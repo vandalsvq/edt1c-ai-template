@@ -1,0 +1,55 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# EDT / Eclipse
+.metadata/
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+.target
+.classpath
+.project
+*.launch
+.factorypath
+
+# 1C
+*.cf
+*.cfu
+*.cfe
+*.dt
+*.epf
+*.erf
+*.efd
+1cv8.1CD
+1Cv8Log/
+*.1ccr
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Claude Code локальные настройки
+.claude/settings.local.json
+.claude/projects/
+
+# Python (для скриптов)
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Логи
+*.log
+logs/

@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__codepilot1c__inspect_platform_reference",
+      "mcp__codepilot1c__discover_tools",
+      "mcp__codepilot1c__glob",
+      "mcp__codepilot1c__read_file",
+      "Bash(git add*)",
+      "Bash(git commit*)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "WebSearch"
+    ]
+  }
+}
