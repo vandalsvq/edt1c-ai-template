@@ -1,10 +1,15 @@
 {
+  "env": {
+    "HBK_MD_HOME": "/Users/<имя-пользователя>/Repository/hbk_md"
+  },
   "permissions": {
     "allow": [
       "mcp__codepilot1c__inspect_platform_reference",
       "mcp__codepilot1c__discover_tools",
       "mcp__codepilot1c__glob",
       "mcp__codepilot1c__read_file",
+      "Bash(: \"${HBK_MD_HOME:?*)",
+      "Bash(python3 \"$HBK_MD_HOME/.claude/1c-syntax-check.py\":*)",
       "Bash(git add*)",
       "Bash(git commit*)",
       "Bash(git status*)",

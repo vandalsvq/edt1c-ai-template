@@ -58,47 +58,44 @@ ls ~/Repository/hbk_md/shcntx_ru_v*/search-index-ru.json 2>/dev/null
 
 Разбор нужен один раз на каждую новую версию платформы. Скрипт `1c-syntax-check.py` автоматически выбирает самую свежую папку `shcntx_ru_v*` рядом с собой — отдельно версию указывать не нужно.
 
-## Шаг 3. Подставить путь в `SKILL.md`
+## Шаг 3. Прописать путь в `.claude/settings.local.json`
 
-В файле [`.claude/skills/bsl-check/SKILL.md`](../.claude/skills/bsl-check/SKILL.md) замените плейсхолдер `<PATH_TO>` на абсолютный путь к каталогу, где лежит `1c-syntax-check.py`.
-
-Было:
-
-```bash
-python3 <PATH_TO>/1c-syntax-check.py $ARGUMENTS
-```
-
-Стало (пример для `~/Repository/hbk_md`):
-
-```bash
-python3 /Users/<имя-пользователя>/Repository/hbk_md/.claude/1c-syntax-check.py $ARGUMENTS
-```
-
-> Используйте именно абсолютный путь — Claude Code запускает skill из произвольного рабочего каталога, и `~` в shell-команде раскроется не всегда.
-
-## Шаг 4. Дописать permission в `.claude/settings.local.json`
-
-Чтобы Claude Code не запрашивал подтверждение на каждый запуск skill, добавьте правило в `permissions.allow` локальных настроек:
+`SKILL.md` в репозитории не содержит абсолютных путей — он берёт каталог `hbk_md` из переменной окружения `HBK_MD_HOME`. Эту переменную (вместе с permission на запуск skill) задаёт каждый разработчик у себя в `.claude/settings.local.json` — этот файл в `.gitignore` и в репозиторий не попадает.
 
 ```bash
 # если файла ещё нет — скопируйте пример
 cp .claude/settings.local.json.example .claude/settings.local.json
 ```
 
-Откройте `.claude/settings.local.json` и добавьте в массив `permissions.allow` строку (с тем же абсолютным путём, что и в шаге 2):
+Откройте `.claude/settings.local.json` и:
 
-```json
-"Bash(python3 /Users/<имя-пользователя>/Repository/hbk_md/.claude/1c-syntax-check.py:*)"
-```
+1. В секции `env` подставьте абсолютный путь к каталогу `hbk_md`:
 
-Файл `.claude/settings.local.json` находится в `.gitignore` — он у каждого разработчика свой.
+   ```json
+   "env": {
+     "HBK_MD_HOME": "/Users/<имя-пользователя>/Repository/hbk_md"
+   }
+   ```
 
-## Шаг 5. Проверка
+2. Убедитесь, что в `permissions.allow` есть две строки для skill:
+
+   ```json
+   "Bash(: \"${HBK_MD_HOME:?*)",
+   "Bash(python3 \"$HBK_MD_HOME/.claude/1c-syntax-check.py\":*)"
+   ```
+
+   Первая разрешает bash-проверку наличия переменной (`${HBK_MD_HOME:?…}`), вторая — собственно вызов Python-скрипта. Без первой Claude Code будет запрашивать подтверждение на каждый вызов.
+
+> Используйте именно абсолютный путь — Claude Code запускает skill из произвольного рабочего каталога, и `~` в shell-команде раскроется не всегда.
+>
+> Если переменная `HBK_MD_HOME` не задана, skill упадёт с понятным сообщением (`HBK_MD_HOME не задана…`) до запуска Python — благодаря конструкции `${VAR:?msg}` в `SKILL.md`.
+
+## Шаг 4. Проверка
 
 Из корня шаблона:
 
 ```bash
-python3 ~/Repository/hbk_md/.claude/1c-syntax-check.py Структура.Вставить
+python3 "$HBK_MD_HOME/.claude/1c-syntax-check.py" Структура.Вставить
 # Ожидаемый вывод:
 # ✓ Структура.Вставить (Structure.Insert)
 ```
@@ -111,7 +108,7 @@ python3 ~/Repository/hbk_md/.claude/1c-syntax-check.py Структура.Вст
 /bsl-check -p Строка
 ```
 
-Если первая команда вернула результат, а вторая — нет, перезапустите Claude Code (skill подхватывается при старте сессии).
+Если первая команда вернула результат, а вторая — нет, перезапустите Claude Code (skill и `env` из `settings.local.json` подхватываются при старте сессии).
 
 ## Обновление
 
@@ -121,7 +118,7 @@ python3 ~/Repository/hbk_md/.claude/1c-syntax-check.py Структура.Вст
 git -C ~/Repository/hbk_md pull
 ```
 
-**Добавить новую версию платформы:** скопируйте новый `.hbk` в `~/Repository/hbk_md/`, переименуйте в формат `X.X.X.X.hbk` и запустите `python3 process_hbk_complete.py` (Шаг 2). Старые версии можно удалить — скрипт автоматически выбирает самую свежую папку `shcntx_ru_v*` по имени, менять `SKILL.md` повторно не нужно.
+**Добавить новую версию платформы:** скопируйте новый `.hbk` в `~/Repository/hbk_md/`, переименуйте в формат `X.X.X.X.hbk` и запустите `python3 process_hbk_complete.py` (Шаг 2). Старые версии можно удалить — скрипт автоматически выбирает самую свежую папку `shcntx_ru_v*` по имени, менять `SKILL.md` или `HBK_MD_HOME` повторно не нужно.
 
 ## Если skill не нужен
 
@@ -135,8 +132,11 @@ git -C ~/Repository/hbk_md pull
 **`❌ Справочник не найден: .../shcntx_ru_md`.**
 Скрипт не нашёл `shcntx_ru_v*` рядом с собой. Это значит, что разбор `.hbk` ещё не выполнен — публичный репо не содержит готовых справочников. Вернитесь к Шагу 2 и подготовьте справочник из `.hbk` файла платформы.
 
+**`HBK_MD_HOME не задана…`** при запуске `/bsl-check`.
+Переменная окружения `HBK_MD_HOME` не пробросилась в shell skill'а. Проверьте, что в `.claude/settings.local.json` есть секция `env` с `HBK_MD_HOME`, и перезапустите Claude Code (env подхватывается при старте сессии).
+
 **`Bash(python3 ...) — permission denied` или промт согласия каждый раз.**
-В `permissions.allow` запись путь-в-путь должна совпадать с тем, что фактически вызывается. Сравните строку из `SKILL.md` (шаг 2) и строку правила (шаг 3) — они должны указывать на один и тот же абсолютный путь.
+В `permissions.allow` правило должно совпадать с тем, что фактически вызывается. Шаблон `Bash(python3 "$HBK_MD_HOME/.claude/1c-syntax-check.py":*)` соответствует команде из `SKILL.md` дословно (с переменной, без раскрытия). Также должно быть правило для проверки переменной — `Bash(: "${HBK_MD_HOME:?*)`, иначе bash-проверка `${HBK_MD_HOME:?…}` отдельно потребует подтверждения.
 
 **Skill вызывается, но возвращает ошибку Python.**
 Проверьте версию: `python3 --version` (нужно 3.8+). Если используете `pyenv`/`aspenv`, убедитесь, что `python3` из `PATH` — тот, что нужен.

@@ -140,15 +140,21 @@ claude mcp list 2>/dev/null | grep -i codepilot1c
    - Скопируй файл: `cp <user-path> <hbk_md>/<X.X.X.X>.hbk`.
    - Запусти разбор: `cd <hbk_md> && python3 process_hbk_complete.py`. Это может занять несколько минут.
    - Проверь, что появился `<hbk_md>/shcntx_ru_v<X.X.X.X>/search-index-ru.json`. Если нет — покажи вывод утилиты и сообщи об ошибке, дальше не двигайся.
-4. **Подставить путь в `.claude/skills/bsl-check/SKILL.md`.** Замени `<PATH_TO>` на абсолютный путь к каталогу `<hbk_md>/.claude/`.
-5. **Дописать permission.** Если `.claude/settings.local.json` ещё нет — скопируй из `.example` (см. Шаг 6 ниже). В `permissions.allow` добавь:
+4. **Прописать путь в `.claude/settings.local.json`.** `SKILL.md` редактировать не надо — он берёт каталог из переменной `HBK_MD_HOME`. Если `settings.local.json` ещё нет — скопируй из `.example` (см. Шаг 6 ниже). Затем:
+   - В секции `env` подставь абсолютный путь к каталогу `<hbk_md>`:
 
-   ```json
-   "Bash(python3 <abs-path-to-hbk_md>/.claude/1c-syntax-check.py:*)"
-   ```
+     ```json
+     "env": { "HBK_MD_HOME": "<abs-path-to-hbk_md>" }
+     ```
 
-   Не добавляй дубликат, если правило уже есть.
-6. **Проверить.** Запусти `python3 <abs-path-to-hbk_md>/.claude/1c-syntax-check.py Структура.Вставить`. Должно вернуть `✓ Структура.Вставить (Structure.Insert)`. Если нет — покажи вывод и продиагностируй (Шаг 5 troubleshooting в `docs/bsl-check-setup.md`).
+   - В `permissions.allow` убедись, что есть две строки (в `.example` они уже добавлены, не дублируй):
+
+     ```json
+     "Bash(: \"${HBK_MD_HOME:?*)",
+     "Bash(python3 \"$HBK_MD_HOME/.claude/1c-syntax-check.py\":*)"
+     ```
+
+5. **Проверить.** Запусти `python3 <abs-path-to-hbk_md>/.claude/1c-syntax-check.py Структура.Вставить`. Должно вернуть `✓ Структура.Вставить (Structure.Insert)`. Если нет — покажи вывод и продиагностируй (раздел Troubleshooting в `docs/bsl-check-setup.md`).
 
 #### 5.B. «Отложить»
 
@@ -216,5 +222,5 @@ claude mcp list 2>/dev/null | grep -i codepilot1c
 Промпт идемпотентен. Запусти его повторно — он определит текущее состояние:
 
 - Уже заполненный CLAUDE.md (нет `<...>` плейсхолдеров) — спросит, нужно ли менять, или пропустит.
-- Skill уже подключён (`SKILL.md` без `<PATH_TO>`, есть permission) — спросит, нужно ли переподключать.
+- Skill уже подключён (в `.claude/settings.local.json` есть `env.HBK_MD_HOME` и оба permission-правила) — спросит, нужно ли переподключать.
 - Если после прерывания ты не уверен в состоянии — спрашивай у пользователя, не действуй наугад.

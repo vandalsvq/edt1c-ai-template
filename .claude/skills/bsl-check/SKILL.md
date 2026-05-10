@@ -6,10 +6,12 @@ description: Проверка синтаксиса 1С:Предприятие 8 
 Run the following Bash command, substituting `$ARGUMENTS` with the arguments passed to the skill:
 
 ```bash
-python3 <PATH_TO>/1c-syntax-check.py $ARGUMENTS
+: "${HBK_MD_HOME:?HBK_MD_HOME не задана. Пропишите путь к каталогу hbk_md в .claude/settings.local.json (см. docs/bsl-check-setup.md).}" && python3 "$HBK_MD_HOME/.claude/1c-syntax-check.py" $ARGUMENTS
 ```
 
-> **Перед использованием** замените `<PATH_TO>` на путь к скрипту `1c-syntax-check.py` в вашей среде. Скрипт авто-обнаруживает справочник `shcntx_ru_v*` рядом с собой — отдельный `--ref-dir` не нужен.
+> Путь к каталогу `hbk_md` (со скриптом `1c-syntax-check.py` и справочниками `shcntx_ru_v*`) берётся из переменной окружения `HBK_MD_HOME`. Её задаёт каждый разработчик у себя в `.claude/settings.local.json` (секция `env`) — этот файл в `.gitignore` и не попадает в репозиторий. Скрипт авто-обнаруживает свежую версию справочника `shcntx_ru_v*` рядом с собой — отдельный `--ref-dir` не нужен.
+>
+> Если переменная не задана, команда упадёт с понятным сообщением до запуска Python (конструкция `${VAR:?msg}` — стандартный bash-идиом).
 >
 > Если скрипта и справочника нет — этот skill отключён. Можно либо удалить каталог `.claude/skills/bsl-check/`, либо подключить справочник 1С (`shcntx_ru`) и положить рядом скрипт `1c-syntax-check.py`.
 
