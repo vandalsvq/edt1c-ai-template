@@ -51,7 +51,7 @@ edt_validate_request → validation_token → передать в мутирую
 
 ```text
 edt_validate_request(
-  project = "PrintWizard.InfostartPrintWizard",
+  project = "<ИмяПроекта>",
   operation = "create_metadata",
   payload = {kind: "Catalog", name: "pw_Новый"}
 ) → validation_token
@@ -84,7 +84,7 @@ BSL-инструменты идентифицируют модуль парой 
 а не FQN модуля.
 
 ```text
-projectName = "PrintWizard.InfostartPrintWizard"
+projectName = "<ИмяПроекта>"
 filePath    = "CommonModules/pw_Ядро/Module.bsl"
 ```
 
@@ -121,7 +121,7 @@ filePath    = "CommonModules/pw_Ядро/Module.bsl"
 
 ```text
 bsl_get_method_body(
-  projectName = "PrintWizard.InfostartPrintWizard",
+  projectName = "<ИмяПроекта>",
   filePath    = "CommonModules/pw_Ядро/Module.bsl",
   name        = "ИмяМетода",
   context_lines = 0     # опционально: вернуть пару строк контекста до/после
@@ -134,7 +134,7 @@ bsl_get_method_body(
 
 ```text
 bsl_module_exports(
-  projectName    = "PrintWizard.InfostartPrintWizard",
+  projectName    = "<ИмяПроекта>",
   filePath       = "CommonModules/pw_СхемаКлиентСервер/Module.bsl",
   name_contains  = "Создать"   # опциональный фильтр
 )
@@ -155,7 +155,7 @@ bsl_type_at_position(
 
 ```text
 edt_find_references(
-  projectName = "PrintWizard.InfostartPrintWizard",
+  projectName = "<ИмяПроекта>",
   objectFqn   = "Catalog.pw_Шаблоны",
   limit       = 100
 )
@@ -218,19 +218,19 @@ edt_find_references(
 
 ```text
 1. edt_field_type_candidates(
-     project    = "PrintWizard.InfostartPrintWizard",
+     project    = "<ИмяПроекта>",
      target_fqn = "Catalog.pw_Шаблоны",
      field      = "type"
    )
 
 2. edt_validate_request(
-     project   = "PrintWizard.InfostartPrintWizard",
+     project   = "<ИмяПроекта>",
      operation = "add_metadata_child",
      payload   = {parent_fqn: "Catalog.pw_Шаблоны", child_kind: "Attribute", name: "pw_Описание"}
    ) → token
 
 3. add_metadata_child(
-     project           = "PrintWizard.InfostartPrintWizard",
+     project           = "<ИмяПроекта>",
      parent_fqn        = "Catalog.pw_Шаблоны",
      child_kind        = "Attribute",
      name              = "pw_Описание",
@@ -243,13 +243,13 @@ edt_find_references(
 
 ```text
 1. edt_validate_request(
-     project   = "PrintWizard.InfostartPrintWizard",
+     project   = "<ИмяПроекта>",
      operation = "create_metadata",
      payload   = {kind: "Catalog", name: "pw_НовыйСправочник"}
    ) → token
 
 2. create_metadata(
-     project          = "PrintWizard.InfostartPrintWizard",
+     project          = "<ИмяПроекта>",
      kind             = "Catalog",
      name             = "pw_НовыйСправочник",
      validation_token = token
@@ -277,14 +277,14 @@ edt_find_references(
 ```text
 # Прочитать текущий макет
 inspect_template(
-  project      = "PrintWizard.InfostartPrintWizard",
+  project      = "<ИмяПроекта>",
   template_fqn = "Catalog.pw_Макеты.Template.ПечатнаяФорма"
 )
 
 # Сгенерировать макет
 edt_validate_request(...) → token
 render_template(
-  project      = "PrintWizard.InfostartPrintWizard",
+  project      = "<ИмяПроекта>",
   template_fqn = "Catalog.pw_Макеты.Template.ПечатнаяФорма",
   sections = [
     {name: "Шапка",         rows: [["Организация", "[Организация]"]]},
@@ -324,7 +324,7 @@ render_template(
 
 ```text
 1. inspect_form_layout(
-     project  = "PrintWizard.InfostartPrintWizard",
+     project  = "<ИмяПроекта>",
      form_fqn = "DataProcessor.pw_Схема.Form.ОсновнаяФорма",
      include_properties = true
    )
@@ -332,7 +332,7 @@ render_template(
 2. edt_validate_request(operation="mutate_form_model", payload={...}) → token
 
 3. mutate_form_model(
-     project          = "PrintWizard.InfostartPrintWizard",
+     project          = "<ИмяПроекта>",
      form_fqn         = "DataProcessor.pw_Схема.Form.ОсновнаяФорма",
      operations       = [{op: "add_button", name: "pw_Экспорт", command_name: "...", parent_item_id: "..."}],
      validation_token = token
@@ -386,7 +386,7 @@ render_template(
 # Прочитать сводку
 dcs_manage(
   command   = "get_summary",
-  project   = "PrintWizard.InfostartPrintWizard",
+  project   = "<ИмяПроекта>",
   owner_fqn = "Report.pw_ОтчётПечати"
 )
 
@@ -394,7 +394,7 @@ dcs_manage(
 edt_validate_request(operation="dcs_manage", payload={command:"upsert_param", ...}) → token
 dcs_manage(
   command          = "upsert_param",
-  project          = "PrintWizard.InfostartPrintWizard",
+  project          = "<ИмяПроекта>",
   owner_fqn        = "Report.pw_ОтчётПечати",
   parameter_name   = "Период",
   expression       = "&Период",
@@ -446,7 +446,7 @@ dcs_manage(
 
 ```text
 author_yaxunit_tests(
-  project = "PrintWizard.InfostartPrintWizard",
+  project = "<ИмяПроекта>",
   feature = "Ядро",
   tests = [
     {
@@ -478,13 +478,13 @@ author_yaxunit_tests(
 ```text
 qa_inspect(command="status")
 qa_prepare_form_context(
-  project   = "PrintWizard.InfostartPrintWizard",
+  project   = "<ИмяПроекта>",
   owner_fqn = "DataProcessor.pw_Схема",
   usage     = "OBJECT"
 )
 qa_plan_scenario(
   goal         = "Пользователь создаёт новую схему печати",
-  project_name = "PrintWizard.InfostartPrintWizard",
+  project_name = "<ИмяПроекта>",
   object_type  = "DataProcessor",
   object_name  = "pw_Схема"
 )
@@ -530,7 +530,7 @@ qa_run(
 
 ```text
 # Live-диагностика проекта
-get_diagnostics(scope="project", project_name="PrintWizard.InfostartPrintWizard", severity="warning")
+get_diagnostics(scope="project", project_name="<ИмяПроекта>", severity="warning")
 
 # Live-диагностика конкретного файла
 get_diagnostics(scope="file", path="src/CommonModules/pw_Ядро/Module.bsl", wait_ms=500)
