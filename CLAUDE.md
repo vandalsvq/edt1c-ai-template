@@ -197,8 +197,9 @@
 - Процесс, именование, статусы: [`specs/README.md`](specs/README.md)
 - Шаблоны: [`specs/_template/spec.md`](specs/_template/spec.md) (стабильный контракт) + [`specs/_template/plan.md`](specs/_template/plan.md) (этапы, решения — транзиентное)
 - Ретроактивные спеки: [`specs/retro/`](specs/retro/)
+- Черновые планы до спек (груминг бэклога, зонтичные инициативы, реестры): [`planning/`](planning/) — когда писать туда, а когда сразу в спеку, см. [`planning/README.md`](planning/README.md)
 
-Активная спека — папка `specs/<prefix>-<N>/` с `spec.md` + `plan.md`. Порог выделения `decisions.md` из `plan.md` — ~15 записей в разделе «Решения».
+Активная спека — папка `specs/<prefix>-<N>/` с `spec.md` + `plan.md`. Порог выделения `decisions.md` из `plan.md` — ~15+ записей в разделе «Решения».
 
 **Когда спека обязательна:**
 

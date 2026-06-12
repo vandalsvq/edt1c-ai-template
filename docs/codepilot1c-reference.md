@@ -53,7 +53,7 @@ edt_validate_request → validation_token → передать в мутирую
 edt_validate_request(
   project = "<ИмяПроекта>",
   operation = "create_metadata",
-  payload = {kind: "Catalog", name: "pw_Новый"}
+  payload = {kind: "Catalog", name: "prj_Новый"}
 ) → validation_token
 ```
 
@@ -85,10 +85,10 @@ BSL-инструменты идентифицируют модуль парой 
 
 ```text
 projectName = "<ИмяПроекта>"
-filePath    = "CommonModules/pw_Ядро/Module.bsl"
+filePath    = "CommonModules/prj_Ядро/Module.bsl"
 ```
 
-Метаданные идентифицируются через FQN (`Catalog.pw_Шаблоны`, `Document.X.Form.Y`,
+Метаданные идентифицируются через FQN (`Catalog.prj_Шаблоны`, `Document.X.Form.Y`,
 `Catalog.X.Template.Y` и т.п.).
 
 ---
@@ -111,7 +111,7 @@ filePath    = "CommonModules/pw_Ядро/Module.bsl"
 ### Параметры, общие для большинства BSL-инструментов
 
 - `projectName` — имя EDT-проекта
-- `filePath` — путь к модулю относительно `src/` (например, `CommonModules/pw_Ядро/Module.bsl`)
+- `filePath` — путь к модулю относительно `src/` (например, `CommonModules/prj_Ядро/Module.bsl`)
 - Списочные инструменты (`bsl_list_methods`, `bsl_module_exports`, `bsl_scope_members`,
   `edt_content_assist`) поддерживают `limit`, `offset`, `name_contains`/`contains`
 
@@ -122,7 +122,7 @@ filePath    = "CommonModules/pw_Ядро/Module.bsl"
 ```text
 bsl_get_method_body(
   projectName = "<ИмяПроекта>",
-  filePath    = "CommonModules/pw_Ядро/Module.bsl",
+  filePath    = "CommonModules/prj_Ядро/Module.bsl",
   name        = "ИмяМетода",
   context_lines = 0     # опционально: вернуть пару строк контекста до/после
 )
@@ -135,7 +135,7 @@ bsl_get_method_body(
 ```text
 bsl_module_exports(
   projectName    = "<ИмяПроекта>",
-  filePath       = "CommonModules/pw_СхемаКлиентСервер/Module.bsl",
+  filePath       = "CommonModules/prj_СхемаКлиентСервер/Module.bsl",
   name_contains  = "Создать"   # опциональный фильтр
 )
 ```
@@ -156,12 +156,12 @@ bsl_type_at_position(
 ```text
 edt_find_references(
   projectName = "<ИмяПроекта>",
-  objectFqn   = "Catalog.pw_Шаблоны",
+  objectFqn   = "Catalog.prj_Шаблоны",
   limit       = 100
 )
 ```
 
-> `edt_find_references` принимает FQN объекта метаданных, а не «pw_Ядро.МойМетод».
+> `edt_find_references` принимает FQN объекта метаданных, а не «prj_Ядро.МойМетод».
 > Для поиска вызовов конкретного метода — стандартный `Grep`.
 
 ---
@@ -219,21 +219,21 @@ edt_find_references(
 ```text
 1. edt_field_type_candidates(
      project    = "<ИмяПроекта>",
-     target_fqn = "Catalog.pw_Шаблоны",
+     target_fqn = "Catalog.prj_Шаблоны",
      field      = "type"
    )
 
 2. edt_validate_request(
      project   = "<ИмяПроекта>",
      operation = "add_metadata_child",
-     payload   = {parent_fqn: "Catalog.pw_Шаблоны", child_kind: "Attribute", name: "pw_Описание"}
+     payload   = {parent_fqn: "Catalog.prj_Шаблоны", child_kind: "Attribute", name: "prj_Описание"}
    ) → token
 
 3. add_metadata_child(
      project           = "<ИмяПроекта>",
-     parent_fqn        = "Catalog.pw_Шаблоны",
+     parent_fqn        = "Catalog.prj_Шаблоны",
      child_kind        = "Attribute",
-     name              = "pw_Описание",
+     name              = "prj_Описание",
      properties        = {type: "String", length: 150},
      validation_token  = token
    )
@@ -245,13 +245,13 @@ edt_find_references(
 1. edt_validate_request(
      project   = "<ИмяПроекта>",
      operation = "create_metadata",
-     payload   = {kind: "Catalog", name: "pw_НовыйСправочник"}
+     payload   = {kind: "Catalog", name: "prj_НовыйСправочник"}
    ) → token
 
 2. create_metadata(
      project          = "<ИмяПроекта>",
      kind             = "Catalog",
-     name             = "pw_НовыйСправочник",
+     name             = "prj_НовыйСправочник",
      validation_token = token
    )
 ```
@@ -278,14 +278,14 @@ edt_find_references(
 # Прочитать текущий макет
 inspect_template(
   project      = "<ИмяПроекта>",
-  template_fqn = "Catalog.pw_Макеты.Template.ПечатнаяФорма"
+  template_fqn = "Catalog.prj_Макеты.Template.ПечатнаяФорма"
 )
 
 # Сгенерировать макет
 edt_validate_request(...) → token
 render_template(
   project      = "<ИмяПроекта>",
-  template_fqn = "Catalog.pw_Макеты.Template.ПечатнаяФорма",
+  template_fqn = "Catalog.prj_Макеты.Template.ПечатнаяФорма",
   sections = [
     {name: "Шапка",         rows: [["Организация", "[Организация]"]]},
     {name: "СтрокаТаблицы", style: "table-row", rows: [["[Номенклатура]", "[Количество]"]]}
@@ -325,7 +325,7 @@ render_template(
 ```text
 1. inspect_form_layout(
      project  = "<ИмяПроекта>",
-     form_fqn = "DataProcessor.pw_Схема.Form.ОсновнаяФорма",
+     form_fqn = "DataProcessor.prj_Схема.Form.ОсновнаяФорма",
      include_properties = true
    )
 
@@ -333,8 +333,8 @@ render_template(
 
 3. mutate_form_model(
      project          = "<ИмяПроекта>",
-     form_fqn         = "DataProcessor.pw_Схема.Form.ОсновнаяФорма",
-     operations       = [{op: "add_button", name: "pw_Экспорт", command_name: "...", parent_item_id: "..."}],
+     form_fqn         = "DataProcessor.prj_Схема.Form.ОсновнаяФорма",
+     operations       = [{op: "add_button", name: "prj_Экспорт", command_name: "...", parent_item_id: "..."}],
      validation_token = token
    )
 ```
@@ -368,7 +368,7 @@ render_template(
 | `upsert_param` | Создать/обновить параметр |
 | `upsert_field` | Создать/обновить вычисляемое поле |
 
-**Обязательные параметры:** `command`, `project`, `owner_fqn` (например, `Report.pw_ОтчётПечати`).
+**Обязательные параметры:** `command`, `project`, `owner_fqn` (например, `Report.prj_ОтчётПечати`).
 
 > ВНИМАНИЕ: `owner_fqn` — это FQN владельца (`Report.X` / `Catalog.X`), **не** Template FQN.
 
@@ -387,7 +387,7 @@ render_template(
 dcs_manage(
   command   = "get_summary",
   project   = "<ИмяПроекта>",
-  owner_fqn = "Report.pw_ОтчётПечати"
+  owner_fqn = "Report.prj_ОтчётПечати"
 )
 
 # Добавить параметр
@@ -395,7 +395,7 @@ edt_validate_request(operation="dcs_manage", payload={command:"upsert_param", ..
 dcs_manage(
   command          = "upsert_param",
   project          = "<ИмяПроекта>",
-  owner_fqn        = "Report.pw_ОтчётПечати",
+  owner_fqn        = "Report.prj_ОтчётПечати",
   parameter_name   = "Период",
   expression       = "&Период",
   validation_token = token
@@ -479,19 +479,19 @@ author_yaxunit_tests(
 qa_inspect(command="status")
 qa_prepare_form_context(
   project   = "<ИмяПроекта>",
-  owner_fqn = "DataProcessor.pw_Схема",
+  owner_fqn = "DataProcessor.prj_Схема",
   usage     = "OBJECT"
 )
 qa_plan_scenario(
   goal         = "Пользователь создаёт новую схему печати",
   project_name = "<ИмяПроекта>",
   object_type  = "DataProcessor",
-  object_name  = "pw_Схема"
+  object_name  = "prj_Схема"
 )
 qa_generate(command = "compile_feature", ...)
-qa_validate_feature(feature_file = "pw_Схема.feature", unknown_steps_mode = "warn")
+qa_validate_feature(feature_file = "prj_Схема.feature", unknown_steps_mode = "warn")
 qa_run(
-  features         = ["pw_Схема.feature"],
+  features         = ["prj_Схема.feature"],
   use_edt_runtime  = true,
   unknown_steps_mode = "warn"
 )
@@ -533,7 +533,7 @@ qa_run(
 get_diagnostics(scope="project", project_name="<ИмяПроекта>", severity="warning")
 
 # Live-диагностика конкретного файла
-get_diagnostics(scope="file", path="src/CommonModules/pw_Ядро/Module.bsl", wait_ms=500)
+get_diagnostics(scope="file", path="src/CommonModules/prj_Ядро/Module.bsl", wait_ms=500)
 
 # Headless smoke (если UI недоступен)
 edt_diagnostics(command="metadata_smoke")
@@ -583,10 +583,10 @@ edt_diagnostics(command="metadata_smoke")
 ### Сценарий A: изучить незнакомый модуль
 
 ```text
-bsl_module_context(projectName="...", filePath="CommonModules/pw_Ядро/Module.bsl")
-bsl_list_methods(   projectName="...", filePath="CommonModules/pw_Ядро/Module.bsl")
-bsl_module_exports( projectName="...", filePath="CommonModules/pw_Ядро/Module.bsl")
-bsl_get_method_body(projectName="...", filePath="CommonModules/pw_Ядро/Module.bsl", name="НужныйМетод")
+bsl_module_context(projectName="...", filePath="CommonModules/prj_Ядро/Module.bsl")
+bsl_list_methods(   projectName="...", filePath="CommonModules/prj_Ядро/Module.bsl")
+bsl_module_exports( projectName="...", filePath="CommonModules/prj_Ядро/Module.bsl")
+bsl_get_method_body(projectName="...", filePath="CommonModules/prj_Ядро/Module.bsl", name="НужныйМетод")
 ```
 
 ### Сценарий B: добавить новый метод в существующий модуль
@@ -602,31 +602,31 @@ bsl_get_method_body(projectName="...", filePath="CommonModules/pw_Ядро/Modul
 ### Сценарий C: создать объект метаданных с формой и тестом
 
 ```text
-1. edt_validate_request(operation="create_metadata",      payload={kind:"Catalog", name:"pw_Новый"})
-2. create_metadata(kind="Catalog", name="pw_Новый", validation_token=...)
-3. edt_validate_request(operation="create_form",          payload={owner_fqn:"Catalog.pw_Новый", name:"ФормаЭлемента"})
-4. create_form(owner_fqn="Catalog.pw_Новый", name="ФормаЭлемента", usage="OBJECT", set_as_default=true, validation_token=...)
-5. inspect_form_layout(form_fqn="Catalog.pw_Новый.Form.ФормаЭлемента", include_properties=true)
-6. author_yaxunit_tests(project="...", feature="pw_Новый", tests=[...])
+1. edt_validate_request(operation="create_metadata",      payload={kind:"Catalog", name:"prj_Новый"})
+2. create_metadata(kind="Catalog", name="prj_Новый", validation_token=...)
+3. edt_validate_request(operation="create_form",          payload={owner_fqn:"Catalog.prj_Новый", name:"ФормаЭлемента"})
+4. create_form(owner_fqn="Catalog.prj_Новый", name="ФормаЭлемента", usage="OBJECT", set_as_default=true, validation_token=...)
+5. inspect_form_layout(form_fqn="Catalog.prj_Новый.Form.ФормаЭлемента", include_properties=true)
+6. author_yaxunit_tests(project="...", feature="prj_Новый", tests=[...])
 7. get_diagnostics(scope="project", project_name="...")
 ```
 
 ### Сценарий D: рефакторинг — найти все использования объекта метаданных
 
 ```text
-edt_find_references(projectName="...", objectFqn="Catalog.pw_УстаревшийСправочник")
+edt_find_references(projectName="...", objectFqn="Catalog.prj_УстаревшийСправочник")
 → список мест → для каждого read_file/edit_file
 ```
 
-> Для поиска вызовов конкретного метода BSL — **стандартный `Grep`** по `pw_Ядро.МойМетод`,
+> Для поиска вызовов конкретного метода BSL — **стандартный `Grep`** по `prj_Ядро.МойМетод`,
 > а не `edt_find_references` (он работает только по объектам метаданных).
 
 ### Сценарий E: написать BDD-тест для формы
 
 ```text
 qa_inspect(command="status")
-qa_prepare_form_context(project="...", owner_fqn="DataProcessor.pw_Схема", usage="OBJECT")
-qa_plan_scenario(goal="...", project_name="...", object_type="DataProcessor", object_name="pw_Схема")
+qa_prepare_form_context(project="...", owner_fqn="DataProcessor.prj_Схема", usage="OBJECT")
+qa_plan_scenario(goal="...", project_name="...", object_type="DataProcessor", object_name="prj_Схема")
 qa_generate(command="compile_feature", ...)
 qa_validate_feature(feature_file="...")
 qa_run(features=["..."], use_edt_runtime=true)
@@ -639,9 +639,7 @@ qa_run(features=["..."], use_edt_runtime=true)
 | Ситуация | Рекомендация |
 | --- | --- |
 | `delete_metadata` | После удаления — `get_diagnostics` и `edt_find_references` |
-| Изменение `pw_Ядро` | Не добавлять внешних зависимостей — нарушит изоляцию |
-| Изменение `pw_Схема*` | Только `pw_СхемаКлиентСервер` и `pw_Ядро` как зависимости |
-| Изменение `pw_Исполнитель`, `pw_ИсполнительDOCX` | Только `pw_Ядро` как зависимость |
+| Изменение модулей с архитектурными ограничениями | Сверяться с разделом «Архитектурные ограничения» в `CLAUDE.md` — не добавлять запрещённых зависимостей |
 | Множественные мутации | Каждая требует отдельного `edt_validate_request` |
 | `ensure_module_artifact` | Теперь требует `validation_token` |
 | `dcs_manage.upsert_dataset` | Пустой `query` вешает DCS-редактор EDT — всегда непустой |
