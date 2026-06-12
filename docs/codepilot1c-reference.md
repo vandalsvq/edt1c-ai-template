@@ -1,7 +1,12 @@
 # MCP codepilot1c — справочник инструментов
 
-MCP-сервер `codepilot1c` предоставляет 56 инструментов для работы с EDT-проектом 1C:Enterprise.
+MCP-сервер `codepilot1c` предоставляет 83 инструмента для работы с EDT-проектом 1C:Enterprise.
 Инструменты понимают структуру EDT и работают через BM API — в отличие от стандартных Read/Edit/Write.
+
+> **Обновление сервера (проверка 2026-05-30):** добавлено 27 инструментов (56 → 83) и целые новые семейства —
+> live-отладчик и профилировщик рантайма 1С, прогон YAxUnit (`run_yaxunit_tests`/`debug_yaxunit_tests`),
+> семантическая навигация по коду (EDT LSP: go-to-definition, иерархия вызовов, структура модулей),
+> теги/закладки/задачи, подключение инфобазы. См. новые разделы ниже.
 
 ---
 
@@ -9,16 +14,19 @@ MCP-сервер `codepilot1c` предоставляет 56 инструмен�
 
 1. [Ключевые правила](#ключевые-правила)
 2. [BSL — чтение и анализ кода](#bsl--чтение-и-анализ-кода)
-3. [Метаданные](#метаданные)
-4. [Макеты](#макеты)
-5. [Формы](#формы)
-6. [СКД](#скд)
-7. [Расширения и внешние объекты](#расширения-и-внешние-объекты)
-8. [QA — тестирование](#qa--тестирование)
-9. [Диагностика](#диагностика)
-10. [Workspace и Git](#workspace-и-git)
-11. [Вспомогательные инструменты](#вспомогательные-инструменты)
-12. [Типовые сценарии](#типовые-сценарии)
+3. [Навигация и анализ кода (EDT LSP)](#навигация-и-анализ-кода-edt-lsp)
+4. [Теги, закладки, задачи](#теги-закладки-задачи)
+5. [Метаданные](#метаданные)
+6. [Макеты](#макеты)
+7. [Формы](#формы)
+8. [СКД](#скд)
+9. [Расширения и внешние объекты](#расширения-и-внешние-объекты)
+10. [QA — тестирование](#qa--тестирование)
+11. [Диагностика](#диагностика)
+12. [Отладка и профилирование](#отладка-и-профилирование)
+13. [Workspace и Git](#workspace-и-git)
+14. [Вспомогательные инструменты](#вспомогательные-инструменты)
+15. [Типовые сценарии](#типовые-сценарии)
 
 ---
 
@@ -51,7 +59,7 @@ edt_validate_request → validation_token → передать в мутирую
 
 ```text
 edt_validate_request(
-  project = "<ИмяПроекта>",
+  project = "<Каталог.Имя>",
   operation = "create_metadata",
   payload = {kind: "Catalog", name: "prj_Новый"}
 ) → validation_token
@@ -84,8 +92,8 @@ BSL-инструменты идентифицируют модуль парой 
 а не FQN модуля.
 
 ```text
-projectName = "<ИмяПроекта>"
-filePath    = "CommonModules/prj_Ядро/Module.bsl"
+projectName = "<Каталог.Имя>"
+filePath    = "CommonModules/prj_СхемаКлиентСервер/Module.bsl"
 ```
 
 Метаданные идентифицируются через FQN (`Catalog.prj_Шаблоны`, `Document.X.Form.Y`,
@@ -121,8 +129,8 @@ filePath    = "CommonModules/prj_Ядро/Module.bsl"
 
 ```text
 bsl_get_method_body(
-  projectName = "<ИмяПроекта>",
-  filePath    = "CommonModules/prj_Ядро/Module.bsl",
+  projectName = "<Каталог.Имя>",
+  filePath    = "CommonModules/prj_СхемаКлиентСервер/Module.bsl",
   name        = "ИмяМетода",
   context_lines = 0     # опционально: вернуть пару строк контекста до/после
 )
@@ -134,7 +142,7 @@ bsl_get_method_body(
 
 ```text
 bsl_module_exports(
-  projectName    = "<ИмяПроекта>",
+  projectName    = "<Каталог.Имя>",
   filePath       = "CommonModules/prj_СхемаКлиентСервер/Module.bsl",
   name_contains  = "Создать"   # опциональный фильтр
 )
@@ -155,14 +163,86 @@ bsl_type_at_position(
 
 ```text
 edt_find_references(
-  projectName = "<ИмяПроекта>",
+  projectName = "<Каталог.Имя>",
   objectFqn   = "Catalog.prj_Шаблоны",
   limit       = 100
 )
 ```
 
 > `edt_find_references` принимает FQN объекта метаданных, а не «prj_Ядро.МойМетод».
-> Для поиска вызовов конкретного метода — стандартный `Grep`.
+> Для поиска вызовов конкретного метода — `edt_get_method_call_hierarchy` (семантически)
+> или стандартный `Grep` (по тексту).
+
+---
+
+## Навигация и анализ кода (EDT LSP)
+
+Семантическая навигация поверх модели EDT (аналог LSP). Идентификация:
+символы — по FQN (`symbolFqn`) или позиции (`position` = `fileUri`+`line`+`column`);
+модули — по FQN **с суффиксом `.Module`** или по пути относительно `src/`.
+
+| Инструмент | Назначение |
+| --- | --- |
+| `edt_list_modules` | Список всех BSL-модулей проекта: FQN, владелец, путь файла. Фильтр `objectType` (`CommonModule`, `DataProcessor`, ...) |
+| `edt_get_module_structure` | Структура модуля: области, методы, экспортные (`full=true` — со call sites) |
+| `edt_go_to_definition` | Определение символа по FQN или позиции |
+| `edt_get_symbol_info` | Детальная информация о символе по FQN или позиции |
+| `edt_get_method_call_hierarchy` | Иерархия вызовов метода: `direction` = `callers`/`callees`/`both`, `depth` |
+| `edt_search_in_code` | Текст/regex-поиск по коду: `scope` = `all`/`modules`/`queries`, `searchType` = `text`/`regex` |
+| `edt_get_configuration_properties` | Свойства конфигурации: name, version, vendor, счётчики коллекций |
+| `edt_get_problem_summary` | Сводка проблем валидации: `total_errors`/`total_warnings`/`total_infos` + список |
+
+Идентификация модуля — обе формы валидны:
+
+```text
+moduleFqn = "CommonModule.prj_СхемаКлиентСервер.Module"      # FQN с суффиксом .Module
+moduleFqn = "CommonModules/prj_СхемаКлиентСервер/Module.bsl" # путь относительно src/
+```
+
+> Не путать обработки с общими модулями: модуль обработки лежит в
+> `DataProcessors/<Имя>/ObjectModule.bsl`, а не `CommonModules/<Имя>/Module.bsl`.
+> `edt_get_module_structure` резолвит модуль, но на части модулей возвращает пустые
+> `methods/exports` — для надёжного списка методов используй `bsl_list_methods`/`bsl_module_exports`.
+
+```text
+# Кто вызывает метод (семантически, замена ручного Grep)
+edt_get_method_call_hierarchy(
+  projectName = "<Каталог.Имя>",
+  methodFqn   = "CommonModule.prj_СхемаКлиентСервер.СоздатьСхему",
+  direction   = "callers",
+  depth       = 2
+)
+
+# Regex-поиск только по текстам запросов
+edt_search_in_code(
+  projectName = "<Каталог.Имя>",
+  query       = "ВЫБРАТЬ.*ПЕРВЫЕ",
+  scope       = "queries",
+  searchType  = "regex"
+)
+
+# Список модулей-обработок
+edt_list_modules(projectName = "<Каталог.Имя>", objectType = "DataProcessor")
+```
+
+---
+
+## Теги, закладки, задачи
+
+Read-only маркеры из модели EDT/Eclipse.
+
+| Инструмент | Назначение |
+| --- | --- |
+| `edt_get_tags` | Список тегов проекта + число объектов по каждому тегу |
+| `edt_get_objects_by_tags` | Объекты метаданных с указанными тегами (`tags[]`) |
+| `get_bookmarks` | Закладки Eclipse/EDT: файл, строка, сообщение, тип, приоритет (`limit` 1..1000) |
+| `get_tasks` | Маркеры TODO/FIXME/XXX: файл, строка, сообщение, приоритет (`limit` 1..1000) |
+
+```text
+get_tasks(projectName = "<Каталог.Имя>", limit = 50)
+# → {total, hasMore, markers: [{resource: "src/.../Module.bsl", line: 1259,
+#                               markerType: "TODO", message: "...", priority: "P_NORMAL"}, ...]}
+```
 
 ---
 
@@ -181,7 +261,7 @@ edt_find_references(
 | `delete_metadata` | Удалить объект или дочерний элемент | **W** |
 | `ensure_module_artifact` | Материализовать `.bsl`-файл для объекта (требует validation_token) | **W** |
 
-### Параметры
+### Параметры инструментов метаданных
 
 - `scan_metadata_index(projectName, scope?, nameContains?, language?, limit?, includeModules?)`
 - `edt_metadata_details(projectName, objectFqns[], full?, language?)` — массив FQN
@@ -218,19 +298,19 @@ edt_find_references(
 
 ```text
 1. edt_field_type_candidates(
-     project    = "<ИмяПроекта>",
+     project    = "<Каталог.Имя>",
      target_fqn = "Catalog.prj_Шаблоны",
      field      = "type"
    )
 
 2. edt_validate_request(
-     project   = "<ИмяПроекта>",
+     project   = "<Каталог.Имя>",
      operation = "add_metadata_child",
      payload   = {parent_fqn: "Catalog.prj_Шаблоны", child_kind: "Attribute", name: "prj_Описание"}
    ) → token
 
 3. add_metadata_child(
-     project           = "<ИмяПроекта>",
+     project           = "<Каталог.Имя>",
      parent_fqn        = "Catalog.prj_Шаблоны",
      child_kind        = "Attribute",
      name              = "prj_Описание",
@@ -243,13 +323,13 @@ edt_find_references(
 
 ```text
 1. edt_validate_request(
-     project   = "<ИмяПроекта>",
+     project   = "<Каталог.Имя>",
      operation = "create_metadata",
      payload   = {kind: "Catalog", name: "prj_НовыйСправочник"}
    ) → token
 
 2. create_metadata(
-     project          = "<ИмяПроекта>",
+     project          = "<Каталог.Имя>",
      kind             = "Catalog",
      name             = "prj_НовыйСправочник",
      validation_token = token
@@ -277,14 +357,14 @@ edt_find_references(
 ```text
 # Прочитать текущий макет
 inspect_template(
-  project      = "<ИмяПроекта>",
+  project      = "<Каталог.Имя>",
   template_fqn = "Catalog.prj_Макеты.Template.ПечатнаяФорма"
 )
 
 # Сгенерировать макет
 edt_validate_request(...) → token
 render_template(
-  project      = "<ИмяПроекта>",
+  project      = "<Каталог.Имя>",
   template_fqn = "Catalog.prj_Макеты.Template.ПечатнаяФорма",
   sections = [
     {name: "Шапка",         rows: [["Организация", "[Организация]"]]},
@@ -305,7 +385,7 @@ render_template(
 | `mutate_form_model` | Точечные изменения модели существующей формы | **W** |
 | `apply_form_recipe` | Применить декларативный recipe: создание, поиск, атрибуты, layout | **W** |
 
-### Параметры
+### Параметры инструментов форм
 
 - `inspect_form_layout(project, form_fqn, include_invisible?, include_properties?, include_titles?, max_depth?, max_items?)`
 - `create_form(project, owner_fqn, name, validation_token, usage?, synonym?, comment?, set_as_default?, managed?, wait_ms?)`
@@ -324,7 +404,7 @@ render_template(
 
 ```text
 1. inspect_form_layout(
-     project  = "<ИмяПроекта>",
+     project  = "<Каталог.Имя>",
      form_fqn = "DataProcessor.prj_Схема.Form.ОсновнаяФорма",
      include_properties = true
    )
@@ -332,7 +412,7 @@ render_template(
 2. edt_validate_request(operation="mutate_form_model", payload={...}) → token
 
 3. mutate_form_model(
-     project          = "<ИмяПроекта>",
+     project          = "<Каталог.Имя>",
      form_fqn         = "DataProcessor.prj_Схема.Form.ОсновнаяФорма",
      operations       = [{op: "add_button", name: "prj_Экспорт", command_name: "...", parent_item_id: "..."}],
      validation_token = token
@@ -386,7 +466,7 @@ render_template(
 # Прочитать сводку
 dcs_manage(
   command   = "get_summary",
-  project   = "<ИмяПроекта>",
+  project   = "<Каталог.Имя>",
   owner_fqn = "Report.prj_ОтчётПечати"
 )
 
@@ -394,7 +474,7 @@ dcs_manage(
 edt_validate_request(operation="dcs_manage", payload={command:"upsert_param", ...}) → token
 dcs_manage(
   command          = "upsert_param",
-  project          = "<ИмяПроекта>",
+  project          = "<Каталог.Имя>",
   owner_fqn        = "Report.prj_ОтчётПечати",
   parameter_name   = "Период",
   expression       = "&Период",
@@ -446,7 +526,7 @@ dcs_manage(
 
 ```text
 author_yaxunit_tests(
-  project = "<ИмяПроекта>",
+  project = "<Каталог.Имя>",
   feature = "Ядро",
   tests = [
     {
@@ -457,6 +537,26 @@ author_yaxunit_tests(
       data_setup= "ЮТДанные.СоздатьЭлемент(...);"
     }
   ]
+)
+```
+
+#### Прогон и отладка YAxUnit (новое)
+
+| Инструмент | Назначение |
+| --- | --- |
+| `run_yaxunit_tests` | Запустить YAxUnit, распарсить JUnit XML → Markdown-отчёт. Опции: `filters`, `update_database`, `keep_connected`, `junit_xml_path`, `timeout_s` |
+| `debug_yaxunit_tests` | Запустить YAxUnit в режиме **отладки** (под брейкпоинты): `launch_config_name`, `wait_for_debugger`, `filters` |
+
+> `author_yaxunit_tests` **создаёт** тесты, `run_yaxunit_tests` — **исполняет** их.
+> Оба требуют подключённой инфобазы (`connect_infobase`) и интеграции YAxUnit.
+> `debug_yaxunit_tests` стыкуется с разделом [Отладка и профилирование](#отладка-и-профилирование):
+> ставим `set_breakpoint`, запускаем `debug_yaxunit_tests(wait_for_debugger=true)`, далее `wait_for_break` → `get_variables`.
+
+```text
+run_yaxunit_tests(
+  project_name    = "<Каталог.Имя>",
+  filters         = "prj_ЯдроТесты",
+  update_database = false
 )
 ```
 
@@ -478,13 +578,13 @@ author_yaxunit_tests(
 ```text
 qa_inspect(command="status")
 qa_prepare_form_context(
-  project   = "<ИмяПроекта>",
+  project   = "<Каталог.Имя>",
   owner_fqn = "DataProcessor.prj_Схема",
   usage     = "OBJECT"
 )
 qa_plan_scenario(
-  goal         = "Пользователь создаёт новую схему печати",
-  project_name = "<ИмяПроекта>",
+  goal         = "Пользователь создаёт новую схему",
+  project_name = "<Каталог.Имя>",
   object_type  = "DataProcessor",
   object_name  = "prj_Схема"
 )
@@ -530,7 +630,7 @@ qa_run(
 
 ```text
 # Live-диагностика проекта
-get_diagnostics(scope="project", project_name="<ИмяПроекта>", severity="warning")
+get_diagnostics(scope="project", project_name="<Каталог.Имя>", severity="warning")
 
 # Live-диагностика конкретного файла
 get_diagnostics(scope="file", path="src/CommonModules/prj_Ядро/Module.bsl", wait_ms=500)
@@ -538,6 +638,60 @@ get_diagnostics(scope="file", path="src/CommonModules/prj_Ядро/Module.bsl", 
 # Headless smoke (если UI недоступен)
 edt_diagnostics(command="metadata_smoke")
 ```
+
+---
+
+## Отладка и профилирование
+
+Новое семейство — live-отладчик рантайма 1С и профилировщик поверх EDT debug API.
+Требует **активной отладочной сессии** (запуск приложения/тестов в режиме отладки)
+и подключённой инфобазы (см. [Инфобаза](#инфобаза)). Все инструменты — top-level,
+в `discover_tools` по категориям **не раскрываются** (см. примечание в конце).
+
+### Отладчик
+
+| Инструмент | Назначение |
+| --- | --- |
+| `debug_status` | Статус: `state`, `suspended`, число launch/target/breakpoint |
+| `set_breakpoint` | Точка останова: `filePath` (относительно `src/`) + `line`; опц. `condition`, `enabled` |
+| `remove_breakpoint` | Снять по `breakpointId` или паре `filePath`+`line` |
+| `list_breakpoints` | Список точек останова в проекте/воркспейсе |
+| `wait_for_break` | Ждать приостановки потока (`timeoutMs`) |
+| `step` | Шаг потока: `kind` = `into`/`over`/`out` |
+| `resume` | Продолжить поток/таргет (опц. `threadId`) |
+| `get_variables` | Переменные текущего фрейма стека (опц. `frameId`/`threadId`) |
+| `evaluate_expression` | Вычислить выражение в текущем фрейме (`expression`) |
+
+```text
+set_breakpoint(
+  projectName = "<Каталог.Имя>",
+  filePath    = "DataProcessors/prj_Исполнитель/ObjectModule.bsl",
+  line        = 120
+)
+# запустить отладку: edt_diagnostics(command="launch_app") или debug_yaxunit_tests(...)
+wait_for_break(projectName = "<Каталог.Имя>", timeoutMs = 60000)
+get_variables(projectName = "<Каталог.Имя>")
+evaluate_expression(projectName = "<Каталог.Имя>", expression = "Схема.Параметры.Количество()")
+step(projectName = "<Каталог.Имя>", kind = "over")
+resume(projectName = "<Каталог.Имя>")
+```
+
+### Профилирование
+
+| Инструмент | Назначение |
+| --- | --- |
+| `start_profiling` | Включить/выключить профайлер на активном debug-таргете (`applicationId` — если таргетов несколько) |
+| `get_profiling_results` | Результаты: модули, строки, вызовы, тайминг, покрытие. Фильтры `moduleFilter`, `minFrequency`, `maxLinesPerModule` (≤1000) |
+
+```text
+start_profiling()                                  # toggle on на единственном таргете
+# выполнить целевой сценарий в отлаживаемом приложении
+get_profiling_results(moduleFilter = "prj_Исполнитель", minFrequency = 2)
+```
+
+> Отладчик и профайлер — для разбора рантайм-поведения (узкие места,
+> трудноуловимые баги), не для статического анализа. Для статики — `bsl_analyze_method`
+> и навигация EDT LSP.
 
 ---
 
@@ -556,6 +710,25 @@ edt_diagnostics(command="metadata_smoke")
 
 > Для git-операций в EDT-проекте предпочтительно передавать `project_name`, а не `repo_path` —
 > инструмент сам определит нужный путь. `repo_path` обязателен только для `init`/`create`/`clone`.
+
+### Инфобаза
+
+| Инструмент | Назначение |
+| --- | --- |
+| `connect_infobase` | Привязать к проекту файловую (`kind=file`) или standalone (`kind=standalone`) ИБ; `set_primary` делает её основной, `force` заменяет существующую |
+| `update_infobase_status` | Опрос статуса фонового обновления ИБ по `job_id` (из `edt_diagnostics(command="update_infobase", async=true)`): state, время, результат/ошибка |
+
+```text
+connect_infobase(
+  project_name  = "<Каталог.Имя>",
+  database_path = "/путь/к/файловой/ИБ",
+  kind          = "file",
+  set_primary   = true
+)
+```
+
+> `connect_infobase` — предпосылка для отладки и `run_yaxunit_tests` (нужна подключённая ИБ).
+> Параметр `password` в результат не возвращается.
 
 ---
 
@@ -576,6 +749,13 @@ edt_diagnostics(command="metadata_smoke")
 | `remember_fact` | Сохранить факт в долгосрочную память сервера; `category`: `FACT`/`ARCHITECTURE`/`DECISION`/`PATTERN`/`BUG` |
 | `inspect_platform_reference` | Справка по типам встроенного языка платформы |
 
+> **discover_tools и новые семейства.** Enum категорий `discover_tools` не расширяли —
+> там по-прежнему `bsl|metadata|forms|extensions|dcs|qa|diagnostics|workspace`.
+> Инструменты навигации EDT LSP и тегов распределены по `bsl`/`metadata`/`workspace`,
+> а **весь блок отладки и профилирования** (`set_breakpoint`, `step`, `get_variables`,
+> `evaluate_expression`, `start_profiling`, ...) **ни в одну категорию не попадает** —
+> эти инструменты top-level и раскрываются напрямую (через поиск инструментов), минуя `discover_tools`.
+
 ---
 
 ## Типовые сценарии
@@ -583,10 +763,10 @@ edt_diagnostics(command="metadata_smoke")
 ### Сценарий A: изучить незнакомый модуль
 
 ```text
-bsl_module_context(projectName="...", filePath="CommonModules/prj_Ядро/Module.bsl")
-bsl_list_methods(   projectName="...", filePath="CommonModules/prj_Ядро/Module.bsl")
-bsl_module_exports( projectName="...", filePath="CommonModules/prj_Ядро/Module.bsl")
-bsl_get_method_body(projectName="...", filePath="CommonModules/prj_Ядро/Module.bsl", name="НужныйМетод")
+bsl_module_context(projectName="...", filePath="CommonModules/prj_СхемаКлиентСервер/Module.bsl")
+bsl_list_methods(   projectName="...", filePath="CommonModules/prj_СхемаКлиентСервер/Module.bsl")
+bsl_module_exports( projectName="...", filePath="CommonModules/prj_СхемаКлиентСервер/Module.bsl")
+bsl_get_method_body(projectName="...", filePath="CommonModules/prj_СхемаКлиентСервер/Module.bsl", name="НужныйМетод")
 ```
 
 ### Сценарий B: добавить новый метод в существующий модуль
@@ -632,6 +812,28 @@ qa_validate_feature(feature_file="...")
 qa_run(features=["..."], use_edt_runtime=true)
 ```
 
+### Сценарий F: отладить рантайм-поведение
+
+```text
+connect_infobase(project_name="...", database_path="...", kind="file")   # если ИБ ещё не привязана
+set_breakpoint(projectName="...", filePath="DataProcessors/prj_Исполнитель/ObjectModule.bsl", line=120)
+debug_yaxunit_tests(project_name="...", filters="prj_ИсполнительТесты", wait_for_debugger=true)
+wait_for_break(projectName="...", timeoutMs=60000)
+get_variables(projectName="...")
+evaluate_expression(projectName="...", expression="Область.Параметры.Количество()")
+step(projectName="...", kind="over")  →  resume(projectName="...")
+```
+
+### Сценарий G: найти узкое место (профилирование)
+
+```text
+# приложение запущено в режиме отладки
+start_profiling()                                  # toggle on
+# выполнить целевой сценарий
+get_profiling_results(moduleFilter="prj_Исполнитель", minFrequency=2, maxLinesPerModule=200)
+→ строки с наибольшим временем/числом вызовов
+```
+
 ---
 
 ## Ограничения и предостережения
@@ -645,3 +847,7 @@ qa_run(features=["..."], use_edt_runtime=true)
 | `dcs_manage.upsert_dataset` | Пустой `query` вешает DCS-редактор EDT — всегда непустой |
 | `edit_file` `.mdo` | Через override `allow_metadata_descriptor_edit=true`; обычно — BM API |
 | `edt_extension_smoke`, `edt_external_smoke` | Только для проверки инфраструктуры |
+| Отладчик/профайлер (`set_breakpoint`, `step`, `start_profiling`, ...) | Нужна активная отладочная сессия + подключённая ИБ; в `discover_tools` не раскрываются |
+| `run_yaxunit_tests`, `debug_yaxunit_tests` | Нужны `connect_infobase` и интеграция YAxUnit |
+| `edt_get_module_structure` | На части модулей возвращает пустые `methods/exports` — для списка методов брать `bsl_list_methods` |
+| `moduleFqn` (EDT LSP) | FQN модуля — с суффиксом `.Module` (`CommonModule.X.Module`), либо путь от `src/` |
