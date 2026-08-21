@@ -1,0 +1,20 @@
+{
+    "mcpServers": {
+        "codepilot1c": {
+            "type": "http",
+            "url": "http://127.0.0.1:<ПОРТ>/mcp"
+        },
+        "yaxunit-runner": {
+            "type": "stdio",
+            "command": "<ПУТЬ_К_java.exe>",
+            "args": [
+                "-jar",
+                "<ПУТЬ_К_mcp-yaxunit-runner-X.Y.Z.jar>"
+            ],
+            "env": {
+                "SPRING_CONFIG_IMPORT": "<ПУТЬ_К_tests/application-yaxunit.yml>",
+                "PATH": "<PATH_СТЕНДА: каталог EDT-компонент + java\\bin + системные пути>"
+            }
+        }
+    }
+}

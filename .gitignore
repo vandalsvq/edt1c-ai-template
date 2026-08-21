@@ -4,32 +4,25 @@
 .LSOverride
 ._*
 
-# EDT / Eclipse
+# EDT / Eclipse — только временное и генерируемое.
+# ВНИМАНИЕ: `.project` и `.settings/` EDT-проекта коммитятся, их игнорировать нельзя.
 .metadata/
 bin/
 tmp/
 *.tmp
 *.bak
-*.swp
 *~.nib
 local.properties
-.settings/
 .loadpath
 .recommenders
 .target
-.classpath
-.project
 *.launch
 .factorypath
 
-# 1C
-*.cf
-*.cfu
-*.cfe
+# 1С — файлы данных и временное.
+# Артефакты сборки (*.cf, *.cfu, *.cfe, *.epf, *.erf, *.efd) НЕ игнорируются:
+# готовые внешние обработки, отчёты и поставки расширений в репозитории уместны.
 *.dt
-*.epf
-*.erf
-*.efd
 1cv8.1CD
 1Cv8Log/
 *.1ccr
@@ -42,6 +35,9 @@ local.properties
 # Claude Code локальные настройки
 .claude/settings.local.json
 .claude/projects/
+
+# Машинно-специфичные конфиги (в репозитории — *.example-шаблоны)
+.mcp.json
 
 # Python (для скриптов)
 __pycache__/
