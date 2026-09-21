@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>{{TITLE}}</title>
+<style>
+  @page { size: A4; margin: 18mm 15mm 16mm; }
+  * { box-sizing: border-box; }
+  body {
+    font: 10.5pt/1.5 -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #1a1a1a; margin: 0;
+  }
+  h1 { font-size: 17pt; margin: 0 0 2mm; line-height: 1.25; }
+  /* строка-подзаголовок: первый абзац сразу за h1 */
+  h1 + p { color: #555; font-size: 10pt; margin: 0 0 7mm; }
+  h1 + p strong { color: #1a1a1a; font-weight: 600; }
+  h2 {
+    font-size: 12.5pt; margin: 8mm 0 3mm; padding-bottom: 1.5mm;
+    border-bottom: 1.5px solid #1a1a1a; break-after: avoid;
+  }
+  h3 { font-size: 10.5pt; margin: 5mm 0 2mm; break-after: avoid; }
+  p { margin: 0 0 3mm; }
+  ul { margin: 0 0 3mm; padding-left: 5mm; }
+  li { margin-bottom: 1.5mm; }
+  table { width: 100%; border-collapse: collapse; margin: 0 0 4mm; font-size: 9.5pt; }
+  th, td { border: 0.7px solid #b8b8b8; padding: 2mm 2.5mm; text-align: left; vertical-align: top; }
+  th { background: #f0f0f0; font-weight: 600; }
+  tr { break-inside: avoid; }
+  /* таблица шагов тестирования: узкая нумерация и пустая колонка под галочку */
+  table.steps th:first-child, table.steps td:first-child { width: 9mm; text-align: center; color: #555; }
+  table.steps th:nth-child(2), table.steps td:nth-child(2) { width: 62mm; }
+  table.steps th:last-child, table.steps td:last-child { width: 22mm; }
+  blockquote.note {
+    border-left: 3px solid #8a8a8a; background: #f7f7f7;
+    padding: 3mm 4mm; margin: 0 0 4mm; break-inside: avoid;
+  }
+  blockquote.note p:last-child { margin-bottom: 0; }
+  .gone { color: #8a2b2b; font-weight: 600; }
+  .kept { color: #1f5c2e; font-weight: 600; }
+  footer {
+    margin-top: 9mm; padding-top: 3mm; border-top: 0.7px solid #b8b8b8;
+    font-size: 8.5pt; color: #666;
+  }
+</style>
+</head>
+<body>
+
+<!--
+  Печатная оболочка документа для аналитика. Содержание живёт в analyst-doc.md
+  в каталоге задачи; сюда оно подставляется при сборке PDF и здесь не правится.
+
+  Слоты:
+    {{TITLE}}    - заголовок вкладки: «<prefix>-<N> - описание изменений и порядок тестирования»
+    {{CONTENT}}  - HTML-фрагмент, полученный из analyst-doc.md
+    {{FOOTER}}   - «<prefix>-<N> · заголовок · подготовлено для функционального тестирования · дата»
+
+  Что оболочка ждёт от фрагмента:
+    .gone            - на тексте «Удалено.» (красным)
+    .kept            - на тексте «Без изменений.» / «Исправлено.» (зелёным)
+    blockquote.note  - врезка «Под кем проверять»
+    table.steps      - таблица порядка тестирования: № / что сделать / результат / отметка
+
+  Вёрстка рассчитана на A4 и печать. Строки таблиц не рвутся между страницами.
+-->
+
+{{CONTENT}}
+
+<footer>{{FOOTER}}</footer>
+
+</body>
+</html>

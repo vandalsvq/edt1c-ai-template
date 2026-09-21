@@ -15,6 +15,7 @@
 │   ├── settings.json                    # Общие настройки Claude Code (commit'ятся)
 │   ├── settings.local.json.example      # Пример локальных permissions (скопировать в settings.local.json)
 │   └── skills/
+│       ├── analyst-doc/                 # Skill документа для аналитика по задаче (/analyst-doc)
 │       ├── bsl-check/                   # Skill проверки синтаксиса 1С по справочнику shcntx_ru
 │       ├── close-task/                  # Skill закрытия задачи по SDD (/close-task)
 │       ├── sync-template/               # Skill забора переносимых файлов из шаблона (/sync-template)
