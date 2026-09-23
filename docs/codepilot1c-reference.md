@@ -4,25 +4,38 @@ MCP-сервер `codepilot1c` предоставляет около сотни 
 1C:Enterprise. Инструменты понимают структуру EDT и работают через BM API - в отличие от
 стандартных Read/Edit/Write.
 
-Через `discover_tools` раскрывается 71 инструмент (bsl 14, metadata 22, forms 4, extensions 5,
-dcs 1, qa 7, diagnostics 10, workspace 8), остальные доступны всегда.
+`tools/list` отдаёт **103** инструмента: 33 доступны всегда, ещё 70 раскрываются через
+`discover_tools`. Всего категорий восемь и в них 71 инструмент (bsl 14, metadata 22, forms 4,
+extensions 5, dcs 1, qa 7, diagnostics 10, workspace 8) - на единицу больше, чем видно в
+`tools/list`, из-за закрытого `get_infobase_credentials`.
 
 Сервер - плагин 1C:EDT [ondysss/codepilot1c-edt](https://github.com/ondysss/codepilot1c-edt) (AGPL-3.0),
 update site `https://ondysss.github.io/codepilot1c-edt/`.
 
-Справочник сверен с живым сервером **2026-08-21** (плагин `1.3.9.20260820-1223`).
-Транспорт - HTTP: `http://127.0.0.1:8765/mcp`.
+Справочник сверен с живым сервером **2026-09-20** (плагин `1.3.9.20260915-1537`, EDT `1.35.3`,
+MCP Host `1.3.0`). Транспорт - HTTP: `http://127.0.0.1:8765/mcp`. Сверка прошла дважды, на
+сборках `20260913-1332` и `20260915-1537`: состав, схемы, enum'ы, описания, skills и ресурсы
+совпали до буквы - между этими сборками менялось что-то помимо поверхности инструментов.
 
-> `get_infobase_credentials` в `tools/list` не отдаётся вовсе - он существует, но доступен
-> только после `discover_tools(category="diagnostics")`.
+> `get_infobase_credentials` числится в категории `diagnostics`, но **вызвать его нельзя**:
+> в `tools/list` его нет, а прямой вызов после `discover_tools` отвечает
+> `Tool is not exposed` (проверено 2026-09-20).
 
-**Что изменилось с прошлой сверки** (2026-08-20, плагин `1.3.3.20260818-1414`):
+**Что изменилось с прошлой сверки** (2026-08-21, плагин `1.3.9.20260820-1223`):
 
-- **добавился `edt_get_project_call_graph`** (категория `bsl`: 13 → 14) - граф прямых вызовов BSL;
-- **`get_diagnostics` пропадал и вернулся**: в сборке `1.3.9.20260820-1223` его не было ни в
-  `tools/list`, ни в `discover_tools`, с 2026-09-05 он снова отдаётся сервером. Мораль -
+- **`get_diagnostics` вернулся** в сборку (зафиксировано 2026-09-05, см. «Диагностика»). Мораль -
   сверять состав `tools/list`, а не полагаться на прошлые записи справочника (в том числе на
-  эту): состав инструментов между сборками меняется в обе стороны.
+  эту): состав инструментов между сборками меняется в обе стороны;
+- **GSD вырос с 6 инструментов до 8** (`gsd_record_shipment`, `gsd_record_verification_outcome`)
+  и обзавёлся фазой `SHIPPING`;
+- **`add_metadata_child.child_kind`** пополнился `URLTemplate` и `HTTPMethod` (дети HTTP-сервиса);
+- **`get_infobase_credentials` закрыт окончательно** - раньше его можно было достать через
+  `discover_tools`, теперь вызов отбивается `Tool is not exposed`;
+- категории `extensions` (5) и `dcs` (1) пересверены вызовами, состав всех восьми категорий
+  совпал с записанным.
+
+Не пересверялись вживую (мутирующие проверки, требуют отдельной задачи): отказы BM API
+из раздела «Формы», поведение `update_infobase` и сценарии QA.
 
 ---
 
@@ -367,7 +380,11 @@ edt_get_method_call_hierarchy(
 ### `add_metadata_child.child_kind` - допустимые виды детей
 
 `Attribute`, `Tabular_Section`, `Command`, `Form`, `Template`, `Dimension`, `Resource`,
-`Requisite`, **`EnumValue`**.
+`Requisite`, **`EnumValue`**, `URLTemplate`, `HTTPMethod`.
+
+Последние два - дети `HTTPService`: шаблон URL и метод в нём. У `HTTPMethod` есть свой
+`http_method` (`GET`/`POST`/`PUT`/`DELETE`/`PATCH`/`MERGE`/`OPTIONS`/`TRACE`/`CONNECT`,
+WebDAV-набор и `ANY`).
 
 При `child_kind=Form` дополнительно: `form_usage` (`OBJECT`/`LIST`/`CHOICE`/`AUXILIARY`),
 `set_as_default`, `wait_ms`. При `child_kind=Template` - `template_type`
@@ -1071,30 +1088,31 @@ edt_diagnostics(command="metadata_smoke")
 | --- | --- |
 | `get_standalone_server_status` | Состояние автономного сервера EDT: процессы, порты, блокировки, последние ошибки |
 | `resolve_web_client_url` | URL веб-клиента (и конфигуратора) инфобазы проекта - для проверки UI в браузере |
-| `get_infobase_credentials` | **Только логин** ИБ из хранилища EDT + сведения о доступных способах аутентификации. Пароль не возвращается (см. ниже) |
+| `get_infobase_credentials` | Логин ИБ из хранилища EDT и сведения о способах аутентификации. **С 2026-09-20 не вызывается вовсе** - см. ниже |
 | `connect_infobase` | Подключить ИБ к проекту: `kind` = `file`/`standalone`, `database_path`, `set_primary`, `force`, `runtime_version`, `server_port`, `login`/`password` |
 | `get_1c_processes` | Процессы 1С/EDT: PID, родитель, командная строка; `include_ports`, `include_open_files` - детали по портам и открытым файлам |
 | `get_infobase_locks` | Блокировки файловой ИБ и удерживающие их процессы; `path_or_connection` обязателен, `include_evidence` добавляет подтверждающие данные |
 | `tail_edt_logs` | Хвост логов EDT и CodePilot с фильтрами `project`, `op_id`, `pid`, `infobase`, `errors_only`, `since`, `max_lines` |
 | `update_infobase_status` | Статус фонового обновления ИБ по `job_id` |
 
-### `get_infobase_credentials` - пароля больше нет (изменение к 2026-08-20)
+### `get_infobase_credentials` - сначала без пароля, теперь совсем закрыт
 
-Инструмент возвращает **имя пользователя и метаданные доступности аутентификации, но никогда -
-сохранённый пароль**: ключи и секреты переехали в Eclipse Secure Storage. Собственная
-рекомендация сервера - заходить под ОС-аутентификацией либо вводить пароль в браузерной сессии
-руками. Практический вывод: полностью автономный вход в веб-клиент через MCP невозможен -
-если у ИБ есть парольный пользователь, шаг логина остаётся за владельцем.
+Две ступени одного движения:
 
-Инструмент к тому же не отдаётся в `tools/list` - сначала `discover_tools(category="diagnostics")`.
+- **к 2026-08-20** инструмент перестал отдавать сохранённый пароль - остались имя пользователя
+  и метаданные доступности аутентификации, ключи и секреты переехали в Eclipse Secure Storage;
+- **к 2026-09-20** он закрыт политикой `exposedTools` целиком: в `tools/list` его нет, в списке
+  категории `diagnostics` он числится, но прямой вызов отвечает `Tool is not exposed`.
+
+Практический вывод не изменился, только стал жёстче: автономный вход в веб-клиент через MCP
+невозможен - логин и пароль даёт владелец, либо вход идёт под ОС-аутентификацией.
 
 Порядок проверки изменения в живом веб-клиенте:
 
 ```text
 edt_diagnostics(command="update_infobase", project_name="<ХостПроект>")   # имя ХОСТ-проекта
 resolve_web_client_url(projectName="<Каталог.Имя>")
-get_infobase_credentials(projectName="...")   # даст логин, пароля не даст
-→ дальше браузерный MCP: вход под ОС-аутентификацией или пароль от владельца;
+→ дальше браузерный MCP: вход под ОС-аутентификацией или логин с паролем от владельца;
   готовые сценарии - skills verify-web-client / web-e2e-qa
 ```
 
@@ -1102,7 +1120,7 @@ get_infobase_credentials(projectName="...")   # даст логин, парол�
 пароль в ответе не отражается. `force=true` нужен, чтобы заменить уже назначенную основную ИБ
 при `set_primary=true`.
 
-На 2026-08-20 автономный сервер по-прежнему не поднят (`get_standalone_server_status` →
+На 2026-09-20 автономный сервер по-прежнему не поднят (`get_standalone_server_status` →
 `servers: []`), отладка неактивна (`debug_status` → `state: inactive`) - инструменты отвечают,
 окружение просто не запущено.
 
@@ -1235,8 +1253,9 @@ grep(
 
 Точечно закрыть инструмент можно самим сервером: в `-Dcodepilot.mcp.host.policy.exposedTools`
 поддерживается запрет через минус - `*,-delete_metadata` открывает всё, кроме перечисленного.
-`get_infobase_credentials` закрыт так постоянно: в `tools/list` его нет никогда, только через
-`discover_tools(category="diagnostics")`.
+Так закрыт `get_infobase_credentials`: в `tools/list` его нет никогда, а с 2026-09-20 не помогает
+и `discover_tools(category="diagnostics")` - инструмент в списке категории виден, но вызов
+отвечает `Tool is not exposed`. Отсюда правило: «виден в `discover_tools`» не равно «вызывается».
 
 ### Проверка живости сервера
 
@@ -1244,9 +1263,12 @@ grep(
 `experimental.codepilot` - самый быстрый способ понять, с чем именно разговариваем:
 
 ```json
-{"contractVersion": 1, "pluginVersion": "1.3.3.20260818-1414", "edtVersion": "1.35.2",
+{"contractVersion": 1, "pluginVersion": "1.3.9.20260915-1537", "edtVersion": "1.35.3",
  "mode": "gui", "workspace": "<путь к EDT-воркспейсу>",
- "readiness": {"services": "ready", "projects": [], "status": "ready", "ready": true}}
+ "readiness": {"services": "ready",
+               "projects": [{"name": "<ХостПроект>", "state": "ready"},
+                            {"name": "<Каталог.Имя>", "state": "ready"}],
+               "status": "ready", "ready": true}}
 ```
 
 Практика:
@@ -1254,10 +1276,14 @@ grep(
 - **Инструменты не появились в сессии** - почти всегда потому, что EDT (или плагин) поднялся
   позже клиента: список инструментов забирается при подключении. Лечится перезапуском сессии
   клиента, а не сервера. Проверить, что сервер при этом жив, можно сырым `initialize`
-  (`GET` на `/mcp` отвечает `405` - это нормально, эндпоинт принимает только `POST`)
-- **`readiness.projects: []` при `status: ready`** - не признак закрытых проектов:
-  проверено 2026-08-20, при пустом списке `get_diagnostics(scope="project", …)` по расширению
-  отвечает штатно. Судить об открытых проектах по этому полю нельзя
+  (`GET` на `/mcp` отвечает `405` - это нормально, эндпоинт принимает только `POST`).
+  Для `tools/list` одного `POST` мало: сервер отвечает `{"error":"session_required"}`, пока
+  не передан `Mcp-Session-Id` из заголовков ответа на `initialize`, а сам ответ приходит
+  в формате SSE (строка `data: {...}`), а не голым JSON
+- **`readiness.projects` заполняется не всегда.** 2026-09-20 в нём пришли оба проекта со
+  `state: ready`, а 2026-08-20 список был пуст при `status: ready`, хотя
+  `get_diagnostics(scope="project", …)` по расширению отвечал штатно. Пустой список закрытых
+  проектов не означает - судить об открытых проектах по этому полю нельзя
 - `codepilot://state/session` (см. ниже) отличает «сервер занят» (`status: BUSY`) от
   «сервер не отвечает»
 
@@ -1309,14 +1335,18 @@ grep(
 
 ## GSD - фазовая машина сервера
 
-Шесть инструментов (`gsd_create_plan`, `gsd_get_state`, `gsd_update_task`, `gsd_transition`,
-`gsd_record_decision`, `gsd_record_evidence`) ведут состояние работы по проекту: фазы
-`DISCOVERY → PLANNING → EXECUTING → VERIFYING → CLOSED` (допускается один откат
-`VERIFYING → EXECUTING` с обязательной причиной), задачи с `execution_kind`
+Восемь инструментов (`gsd_create_plan`, `gsd_get_state`, `gsd_update_task`, `gsd_transition`,
+`gsd_record_decision`, `gsd_record_evidence`, `gsd_record_shipment`,
+`gsd_record_verification_outcome`) ведут состояние работы по проекту: фазы
+`DISCOVERY → PLANNING → EXECUTING → VERIFYING → SHIPPING → CLOSED` (откат из `VERIFYING`
+или `SHIPPING` - с обязательной причиной), задачи с `execution_kind`
 (`READ_ONLY`/`FILE_MUTATION`/`EDT_MUTATION`/`GIT_MUTATION`) и зависимостями, волны, решения с
 обоснованием и альтернативами, доказательства с происхождением
 (`OBSERVED`/`TESTED`/`USER_ACCEPTED`/`INFERRED`). Все мутации - с `expected_revision`
-(оптимистичная блокировка).
+(оптимистичная блокировка). Добавленные к 2026-09-20 `gsd_record_verification_outcome`
+(`PASSED`/`FAILED` по одному критерию приёмки) и `gsd_record_shipment`
+(`IN_PROGRESS`/`COMPLETED`/`FAILED`, у `COMPLETED` обязателен `completed_at`) закрывают
+фазу `SHIPPING`.
 
 **Не применяется.** Тот же контур закрыт методологией SDD: `specs/<prefix>-<N>/spec.md`
 (контракт) + `plan.md` (этапы, решения), и это состояние лежит в git, а не в служебном хранилище
@@ -1385,8 +1415,7 @@ edt_find_references(projectName="...", objectFqn="Catalog.prj_Устаревши
 ```text
 edt_diagnostics(command="update_infobase", project_name="<ХостПроект>")
 resolve_web_client_url(projectName="<Каталог.Имя>")
-get_infobase_credentials(projectName="...")     # логин и способы аутентификации; пароля не будет
-→ браузерный MCP; вход - ОС-аутентификация либо пароль от владельца
+→ браузерный MCP; вход - ОС-аутентификация либо логин с паролем от владельца
 → готовый сценарий - skill(name="verify-web-client")
 ```
 
@@ -1417,7 +1446,7 @@ qa_run(features=["..."], use_edt_runtime=true)
 | `edit_file` `.mdo` | Через override `allow_metadata_descriptor_edit=true`; обычно - BM API |
 | `edt_extension_smoke`, `edt_external_smoke` | Только для проверки инфраструктуры |
 | `inspect_role_rights` | Без `object_filter` ответ обрезается по объёму; дочерние объекты показываются под FQN владельца |
-| `get_infobase_credentials` | Отдаёт только логин; пароля нет - автономный вход в веб-клиент невозможен. Логин в ответе не тиражировать |
+| `get_infobase_credentials` | С 2026-09-20 не вызывается (`Tool is not exposed`), хотя виден в `discover_tools`; автономный вход в веб-клиент невозможен |
 | Необязательный `projectName` | Всегда передавать явно: иначе берётся активный редактор, а в воркспейсе два проекта - хост и расширение |
 | `get_diagnostics` по большому проекту | Сужать параметром `object`, иначе нужное замечание тонет в обрезанном ответе |
 | Список skills сервера | Верить `skill(list=true)`, а не описанию инструмента: `explain` из набора исчез |
