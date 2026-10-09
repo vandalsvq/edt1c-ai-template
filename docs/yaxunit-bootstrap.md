@@ -190,7 +190,7 @@ Windows/PowerShell. Подставить свои значения в перем
 ```powershell
 # --- значения стенда ---------------------------------------------------------
 $V     = '8.3.27.2214'                        # версия платформы
-$EDT   = 'C:\Program Files\1C\1CE\components\1c-edt-2026.1.2+2-x86_64'
+$EDT   = 'C:\Program Files\1C\1CE\components\1c-edt-2026.1.3+25-x86_64'
 $BIN   = "C:\Program Files\1cv8\$V\bin"
 $WS    = 'D:/EDT/my_ws'                       # воркспейс EDT
 $PROJ  = 'Tests'                              # имя EDT-проекта = имя расширения, БЕЗ ТОЧКИ

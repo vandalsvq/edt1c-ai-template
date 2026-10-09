@@ -14,10 +14,15 @@
 ├── .claude/
 │   ├── settings.json                    # Общие настройки Claude Code (commit'ятся)
 │   ├── settings.local.json.example      # Пример локальных permissions (скопировать в settings.local.json)
+│   ├── agents/
+│   │   ├── stage-executor.md            # Исполнитель этапа в цикле этапа (запускает skill stage)
+│   │   └── stage-reviewer.md            # Ревьюер этапа в цикле этапа, файлы не правит
 │   └── skills/
 │       ├── analyst-doc/                 # Skill документа для аналитика по задаче (/analyst-doc)
 │       ├── bsl-check/                   # Skill проверки синтаксиса 1С по справочнику shcntx_ru
 │       ├── close-task/                  # Skill закрытия задачи по SDD (/close-task)
+│       ├── stage/                       # Skill цикла этапа: куратор, исполнитель, ревьюер (/stage)
+│       ├── strict-module/               # Skill зачистки модуля под строгую типизацию (/strict-module)
 │       ├── sync-template/               # Skill забора переносимых файлов из шаблона (/sync-template)
 │       ├── push-to-template/            # Skill подъёма правок обратно в шаблон (/push-to-template)
 │       ├── skd-*/  (5 навыков)          # СКД: анализ, генерация, правка, валидация - из cc-1c-skills
@@ -39,8 +44,10 @@
 │   ├── bsp-common-modules.md
 │   ├── bsl-check-setup.md               # Чеклист установки skill bsl-check (зависит от vandalsvq/hbk_md)
 │   ├── codepilot1c-reference.md         # Справочник по MCP-серверу codepilot1c
+│   ├── common-pictures.md               # Общие картинки: манифест Picture.zip, порядок создания
 │   ├── mdo-integrity.md
 │   ├── model-selection.md
+│   ├── stage-cycle.md                   # Цикл этапа субагентами: роли, находки, отчёты, бриф
 │   ├── testability.md                   # Проверяемость и автономные headless-прогоны
 │   ├── skd-mxl-toolkit.md               # Навыки skd-*/mxl-*: границы применения и нюансы EDT
 │   ├── yaxunit-bootstrap.md             # Playbook развёртывания YAxUnit + METR на новом проекте

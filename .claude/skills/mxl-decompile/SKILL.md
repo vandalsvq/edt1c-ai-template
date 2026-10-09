@@ -13,7 +13,7 @@ allowed-tools:
 > **В EDT-проекте:** табличный документ лежит в `<Объект>/Templates/<Имя>/Template.mxlx` (в конфигураторном
 > формате это `Template.xml` — содержимое то же). Сам макет навык не заводит: в EDT он регистрируется
 > блоком `<templates>` в `.mdo` объекта-владельца — создавать через `edt_validate_request` →
-> `create_metadata`/`update_metadata` или в EDT. После правки — `mxl-validate` и `edt_diagnostics`.
+> `create_metadata`/`update_metadata` или в EDT. После правки — `mxl-validate` и `get_diagnostics`.
 
 # /mxl-decompile — Декомпилятор макета в DSL
 

@@ -16,8 +16,8 @@ description: Отправить правки переносимых файлов
 3. **Переносимый набор** (только эти пути, остальное не поднимать):
    - `docs/bsl-*.md`, `docs/bsp-common-modules.md`, `docs/mdo-integrity.md`, `docs/testability.md`
    - `docs/codepilot1c-reference.md`, `docs/model-selection.md`, `docs/bsl-check-setup.md`, `docs/yaxunit-bootstrap.md`
-   - `docs/skd-mxl-toolkit.md`
-   - `.claude/skills/` - **кроме** `skd-*` и `mxl-*`
+   - `docs/skd-mxl-toolkit.md`, `docs/common-pictures.md`, `docs/stage-cycle.md`
+   - `.claude/skills/` - **кроме** `skd-*` и `mxl-*`; `.claude/agents/`
    - `licenses/cc-1c-skills-LICENSE`
    - `specs/_template/`, `specs/README.md`, `planning/README.md`
    - `.gitattributes`, `.mcp.json.example`
@@ -27,6 +27,7 @@ description: Отправить правки переносимых файлов
 4. **Обратная генерализация.** Прочитай из `CLAUDE.md` проекта префикс объектов и имя EDT-проекта. Перед сравнением и копированием в каждом файле замени:
    - префикс проекта → `prj_`
    - имя EDT-проекта → `<Каталог.Имя>`, имя хост-проекта → `<ХостПроект>`
+   - если цикл этапа заведён в проекте под своими именами - скилл и агенты к именам шаблона: `stage`, `stage-executor`, `stage-reviewer` (файлы и ссылки на них)
 
    Это механика. Дальше - **смысловая чистка, её делать глазами, а не sed**:
    - имена объектов проекта в примерах (`prj_Исполнитель`, `prj_Схема`) - оставлять можно, если пример читается без знания проекта; иначе заменить на нейтральные;

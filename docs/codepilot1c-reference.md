@@ -12,30 +12,54 @@ extensions 5, dcs 1, qa 7, diagnostics 10, workspace 8) - на единицу б
 Сервер - плагин 1C:EDT [ondysss/codepilot1c-edt](https://github.com/ondysss/codepilot1c-edt) (AGPL-3.0),
 update site `https://ondysss.github.io/codepilot1c-edt/`.
 
-Справочник сверен с живым сервером **2026-09-20** (плагин `1.3.9.20260915-1537`, EDT `1.35.3`,
-MCP Host `1.3.0`). Транспорт - HTTP: `http://127.0.0.1:8765/mcp`. Сверка прошла дважды, на
-сборках `20260913-1332` и `20260915-1537`: состав, схемы, enum'ы, описания, skills и ресурсы
-совпали до буквы - между этими сборками менялось что-то помимо поверхности инструментов.
+Справочник сверен с живым сервером **2026-10-04** (плагин `1.3.9.20261003-0831`, EDT `1.35.3`,
+MCP Host `1.3.0`, Windows-воркспейс). Транспорт - HTTP: `http://127.0.0.1:8765/mcp` (порт -
+`mcp.host.http.port` в настройках плагина, у каждой машины может быть свой, см. «Политика
+изменяющих вызовов»). Сверка 2026-10-04 - `initialize` и сырой `tools/list` новой
+сборки, сравнение тегов upstream `0925-1004...1003-0831` и пробные вызовы. Полная сверка
+2026-09-30 (`0925-1004`, macOS) шла против снимка `20260915-1537` с байткодом двух jar из
+`~/.p2/pool/plugins` и заметками релизов upstream.
 
 > `get_infobase_credentials` числится в категории `diagnostics`, но **вызвать его нельзя**:
 > в `tools/list` его нет, а прямой вызов после `discover_tools` отвечает
 > `Tool is not exposed` (проверено 2026-09-20).
 
-**Что изменилось с прошлой сверки** (2026-08-21, плагин `1.3.9.20260820-1223`):
+**Что изменилось с прошлой сверки (2026-09-30, плагин `1.3.9.20260925-1004`):**
 
-- **`get_diagnostics` вернулся** в сборку (зафиксировано 2026-09-05, см. «Диагностика»). Мораль -
-  сверять состав `tools/list`, а не полагаться на прошлые записи справочника (в том числе на
-  эту): состав инструментов между сборками меняется в обе стороны;
-- **GSD вырос с 6 инструментов до 8** (`gsd_record_shipment`, `gsd_record_verification_outcome`)
-  и обзавёлся фазой `SHIPPING`;
-- **`add_metadata_child.child_kind`** пополнился `URLTemplate` и `HTTPMethod` (дети HTTP-сервиса);
-- **`get_infobase_credentials` закрыт окончательно** - раньше его можно было достать через
-  `discover_tools`, теперь вызов отбивается `Tool is not exposed`;
-- категории `extensions` (5) и `dcs` (1) пересверены вызовами, состав всех восьми категорий
-  совпал с записанным.
+Один релиз upstream и в нём один коммит `e509367d` - хотфикс
+[#95](https://github.com/ondysss/codepilot1c-edt/issues/95). Состав инструментов и схемы
+прежние (103 = 33 + 70).
 
-Не пересверялись вживую (мутирующие проверки, требуют отдельной задачи): отказы BM API
-из раздела «Формы», поведение `update_infobase` и сценарии QA.
+- **Изменяющие инструменты без `validation_token` в контракте стали вызываемыми**:
+  `workspace_import_project`, `write_file`, `git_mutate`, `connect_infobase`,
+  `import_project_from_infobase`. Раньше хост отказывал им при любых настройках
+  (`confirmation_unavailable_tool_policy`). Правило «токен перед мутацией» для остальных
+  инструментов прежнее - «Политика изменяющих вызовов»;
+- **`workspace_import_project(refresh=true)` на открытом проекте** - штатное обновление
+  проекта, то же, что F5 в EDT («Импорт проектов»);
+- **на Windows модель EDT подхватывает правки мимо MCP сама** - BSL и XML `.form`, проверено
+  пробами («`workspace_copy_transform` - перенос модуля с заменами»).
+
+**Ранее (2026-09-30, `0915-1537` → `0925-1004`):** четыре хотфикса upstream, из схем поменялась
+только `mutate_form_model` - командные панели форм (раздел «Формы» → «Командные панели»):
+`commandBars[]` в `inspect_form_layout`, операции `set_auto_command_bar` и
+`set_excluded_commands`, `shortcut` и `picture` у `add_command` (**`picture` ломает форму**,
+SU113), `add_button` без родителя встаёт в командную панель формы, с `parent_item_id` таблицы -
+в панель таблицы. Старые отказы BM API на кнопках командной панели остались (`set_item` /
+`remove_item` их не находят). `edt_diagnostics(command="metadata_smoke")` на проекте внешнего
+отчёта/обработки пропускает мутирующую часть с кодом `SKIPPED_EXTERNAL_PROJECT`.
+
+**Установка обновления может не дойти до EDT** (2026-09-30, macOS): p2 записал новую сборку в
+профиль, а `bundles.info` оставил на старой - EDT после рестарта поднял прежнюю версию. На
+Windows 2026-10-04 обновление `0915-1537` → `1003-0831` встало с первого рестарта. Как
+проверить и чем лечить - «Проверка живости сервера».
+
+Не пересверялись вживую: поведение `update_infobase`, сценарии QA, `add_event_handler` в
+смешанном батче и формы, созданные `create_form` (issue #80 upstream открыт).
+
+Состав инструментов между сборками меняется в обе стороны: `get_diagnostics` пропадал в сборке
+`20260820-1223` и вернулся к 2026-09-05. Сверять состав `tools/list`, а не полагаться на прошлые
+записи справочника, в том числе на эту.
 
 ---
 
@@ -423,6 +447,13 @@ WebDAV-набор и `ANY`).
    )
 ```
 
+**Строка без ограничения длины так не создаётся:** на `properties.length = 0` валидация
+отвечает успехом, а в `.mdo` уезжает `String(150)` (реквизит табличной части, ресурс
+регистра). Неограниченная строка - вторым шагом: `update_metadata` с
+`set.type = {types: [String], stringQualifiers: {length: 0}}`, после чего в `.mdo` должен
+стоять пустой `<stringQualifiers/>`. Выбор длины - по таблице раздела «Строковый реквизит
+формы».
+
 ### Паттерн: создать новый объект метаданных
 
 ```text
@@ -442,6 +473,18 @@ WebDAV-набор и `ANY`).
 
 > После `delete_metadata` обязательно проверить `edt_get_problem_summary` и `edt_find_references` -
 > инструмент предупреждает о влиянии на формы и другие объекты.
+
+### Удаление общего модуля
+
+`delete_metadata` на общем модуле без `force` отвечает `METADATA_DELETE_CONFLICT` со списком
+ссылок. Если после этого убрать регистрации из `Configuration.mdo` руками, BM-модель теряет
+объект, и повтор с `force` даёт `METADATA_NOT_FOUND`. Надёжный порядок:
+
+1. убрать регистрации вручную - `Configuration.mdo` (`content` и `commonModules`) и состав
+   подсистем;
+2. удалить каталог модуля;
+3. дать EDT перечитать проект (`workspace_copy_transform` с `refresh_workspace`) и проектной
+   диагностикой убедиться, что ссылок на модуль не осталось.
 
 ---
 
@@ -484,7 +527,7 @@ render_template(
 
 | Инструмент | Назначение | Read/Write |
 | --- | --- | --- |
-| `inspect_form_layout` | Дерево элементов формы, dataPath, команды, свойства | R |
+| `inspect_form_layout` | Дерево элементов формы, dataPath, команды, свойства, командные панели (`commandBars[]`) | R |
 | `create_form` | Создать новую управляемую форму для объекта метаданных | **W** |
 | `mutate_form_model` | Точечные изменения модели существующей формы | **W** |
 | `apply_form_recipe` | Применить декларативный recipe: создание, поиск, атрибуты, layout | **W** |
@@ -499,15 +542,69 @@ render_template(
 ### `mutate_form_model.operations` - допустимые `op`
 
 `set_form_props`, `add_group`, `add_field`, `add_table`, `add_command`, `add_button`, `set_item`,
-`remove_item`, `move_item`, `add_event_handler`, `set_event_handler`, `remove_event_handler`.
+`remove_item`, `move_item`, `set_auto_command_bar`, `set_excluded_commands`, `add_event_handler`,
+`set_event_handler`, `remove_event_handler`.
 
 - `add_field` - нужны `name` + `data_path` + `field_type`; **привязывает** UI-поле к уже
   существующему реквизиту формы, сам реквизит не создаёт (реквизиты - через `apply_form_recipe`)
 - `add_table` - создаёт таблицу и с `data_path` на ValueTable/ValueTree **сам генерирует колонки**
-- `add_command` - нужны `name` + `action` (обработчик) + `title`
-- `add_button` - нужны `name` + `command_name`; родитель по умолчанию - существующий CommandBar
+- `add_command` - нужны `name` + `action` (обработчик) + `title`; необязательные `shortcut`
+  (пишется как у дизайнера, `<shortcut>Ctrl+F9</shortcut>`) и `picture` - **не использовать**,
+  см. «Командные панели». Заглушку обработчика дописывает в конец модуля, вне областей (SU48) -
+  перенести в `ОбработчикиКомандФормы`
+- `add_button` - нужны `name` + `command_name`. Без родителя кнопка встаёт в командную панель
+  формы, с `parent_item_id` / `parent_item_name` таблицы - в командную панель этой таблицы, с
+  родителем-группой - в группу. Имя кнопки сохраняется (до `0925-1004` EDT подменял его именем
+  команды, а кнопка без родителя уезжала в корневые `items[]`)
+- `add_command` и `add_button` подаются одним батчем (проверено 2026-09-30)
 - `set_item` / `remove_item` / `move_item` - цель строго `item_id` (число) или `item_name` (строка),
   не `id`/`name`; родитель - `parent_item_id` / `parent_item_name`
+- `set_auto_command_bar`, `set_excluded_commands` - встроенная командная панель формы или
+  таблицы, подробности ниже
+
+### Командные панели (с 2026-09-30, сборка `0925-1004`)
+
+Встроенная командная панель (`autoCommandBar`) формы и каждой таблицы живёт вне дерева
+`items[]`. `inspect_form_layout` отдаёт её отдельным массивом `commandBars[]`:
+
+| Поле | Что в нём |
+| --- | --- |
+| `ownerKind` | `FORM` или вид элемента-владельца (`Table`); у таблицы ещё `ownerItemId` / `ownerItemName` |
+| `kind` | `AUTO_COMMAND_BAR` |
+| `autoFill` | заполнять ли панель стандартными командами |
+| `excludedCommands` | скрытые стандартные команды |
+| `availableCommands` | допустимые имена для `excludedCommands` (у формы - `Help`, `Close`, `OK`...; у таблицы - `Add`, `Delete`, `SortListAsc`, `Find`...) |
+| `items` | кнопки панели с `id` и `commandRef` |
+
+Операции (цель - `item_id` / `item_name` таблицы либо `target: "form"`):
+
+```text
+{op: "set_auto_command_bar",  item_name: "СписокТипов", auto_fill: true}
+{op: "set_excluded_commands", item_name: "СписокТипов",
+ excluded_commands: ["SortListAsc", "SortListDesc"], mode: "add"}   # replace (по умолчанию) | add | remove
+```
+
+`excluded_commands` обязателен и должен быть массивом; очистка списка - явный `[]` с
+`mode: "replace"`. `set_form_props` / `set_item` эти свойства не пишут (отказ «unsupported
+reference update»), `add_group` с видом командной панели не создавать - панель уже есть.
+
+**Проверено вживую 2026-09-30** на форме обработки с таблицей:
+`set_excluded_commands` и `set_auto_command_bar` дали ровно по строке `<excludedCommands>` у
+таблицы и `<autoFill>true</autoFill>` в её панели - как у дизайнера, без замечаний EDT.
+
+Чего по-прежнему нет:
+
+- **кнопки панели не правятся и не удаляются.** `inspect_form_layout` показывает их в
+  `commandBars[].items` с `id`, но `set_item` / `remove_item` отвечают `METADATA_NOT_FOUND` и по
+  `item_id`, и по `item_name` (проверено 2026-09-30 на существующей кнопке и на только что
+  созданной). Команды формы по-прежнему только создаются
+- **`add_command.picture` пишет картинку не как дизайнер:** вложенный
+  `<picture xsi:type="platform:PlatformPicture">` с `nameRu` = английское имя и новым
+  пространством имён `platform` в корне формы, тогда как во всех формах проекта -
+  ссылка `<picture xsi:type="core:PictureRef"><picture>StdPicture.X</picture></picture>`.
+  EDT отвечает ошибкой **SU113 «This field can be only reference»**. Команда с одним
+  `shortcut` проходит чисто - значит, дело именно в картинке. Картинку команды ставить в
+  дизайнере
 
 ### Что инструменты форм молча делают по-своему (проверено 2026-08-16)
 
@@ -515,9 +612,42 @@ render_template(
   длины. Для путей к файлам и текстов сообщений это тихое обрезание - длину задавать явно
   (`String(1024)`) либо править `stringQualifiers` в `.form` после создания
 - `add_group` **игнорирует `title` из `set`** (группа остаётся без заголовка) и создаёт её
-  `HorizontalIfPossible` - заголовок и `<group>Vertical</group>` дописываются в `.form` руками
+  `HorizontalIfPossible` c `WeakSeparation` и видимым заголовком. `set_item` заголовок группы
+  ставит, а ориентацию, отображение и показ заголовка - нет (`Unknown form property: group`,
+  `representation`); их дописывать в `.form` руками - порядок ниже
 - `add_field` **тоже игнорирует `title` и прочие свойства из `set`** - заголовок,
-  `listChoiceMode`, `multiLine` доезжают только вторым проходом `set_item`
+  `listChoiceMode`, `multiLine` доезжают только вторым проходом `set_item`. Вторым проходом
+  проходят также `toolTip` и `inputHint` (`{ru, en}`), `toolTipRepresentation`, `width`,
+  `maxWidth`, `autoMaxWidth`, `choiceButton`, `openButton`, `spinButton`, `dropListButton`
+  (проверено 2026-09-27)
+- многоязычное свойство элемента (`toolTip`, `title`) снимается пустыми строками по каждому
+  языку - `{"ru": "", "en": ""}`; пустой объект `{}` ничего не меняет. Подсказку реквизита
+  метаданных ставит `update_metadata` с `set.toolTip = {ru, en}`
+- позиция нового элемента в родителе задаётся ключом `index` операции `add_field` / `add_group`
+  (с нуля); без него элемент встаёт последним
+- `add_event_handler` на собственной форме расширения (не заимствованной) работает, но заглушку
+  процедуры дописывает **в конец модуля**, вне областей - перенести в нужную область
+- **Ручная правка `.form` затирается следующей записью формы через MCP**, если модель EDT её
+  не перечитала: инструмент сериализует свою копию формы целиком. Порядок: правка XML →
+  обновление проекта (`workspace_copy_transform` любого `.bsl` проекта с `refresh_workspace`; сам
+  `.form` этим инструментом не копируется - `STRUCTURED_EDT_ARTIFACT_BLOCKED`) → проверка, что
+  модель видит правку (временная метка в заголовке и `inspect_form_layout`) → любая запись
+  формы моделью, которая эту метку убирает; после неё сверить `.form` (проверено 2026-09-27)
+- **Откат формы через `git checkout` модель тоже не перечитывает** (проверено 2026-09-30):
+  файл на диске уже прежний, а `inspect_form_layout` продолжает показывать откаченные команды
+  и кнопки - следующая запись формы через MCP вернула бы их в файл. После отката -
+  `workspace_copy_transform` любого `.bsl` проекта в `sync-bridge.txt` с
+  `refresh_workspace=true`, затем удалить `sync-bridge.txt` и убедиться по
+  `inspect_form_layout`, что модель совпала с файлом. Это же единственный способ убрать
+  пробные команды и кнопки панели: удалять их MCP не умеет
+- **id элементов при ручной правке `.form` не брать «максимум плюс один»**: счётчик id формы -
+  состояние модели EDT, ручная правка XML его не двигает, и следующий элемент из дизайнера
+  получит тот же id - замечание `form-invalid-item-id`. Структуру формы вести дизайнером или
+  MCP, руками - только то, что они не умеют (динамический `choiceList`, сохраняемые данные
+  формы). Тогда id проверять на уникальность по каждому пространству отдельно (`items`,
+  `attributes`, `formCommands`) и быть готовым, что следующая правка в дизайнере их
+  переиграет. Достоверная проверка - `get_diagnostics` на уровне проекта: проверки формы на
+  уровне файла и модуля этого не видят
 - `create_form` пишет в `.form` свойства уровня формы `<group>Auto</group>` и
   `<showTitle>auto</showTitle>`. EDT их принимает, **платформа при выгрузке в конфигуратор -
   нет**: обновление информационной базы падает с `Исключение XDTO … Несоответствие свойства
@@ -627,10 +757,12 @@ render_template(
   Обходной путь - обработчик формы дописать в `.form` (блок `<handlers>` рядом с
   `</autoCommandBar>`): элементы при этом не создаются, счётчик `id` не двигается
 - Смешанный батч `add_command` + `add_button` + `add_event_handler` в одном вызове
-  падает так же - команды, кнопки и обработчики подавать раздельными вызовами
+  падает так же - обработчики событий подавать отдельным вызовом. Пара `add_command` +
+  `add_button` с 2026-09-30 проходит одним батчем (так её подаёт и сам upstream)
 - Элементы внутри `autoCommandBar` (кнопки формы) `set_item`/`remove_item` **не
-  находят** - ни по `item_name`, ни по `item_id` (`METADATA_NOT_FOUND`). Команды
-  формы (`formCommands`) им тоже недоступны: `add_command` только создаёт.
+  находят** - ни по `item_name`, ни по `item_id` (`METADATA_NOT_FOUND`; перепроверено
+  2026-09-30 на сборке `0925-1004`, хотя `inspect_form_layout` их `id` теперь показывает).
+  Команды формы (`formCommands`) им тоже недоступны: `add_command` только создаёт.
   Переименование команд/кнопок и правка их заголовков - дизайнером либо точечной
   правкой `.form` (согласовать 4 места: `formCommands.name`,
   `action/handler/name`, `items.name` и `items.commandName` кнопки)
@@ -665,7 +797,8 @@ render_template(
 - Boolean-колонка внутри таблицы - только `field_type="INPUT_FIELD"` (флажок платформа рисует
   сама); `CHECK_BOX_FIELD`/`RADIO_BUTTON_FIELD`/`PROGRESS_BAR_FIELD`/`TRACK_BAR_FIELD` в таблице
   отклоняются диагностикой SU107
-- Новую группу командной панели не создавать - CommandBar на форме уже есть
+- Новую группу командной панели не создавать - CommandBar на форме уже есть; её
+  заполнение и скрытые команды - операциями из «Командные панели»
 - `set_item` со скаляром, равным значению по умолчанию (например `titleHeight: 0`), убирает
   свойство из `.form` - это штатный способ отката точечной правки
 
@@ -1012,7 +1145,7 @@ qa_run(
 
 | Команда | Назначение |
 | --- | --- |
-| `metadata_smoke` | Headless-проверка метаданных (раньше `smoke`) |
+| `metadata_smoke` | Headless-проверка метаданных (раньше `smoke`); на проекте внешнего отчёта/обработки мутирующая часть пропускается - `SKIPPED_EXTERNAL_PROJECT` (с `0923-0718`) |
 | `trace_export` | Диагностика проблем экспорта |
 | `analyze_error` | Разбор конкретного error payload (раньше `parse_errors`) |
 | `update_infobase` | Обновить инфобазу |
@@ -1066,6 +1199,12 @@ edt_diagnostics(command="metadata_smoke")
 Видит и ошибки строгой типизации (`SU24`, `SU70`, `SU83`), и предупреждения (`SU30`, `SU64`),
 которых нет в сводке `edt_get_problem_summary`: та отдаёт только маркеры платформенных проверок.
 
+**Проект передаётся параметром `project_name`**, а не `projectName`, как у BSL-инструментов.
+Сервер незнакомые параметры молча отбрасывает, и вызов с `projectName` уходит в проект по
+умолчанию - в воркспейсе с хостом это хост-проект: ответ «0 ошибок» приходит по чужому проекту
+(проверено 2026-09-30 сырым вызовом). Смотреть на заголовок ответа - `Диагностики: /<проект>`.
+`object` принимает и имя объекта, и имя формы (`ФормаЭлемента`).
+
 **Маркеры отстают на один запрос.** Первый вызов после правки файла отдаёт состояние **до**
 неё - и «чисто» на сломанном модуле, и старую ошибку на починенном. Запрашивать диагностику
 дважды подряд и верить второму ответу; иначе правка либо кажется сломавшей то, что цело, либо
@@ -1077,8 +1216,11 @@ edt_diagnostics(command="metadata_smoke")
 
 ### `edt_get_problem_summary`
 
-Быстрая сводка проблем валидации проекта одним числом - дешевле, чем `get_diagnostics` с полным
-списком, когда нужно только «чисто или нет».
+Сводка проблем валидации проекта: числа по уровням плюс список. **На вопрос «чисто ли после
+правки» не отвечает:** 2026-09-30 она вернула `total_problems: 0` по расширению, пока
+`get_diagnostics` показывал по одной обработке 33 ошибки SU103 и 24 предупреждения - проверки
+EDT (SU*) и строгую типизацию сводка не видит. Проверка после правки - `get_diagnostics`,
+сводка - только грубый сигнал «проект вообще собирается».
 
 ---
 
@@ -1147,6 +1289,42 @@ resolve_web_client_url(projectName="<Каталог.Имя>")
 `Templates/` у `prj_Исполнитель*` и инлайн `prj_СхемаКлиентСервер` в `prj_Схема*`.
 Перед записью всегда сначала `dry_run=true`.
 
+**Он же - способ заставить EDT перечитать файл, изменённый мимо MCP** (правкой через
+Bash или скриптом): копия «туда-обратно» с `refresh_workspace=true` обновляет модель.
+Без неё `get_diagnostics` отдаёт маркеры по прежнему содержимому - и это видно по тому,
+что позиции ошибок не сдвигаются после правок выше по файлу. `scope=file` в таком состоянии
+отдаёт пустой список - это «не считал», а не «чисто». Точечная правка через MCP `edit_file`
+рабочую копию обновляет (`bsl_list_methods` уже видит новую версию), но маркеры не
+пересчитывает - синхронизация нужна и после неё. Копия «туда-обратно» дешевле `write_file`:
+содержимое модуля не проходит через контекст, и значимые символы (en-dash в ключах платформы)
+не перевираются.
+
+Промежуточный файл класть **не с расширением `.bsl`**: EDT подхватит его как модуль вне
+структуры проекта и завалит сводку ошибками вида «Переменная не определена [Сервер]»,
+причём маркеры переживут удаление файла. Безопасно - `sync-bridge.txt` в корне проекта.
+Проверять результат - `get_diagnostics` с `object`, дважды подряд (маркеры отстают на запрос);
+для формы - ещё и `inspect_form_layout`, совпала ли модель с файлом.
+
+**На Windows залипание не воспроизводится** (2026-10-04, плагин `1003-0831`). EDT включает
+автообновление воркспейса по умолчанию (`org.eclipse.core.resources/refresh.enabled=true` в
+`plugin_customization.ini` продукта), и правка мимо MCP видна модели сразу, без всякой
+синхронизации:
+
+- процедура с ошибкой, дописанная в конец модуля через Bash, - маркер в `get_diagnostics`;
+- две строки, вставленные выше по файлу обычным Edit, - позиция ошибки сдвинулась на две строки;
+- заголовок формы, изменённый в XML `.form` через `sed`, - новый заголовок в
+  `inspect_form_layout`; после возврата файла - снова прежний.
+
+Залипание наблюдалось 2026-09-16 (BSL, этот раздел), 2026-09-27 и 2026-09-30 (формы, раздел
+«Формы»); сверка 2026-09-30 точно шла на macOS. Почему там иначе, не выяснено (возможно, на macOS автообновление работает
+опросом, а не событиями файловой системы). Пока не выяснено - на macOS синхронизировать
+по-прежнему, на Windows достаточно проверить результат.
+
+**Штатная замена копии «туда-обратно»** с `1003-0831` - `workspace_import_project(path=<каталог
+проекта>, open=false, refresh=true)`: для открытого проекта это `refreshLocal(DEPTH_INFINITE)`,
+то же, что F5 в EDT (подробнее - «Импорт проектов»). Снимает ли он залипание на macOS, не
+проверено: на Windows лечить нечего. До такой проверки рабочим способом остаётся копия.
+
 ### `migrate_to_extension_native`
 
 `migrate_to_extension_native(source_project, extension_project, source_fqns[], mode)` -
@@ -1155,7 +1333,11 @@ resolve_web_client_url(projectName="<Каталог.Имя>")
 
 ### Импорт проектов
 
-- `workspace_import_project(path, open?, refresh?)` - каталог уже должен содержать `.project`
+- `workspace_import_project(path, open?, refresh?)` - каталог уже должен содержать `.project`.
+  Проект с тем же именем уже есть в воркспейсе - не создаётся заново: закрытый открывается
+  (`open`, по умолчанию `true`), затем `refreshLocal(DEPTH_INFINITE)` (`refresh`, по умолчанию
+  `true`). Ответ на открытом проекте - `"created": false, "opened": false, "refreshed": true`
+  (проверено 2026-10-04). До `1003-0831` вызов отклонял хост - «Политика изменяющих вызовов»
 - `git_clone_and_import_project(remote_url, repo_path, branch?, project_subpath?, open?, refresh?)` -
   `project_subpath` указывает подкаталог с `.project` внутри склонированного репозитория
 - `import_project_from_infobase(source_project_name, target_project_name, …)` - экспорт
@@ -1257,13 +1439,38 @@ grep(
 и `discover_tools(category="diagnostics")` - инструмент в списке категории виден, но вызов
 отвечает `Tool is not exposed`. Отсюда правило: «виден в `discover_tools`» не равно «вызывается».
 
+### Политика изменяющих вызовов
+
+Настройки хоста лежат в воркспейсе EDT:
+`<воркспейс>/.metadata/.plugins/org.eclipse.core.runtime/.settings/com.codepilot1c.core.prefs`.
+Ключи: `mcp.host.http.port` (порт HTTP), `mcp.host.policy.defaultMutationDecision` (`ALLOW` -
+изменяющие вызовы разрешены), `mcp.host.policy.exposedTools` (`*` - все инструменты). Ниже
+описано поведение с `defaultMutationDecision=ALLOW`, `exposedTools=*` и без профиля сессии.
+
+С `1003-0831` (upstream [#95](https://github.com/ondysss/codepilot1c-edt/issues/95)) хост
+считает подтверждение полученным, если встроенный изменяющий инструмент уже разрешён
+`defaultMutationDecision=ALLOW` или явным правилом `allow` профиля. Правила профиля
+`ASK` / `DENY` по-прежнему отказывают, динамическим (не встроенным) изменяющим инструментам
+токен нужен как раньше.
+
+- **Инструменты без токена в контракте** (`workspace_import_project`, `write_file`,
+  `git_mutate`, `connect_infobase`, `import_project_from_infobase`) до `1003-0831` отклонялись
+  при любых настройках: `Инструмент запрещен политикой профиля: <имя> (profile=,
+  reason_code=confirmation_unavailable_tool_policy, layer=tool)` (проверено на `0915-1537`).
+  Теперь вызов доходит до самого инструмента. `edit_file` под этот запрет не попадал и раньше
+- **Инструменты с токеном в контракте** (`update_metadata`, `mutate_form_model` и т.п.) по коду
+  хоста проверяют и гасят токен сами - `edt_validate_request` перед мутацией обязателен, как и был
+- **`git_mutate` (включая `push`) вызывается без подтверждения.** Запрет на `push` без просьбы
+  владельца держится только на правилах CLAUDE.md; git ведём Bash. Если понадобится запрет
+  на стороне сервера - `exposedTools=*,-git_mutate`
+
 ### Проверка живости сервера
 
 Сервер - HTTP MCP Host на `http://127.0.0.1:8765/mcp`. Ответ на `initialize` несёт блок
 `experimental.codepilot` - самый быстрый способ понять, с чем именно разговариваем:
 
 ```json
-{"contractVersion": 1, "pluginVersion": "1.3.9.20260915-1537", "edtVersion": "1.35.3",
+{"contractVersion": 1, "pluginVersion": "1.3.9.20261003-0831", "edtVersion": "1.35.3",
  "mode": "gui", "workspace": "<путь к EDT-воркспейсу>",
  "readiness": {"services": "ready",
                "projects": [{"name": "<ХостПроект>", "state": "ready"},
@@ -1286,6 +1493,21 @@ grep(
   проектов не означает - судить об открытых проектах по этому полю нельзя
 - `codepilot://state/session` (см. ниже) отличает «сервер занят» (`status: BUSY`) от
   «сервер не отвечает»
+- **После обновления плагина сверять `pluginVersion`**, а не дату jar в пуле. 2026-09-30
+  установка `0925-1004` дописала новую сборку в `~/.p2/pool` и в профиль p2, но не в
+  `bundles.info` - EDT дважды перезапускался и оба раза поднимал `0915-1537`. След в
+  `.metadata/.log` воркспейса: предупреждение p2 `Не удалось найти настроенный КомплектИнфо
+  для: [R]com.codepilot1c.core <старая версия>` в момент установки. Лечение: сохранить копию
+  `bundles.info` (`<EDT>/1cedt.app/Contents/Eclipse/configuration/org.eclipse.equinox.simpleconfigurator/`),
+  заменить в двух строках `com.codepilot1c.core` и `com.codepilot1c.ui` версию и имя jar на
+  новые (jar уже лежат в пуле), перезапустить EDT и проверить `pluginVersion`
+- **На Windows плагин стоит не в `~/.p2/pool`**, а в пользовательской области конфигурации
+  Eclipse: `%USERPROFILE%\.eclipse\org.eclipse.platform_4.30.0_<хэш>_win32_win32_x86_64\plugins`
+  (рядом лежат старые сборки в соседних каталогах с другим хэшем). 2026-10-04 обновление встало
+  с первого рестарта, `pluginVersion` сразу показал `1003-0831`
+- После рестарта EDT клиент теряет сервер (`ECONNREFUSED`) и через некоторое время
+  переподключается сам; до этого инструменты можно звать сырым `tools/call` в сессии,
+  открытой через `initialize`
 
 ### MCP-ресурсы сервера
 
@@ -1372,7 +1594,7 @@ bsl_get_method_body(projectName="...", filePath="CommonModules/prj_Ядро/Modu
 2. edt_validate_request(operation="ensure_module_artifact", payload={object_fqn:"..."}) → token
 3. ensure_module_artifact(..., validation_token=token) → путь
 4. edit_file(...)                   → вносим изменения
-5. get_diagnostics(scope="file", path=...) → проверяем ошибки
+5. get_diagnostics(scope="project", project_name="...", object="...") → дважды, верить второму
 ```
 
 ### Сценарий C: создать объект метаданных с формой и тестом
@@ -1384,7 +1606,7 @@ bsl_get_method_body(projectName="...", filePath="CommonModules/prj_Ядро/Modu
 4. create_form(owner_fqn="Catalog.prj_Новый", name="ФормаЭлемента", usage="OBJECT", set_as_default=true, validation_token=...)
 5. inspect_form_layout(form_fqn="Catalog.prj_Новый.Form.ФормаЭлемента", include_properties=true)
 6. author_yaxunit_tests(project="...", feature="prj_Новый", tests=[...])
-7. get_diagnostics(scope="project", project_name="...")
+7. get_diagnostics(scope="project", project_name="...", object="prj_Новый")   # дважды
 ```
 
 ### Сценарий D: рефакторинг - найти все использования объекта метаданных
@@ -1415,7 +1637,8 @@ edt_find_references(projectName="...", objectFqn="Catalog.prj_Устаревши
 ```text
 edt_diagnostics(command="update_infobase", project_name="<ХостПроект>")
 resolve_web_client_url(projectName="<Каталог.Имя>")
-→ браузерный MCP; вход - ОС-аутентификация либо логин с паролем от владельца
+→ браузерный MCP; вход - ОС-аутентификация либо логин и пароль от владельца
+  (get_infobase_credentials закрыт, хотя skill verify-web-client его ещё объявляет)
 → готовый сценарий - skill(name="verify-web-client")
 ```
 
@@ -1446,9 +1669,15 @@ qa_run(features=["..."], use_edt_runtime=true)
 | `edit_file` `.mdo` | Через override `allow_metadata_descriptor_edit=true`; обычно - BM API |
 | `edt_extension_smoke`, `edt_external_smoke` | Только для проверки инфраструктуры |
 | `inspect_role_rights` | Без `object_filter` ответ обрезается по объёму; дочерние объекты показываются под FQN владельца |
-| `get_infobase_credentials` | С 2026-09-20 не вызывается (`Tool is not exposed`), хотя виден в `discover_tools`; автономный вход в веб-клиент невозможен |
+| `get_infobase_credentials` | Закрыт (`Tool is not exposed`) - автономный вход в веб-клиент невозможен, логин и пароль даёт владелец |
 | Необязательный `projectName` | Всегда передавать явно: иначе берётся активный редактор, а в воркспейсе два проекта - хост и расширение |
-| `get_diagnostics` по большому проекту | Сужать параметром `object`, иначе нужное замечание тонет в обрезанном ответе |
+| Диагностика по большому проекту | `get_diagnostics` с `project_name` (не `projectName` - иначе молча уйдёт в хост) и сужением по `object`; маркеры отстают на один запрос - спрашивать дважды. Сводка `edt_get_problem_summary` проверки SU* и строгую типизацию не показывает |
+| Командная панель формы / таблицы | `set_auto_command_bar`, `set_excluded_commands`; не `set_form_props`/`set_item` и не `add_group` |
+| `add_command.picture` | Не использовать - ошибка SU113; картинку команды ставить в дизайнере |
+| Кнопки в `autoCommandBar` | Создаются `add_button`, но не правятся и не удаляются (`METADATA_NOT_FOUND`) |
+| Откат `.form` через `git checkout` | Модель может не перечитать файл (наблюдалось, на Windows не воспроизводится) - обновить проект (`workspace_copy_transform` + `refresh_workspace`; кандидат на замену - `workspace_import_project(refresh=true)`) и сверить `inspect_form_layout` |
+| `git_mutate`, `write_file`, `workspace_import_project` | С `1003-0831` вызываются без подтверждения; git ведём Bash, `push` - только по просьбе владельца |
+| Обновление плагина | Проверять `pluginVersion` в ответе на `initialize`: p2 может не записать `bundles.info` |
 | Список skills сервера | Верить `skill(list=true)`, а не описанию инструмента: `explain` из набора исчез |
 | `workspace_copy_transform*` | Сначала `dry_run=true`, потом запись |
 | `migrate_to_extension_native` | `apply` - только после разбора dry-run плана |
