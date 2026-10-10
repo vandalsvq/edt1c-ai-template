@@ -18,6 +18,7 @@ description: Отправить правки переносимых файлов
    - `docs/codepilot1c-reference.md`, `docs/model-selection.md`, `docs/bsl-check-setup.md`, `docs/yaxunit-bootstrap.md`
    - `docs/skd-mxl-toolkit.md`, `docs/common-pictures.md`, `docs/stage-cycle.md`
    - `.claude/skills/` - **кроме** `skd-*` и `mxl-*`; `.claude/agents/`
+   - `tools/nested-calls/` - скрипт проверки вложенных вызовов и его набор примеров
    - `licenses/cc-1c-skills-LICENSE`
    - `specs/_template/`, `specs/README.md`, `planning/README.md`
    - `.gitattributes`, `.mcp.json.example`

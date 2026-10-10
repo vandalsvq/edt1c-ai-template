@@ -29,6 +29,8 @@
 │       └── mxl-*/  (4 навыка)           # Табличные документы - из cc-1c-skills
 ├── licenses/
 │   └── cc-1c-skills-LICENSE             # MIT апстрима вендоренных навыков skd-*/mxl-*
+├── tools/
+│   └── nested-calls/                    # Проход по правилу вложенных вызовов (Perl) и набор примеров для самопроверки
 ├── docs/               # Стандарты BSL и BSP - справочные документы для Claude
 │   ├── bsl-anti-patterns.md
 │   ├── bsl-async.md
@@ -50,7 +52,7 @@
 │   ├── stage-cycle.md                   # Цикл этапа субагентами: роли, находки, отчёты, бриф
 │   ├── testability.md                   # Проверяемость и автономные headless-прогоны
 │   ├── skd-mxl-toolkit.md               # Навыки skd-*/mxl-*: границы применения и нюансы EDT
-│   ├── yaxunit-bootstrap.md             # Playbook развёртывания YAxUnit + METR на новом проекте
+│   ├── yaxunit-bootstrap.md             # Playbook развёртывания YAxUnit + METR на новом проекте и прогон в рабочей базе
 │   └── project-init.md                  # Промпт первичной инициализации проекта (для Claude)
 ├── specs/              # SDD: спецификации фич (источник истины)
 │   ├── README.md       # Процесс SDD, статусы, правила именования
