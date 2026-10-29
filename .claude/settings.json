@@ -1,3 +1,17 @@
 {
-  "permissions": {}
+  "permissions": {
+    "allow": [
+      "mcp__codepilot1c__get_diagnostics",
+      "mcp__codepilot1c__bsl_list_methods",
+      "mcp__codepilot1c__bsl_get_method_body",
+      "mcp__codepilot1c__bsl_module_context",
+      "mcp__codepilot1c__edt_get_module_structure",
+      "mcp__codepilot1c__edt_get_method_call_hierarchy",
+      "mcp__codepilot1c__edt_find_references",
+      "mcp__codepilot1c__edt_search_in_code",
+      "mcp__codepilot1c__inspect_form_layout",
+      "mcp__codepilot1c__validate_query",
+      "mcp__codepilot1c__edt_metadata_details"
+    ]
+  }
 }

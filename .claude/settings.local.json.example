@@ -1,6 +1,7 @@
 {
   "env": {
-    "HBK_MD_HOME": "/Users/<имя-пользователя>/Repository/hbk_md"
+    "HBK_MD_HOME": "/Users/<имя-пользователя>/Repository/hbk_md",
+    "PYTHONIOENCODING": "utf-8"
   },
   "permissions": {
     "allow": [

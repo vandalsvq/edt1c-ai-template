@@ -12,7 +12,7 @@
 ├── .gitattributes      # *.bin binary - двоичные макеты EDT без конвертации EOL
 ├── .mcp.json.example   # Пример подключения MCP-сервера codepilot1c
 ├── .claude/
-│   ├── settings.json                    # Общие настройки Claude Code (commit'ятся)
+│   ├── settings.json                    # Общие настройки (commit'ятся): читающие инструменты codepilot1c без запроса
 │   ├── settings.local.json.example      # Пример локальных permissions (скопировать в settings.local.json)
 │   ├── agents/
 │   │   ├── stage-form-designer.md       # Верстальщик этапа: собирает форму инструментами MCP до исполнителя
@@ -35,6 +35,8 @@
 │   ├── nested-calls/                    # Проход по правилу вложенных вызовов (Perl) и набор примеров для самопроверки
 │   ├── diff-check/                      # Механические проверки диффа одним проходом (нужна настройка под проект в шапке)
 │   ├── form-audit/                      # Аудит форм по стандартам 1С (нужна настройка под проект в шапке)
+│   ├── yaxunit/                         # Прогон модулей YAxUnit в рабочей базе (настройка в шапке, stand.json машинный)
+│   ├── build-diff/                      # Сравнение собранных epf/erf/cfe по содержимому через ibcmd
 │   └── usage/                           # Замер расхода токенов этапа по журналам Claude Code
 ├── docs/               # Стандарты BSL и BSP - справочные документы для Claude
 │   ├── bsl-anti-patterns.md

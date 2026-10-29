@@ -156,7 +156,7 @@ claude mcp list 2>/dev/null | grep -i codepilot1c
    - В секции `env` подставь абсолютный путь к каталогу `<hbk_md>`:
 
      ```json
-     "env": { "HBK_MD_HOME": "<abs-path-to-hbk_md>" }
+     "env": { "HBK_MD_HOME": "<abs-path-to-hbk_md>", "PYTHONIOENCODING": "utf-8" }
      ```
 
    - В `permissions.allow` убедись, что есть две строки (в `.example` они уже добавлены, не дублируй):
@@ -200,6 +200,14 @@ claude mcp list 2>/dev/null | grep -i codepilot1c
 
 - **Уходит** - заполни таблицу «Настройка под проект» в `.claude/skills/analyst-doc/SKILL.md`: ветка разработки, пути спек, нужен ли PDF и каким браузером его печатать (`--headless=new` умеют Chrome, Chromium, Edge), куда класть готовый файл. Если PDF не нужен - в строке «Сборка PDF» напиши `не нужна`, строку «Браузер для печати» заполни значением `нет`: документ останется Markdown-файлом в каталоге спеки. В таблице настройки `close-task` поставь `да` в строке «Документ для аналитика».
 - **Не уходит** - удали `.claude/skills/analyst-doc/`, раздел «Skill `analyst-doc`» из `CLAUDE.md`, строку из дерева в `README.md`, а в `.claude/skills/close-task/SKILL.md` оставь в строке «Документ для аналитика» значение `нет` (шаг 5 закрытия задачи будет пропускаться).
+
+### Шаг 5.Д. Скрипты `tools/`
+
+Скрипты проверок работают без правки, кроме блока «Настройка под проект» в шапке. Заполни его по ответам Шага 1:
+
+- `tools/diff-check/diff-check.py` - каталог кода (`<Каталог.Имя>/`), префикс, исключения тире, если есть;
+- `tools/form-audit/form-audit.py` - каталог исходников, признак двуязычного проекта;
+- `tools/yaxunit/yaxunit.py` - только если YAxUnit подключён: проекты основного кода и тестов, имена расширений, ветка разработки; конфиг стенда машины - копией `tools/yaxunit/stand.example.json` в `tools/yaxunit/stand.json` (файл в `.gitignore`). YAxUnit не подключён - каталог оставить как есть, строку YAxUnit в «Тестировании» `CLAUDE.md` пометить «не подключён».
 
 ### Шаг 6. Локальные permissions Claude Code
 

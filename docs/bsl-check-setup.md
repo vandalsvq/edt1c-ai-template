@@ -73,9 +73,15 @@ cp .claude/settings.local.json.example .claude/settings.local.json
 
    ```json
    "env": {
-     "HBK_MD_HOME": "/Users/<имя-пользователя>/Repository/hbk_md"
+     "HBK_MD_HOME": "/Users/<имя-пользователя>/Repository/hbk_md",
+     "PYTHONIOENCODING": "utf-8"
    }
    ```
+
+   `PYTHONIOENCODING` держит кириллицу в выводе скрипта целой в консоли Windows (без неё вывод
+   приходит кракозябрами); на macOS и Linux не мешает. Задаётся здесь, а не в команде скилла:
+   правило в `permissions.allow` сравнивает команду дословно, и префикс перед `python3` его
+   сломал бы.
 
 2. Убедитесь, что в `permissions.allow` есть две строки для skill:
 

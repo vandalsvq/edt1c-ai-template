@@ -38,6 +38,7 @@ local.properties
 
 # Машинно-специфичные конфиги (в репозитории - *.example-шаблоны)
 .mcp.json
+tools/yaxunit/stand.json
 
 # Python (для скриптов)
 __pycache__/
