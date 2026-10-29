@@ -676,22 +676,48 @@ reference update»), `add_group` с видом командной панели �
 - поэтому после любой пачки мутаций форму стоит открыть `inspect_form_layout` и сверить
   заголовки и раскладку, а не полагаться на успешный ответ инструмента
 
-### Строковый реквизит формы: длина и многострочность - всегда осознанно
+### Проба свойств 2026-10-24 (пробная форма обработки, затем удалена)
 
-Оба свойства инструменты выставляют по умолчанию, и оба умеют испортить поле молча.
-Перед мутацией решить, что за текст в реквизите, и после мутации **проверить в `.form`**:
+Что `set_form_props` и `set_item` принимают, а что нет; сводная таблица «свойство - чем
+ставится» - [`form-layout-rules.md`](form-layout-rules.md) §6.
 
-| Что за текст | Длина (`stringQualifiers`) | Поле |
-| --- | --- | --- |
-| Ответ инструмента, лог, трассировка, текст запроса | пустой тег - без ограничения | `multiLine` + `wrap` + `height` (10-20) + `verticalStretch` |
-| Заголовок, имя, ключ, путь к файлу | явная (`300`, `1024`) | однострочное |
+- **Проходят** (записаны в `.form`, видны в `inspect_form_layout`): у формы `windowOpeningMode`,
+  `verticalScroll`, `width`, `height`, `title` `{ru, en}`, `autoTitle`; у поля `titleLocation`,
+  `clearButton`, `defaultItem`, `skipOnInput`, `warningOnEditRepresentation`, `warningOnEdit`
+  `{ru, en}`, `readOnly`, `mask`, `format` и `editFormat` `{ru, en}`; у колонки `fixingInTable`,
+  `cellHyperlink`, `titleLocation`, `width`; у таблицы `header`, `footer`, `heightInTableRows`,
+  `initialTreeView`; у группы `enableContentChange`. Значения перечислений - в написании
+  `.form` (`LockOwnerWindow`, `UseIfNecessary`, `ExpandTopLevel`), ответ `inspect_form_layout`
+  показывает их в `UPPER_SNAKE`
+- **Ссылочные свойства не пишутся** - `INVALID_METADATA_CHANGE: Reference property updates are
+  not supported directly`: `minValue`, `maxValue`, `backColor`, `font`, `headerPicture`. Батч с
+  таким свойством откатывается целиком - ссылочное свойство не подавать вместе с остальными,
+  ставить руками
+- **`heightControlVariant`** таблицы не принимается ни как `UseTableContent`, ни как
+  `USE_TABLE_CONTENT` (`Unsupported value type for field`) - «По содержимому» руками
+- **Группа**: `behavior`, `representation`, `showTitle`, `united` - `Unknown form property`;
+  `pagesRepresentation` - то же. **`add_group` с `set: {type: "Pages"}` создаёт группу
+  страниц** (`FormGroup:Pages`) - раньше считалось, что `set` у `add_group` игнорируется
+  целиком; `title` в `set` по-прежнему не ставится
+- **Кнопка `autoCommandBar`** по `item_id` из `commandBars[].items` и **команда формы** по
+  `item_name` - `METADATA_NOT_FOUND`: `defaultButton`, `locationInCommandBar`, подсказка и
+  `modifiesStoredData` существующей команды - руками
+- **`add_table` называет колонки `<Таблица>Таблица`, `<Таблица>Таблица1`, ...** при верных
+  `dataPath` (`Таблица.Имя`, `Таблица.Количество`): переименовывать `set_item` с `name`
+- **Удаление формы `delete_metadata`** без флагов отвечает `METADATA_DELETE_CONFLICT` по ссылке
+  формы на саму себя (`Form#mdForm`), с одним `force` - «has nested children»: форма удаляется
+  только с `force: true` и `recursive: true`; `.mdo` владельца после удаления возвращается к
+  исходному, дифф пустой
+- `create_form` на Windows ответил таймаутом инструмента, форма при этом создалась: после
+  таймаута проверять `git status`, а не повторять вызов
 
-Строка **без ограничения** в поле выбора или в коротком реквизите - тоже дефект: платформа
-рисует такое поле многострочным. Правило симметрично: неограниченная длина только там,
-где поле сознательно сделано многострочным.
+### Строковый реквизит формы: длина и многострочность
 
-Проверка после мутации - по `.form`, не по ответу инструмента: `stringQualifiers` у реквизита,
-`multiLine` / `height` / `verticalStretch` в `InputFieldExtInfo`, `title` у элемента.
+Инструменты ставят `String(150)` и однострочное поле по умолчанию и оба свойства умеют
+испортить молча. Какая длина и какое поле какому тексту положены - правило компоновки
+([`form-layout-rules.md`](form-layout-rules.md), раздел 4); после мутации проверять по
+`.form`, не по ответу инструмента: `stringQualifiers` у реквизита, `multiLine` / `height` /
+`verticalStretch` в `InputFieldExtInfo`, `title` у элемента.
 
 ### Обработчики событий формы
 
