@@ -15,13 +15,15 @@
 │   ├── settings.json                    # Общие настройки Claude Code (commit'ятся)
 │   ├── settings.local.json.example      # Пример локальных permissions (скопировать в settings.local.json)
 │   ├── agents/
+│   │   ├── stage-form-designer.md       # Верстальщик этапа: собирает форму инструментами MCP до исполнителя
 │   │   ├── stage-executor.md            # Исполнитель этапа в цикле этапа (запускает skill stage)
+│   │   ├── stage-tester.md              # Тестировщик этапа: тесты YAxUnit по спеке после исполнителя
 │   │   └── stage-reviewer.md            # Ревьюер этапа в цикле этапа, файлы не правит
 │   └── skills/
 │       ├── analyst-doc/                 # Skill документа для аналитика по задаче (/analyst-doc)
 │       ├── bsl-check/                   # Skill проверки синтаксиса 1С по справочнику shcntx_ru
 │       ├── close-task/                  # Skill закрытия задачи по SDD (/close-task)
-│       ├── stage/                       # Skill цикла этапа: куратор, исполнитель, ревьюер (/stage)
+│       ├── stage/                       # Skill цикла этапа: куратор и четыре роли (/stage)
 │       ├── strict-module/               # Skill зачистки модуля под строгую типизацию (/strict-module)
 │       ├── sync-template/               # Skill забора переносимых файлов из шаблона (/sync-template)
 │       ├── push-to-template/            # Skill подъёма правок обратно в шаблон (/push-to-template)
@@ -32,12 +34,15 @@
 ├── tools/
 │   ├── nested-calls/                    # Проход по правилу вложенных вызовов (Perl) и набор примеров для самопроверки
 │   ├── diff-check/                      # Механические проверки диффа одним проходом (нужна настройка под проект в шапке)
+│   ├── form-audit/                      # Аудит форм по стандартам 1С (нужна настройка под проект в шапке)
 │   └── usage/                           # Замер расхода токенов этапа по журналам Claude Code
 ├── docs/               # Стандарты BSL и BSP - справочные документы для Claude
 │   ├── bsl-anti-patterns.md
 │   ├── bsl-async.md
 │   ├── bsl-code-review.md
 │   ├── bsl-coding-standards.md
+│   ├── bsl-form-design-8.3.md           # Проектирование форм по стандартам 1С («Такси»)
+│   ├── bsl-form-design-8.5.md           # Что меняет интерфейс «Версия 8.5»
 │   ├── bsl-form-module-rules.md
 │   ├── bsl-form-reserved-names.md
 │   ├── bsl-query-functions.md
@@ -48,10 +53,11 @@
 │   ├── bsp-common-modules.md
 │   ├── bsl-check-setup.md               # Чеклист установки skill bsl-check (зависит от vandalsvq/hbk_md)
 │   ├── codepilot1c-reference.md         # Справочник по MCP-серверу codepilot1c
-│   ├── common-pictures.md               # Общие картинки: манифест Picture.zip, порядок создания
+│   ├── common-pictures.md               # Общие картинки: манифест Picture.zip, порядок создания, перенос из поставки 1С
+│   ├── form-layout-rules.md             # Компоновка форм: карта формы, раскладка, чем ставится свойство
 │   ├── mdo-integrity.md
 │   ├── model-selection.md
-│   ├── stage-cycle.md                   # Цикл этапа субагентами: роли, находки, отчёты, бриф
+│   ├── stage-cycle.md                   # Цикл этапа субагентами: роли, находки, отчёты, брифы
 │   ├── testability.md                   # Проверяемость и автономные headless-прогоны
 │   ├── skd-mxl-toolkit.md               # Навыки skd-*/mxl-*: границы применения и нюансы EDT
 │   ├── yaxunit-bootstrap.md             # Playbook развёртывания YAxUnit на новом проекте и прогон в рабочей базе
