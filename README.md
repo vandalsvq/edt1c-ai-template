@@ -10,7 +10,7 @@
 ├── README.md           # Этот файл
 ├── .gitignore          # Игнор для EDT, 1С, macOS, Python, IDE
 ├── .gitattributes      # *.bin binary - двоичные макеты EDT без конвертации EOL
-├── .mcp.json.example   # Пример подключения MCP-серверов (codepilot1c, yaxunit-runner)
+├── .mcp.json.example   # Пример подключения MCP-сервера codepilot1c
 ├── .claude/
 │   ├── settings.json                    # Общие настройки Claude Code (commit'ятся)
 │   ├── settings.local.json.example      # Пример локальных permissions (скопировать в settings.local.json)
@@ -54,7 +54,7 @@
 │   ├── stage-cycle.md                   # Цикл этапа субагентами: роли, находки, отчёты, бриф
 │   ├── testability.md                   # Проверяемость и автономные headless-прогоны
 │   ├── skd-mxl-toolkit.md               # Навыки skd-*/mxl-*: границы применения и нюансы EDT
-│   ├── yaxunit-bootstrap.md             # Playbook развёртывания YAxUnit + METR на новом проекте и прогон в рабочей базе
+│   ├── yaxunit-bootstrap.md             # Playbook развёртывания YAxUnit на новом проекте и прогон в рабочей базе
 │   └── project-init.md                  # Промпт первичной инициализации проекта (для Claude)
 ├── specs/              # SDD: спецификации фич (источник истины)
 │   ├── README.md       # Процесс SDD, статусы, правила именования
