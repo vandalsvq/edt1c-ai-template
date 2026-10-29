@@ -43,7 +43,7 @@
 Windows в CRLF, а в репозитории LF, и это не находка.
 
 Режим --хук читает JSON хука со stdin, проверяет только правленый .bsl и молчит, если находок
-нет; находки - в stderr с кодом 2, их Claude Code показывает роли сразу после правки.
+нет; находки и ошибка запуска - в stderr с кодом 2, их Claude Code показывает роли сразу после правки.
 Правка через Bash (sed, heredoc, скрипт) файла в вызове не называет: если в команде упомянут
 .bsl, проверяются все правленые .bsl рабочего дерева.
 
@@ -114,10 +114,16 @@ BOM = b"\xef\xbb\xbf"
 ПРЕДЕЛ = 15  # строк на одну проверку, остальное - числом
 
 
+def отказ(текст):
+    """Ошибка запуска: текст в stderr, код 2 (`sys.exit` со строкой дал бы 1 - код находок)."""
+    print(текст, file=sys.stderr)
+    sys.exit(2)
+
+
 def git(*аргументы, байты=False):
     итог = subprocess.run(["git", "-c", "core.quotePath=false", *аргументы], capture_output=True)
     if итог.returncode != 0:
-        sys.exit(f"git {' '.join(аргументы)}: {итог.stderr.decode('utf-8', 'replace').strip()}")
+        отказ(f"git {' '.join(аргументы)}: {итог.stderr.decode('utf-8', 'replace').strip()}")
     return итог.stdout if байты else итог.stdout.decode("utf-8", "replace")
 
 
@@ -564,7 +570,7 @@ def main():
         if not аргументы.файл:
             sys.exit(0)
     if аргументы.исправить and аргументы.индекс:
-        sys.exit("--исправить правит рабочее дерево и с --индекс не сочетается")
+        отказ("--исправить правит рабочее дерево и с --индекс не сочетается")
     автокрлф_включён = автокрлф()
 
     область = ["--cached", аргументы.база] if аргументы.индекс else [аргументы.база]
@@ -603,7 +609,7 @@ def main():
                                       capture_output=True))
     for проход in проходы:
         if проход.returncode == 2:
-            sys.exit("nested-calls.pl: " + проход.stderr.decode("utf-8", "replace").strip())
+            отказ("nested-calls.pl: " + проход.stderr.decode("utf-8", "replace").strip())
         находки["вложенные вызовы"] += проход.stdout.decode("utf-8", "replace").splitlines()
 
     # Добавленные строки: тире, жаргон и зарезервированные имена
