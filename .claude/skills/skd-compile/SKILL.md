@@ -12,8 +12,9 @@ allowed-tools:
 
 > **В EDT-проекте:** схема компоновки лежит в `<Объект>/Templates/<Имя>/Template.dcs` (в конфигураторном
 > формате это `Template.xml` — содержимое то же). Сам макет навык не заводит: в EDT он регистрируется
-> блоком `<templates>` в `.mdo` объекта-владельца — создавать через `edt_validate_request` →
-> `create_metadata`/`update_metadata` или в EDT. После правки — `skd-validate` и `get_diagnostics`.
+> блоком `<templates>` в `.mdo` объекта-владельца - создавать через `create_metadata`/`modify_metadata`
+> (при codepilot1c - `edt_validate_request` → `create_metadata`/`update_metadata`) или в EDT.
+> После правки - `skd-validate` и диагностика EDT (`get_project_errors`).
 
 > **Кодировка.** Функция записи `write_edt_xml` в скрипте — локальная правка шаблона: апстрим пишет
 > по конфигураторному соглашению (UTF-8 с BOM, CRLF), здесь файл сохраняется без BOM и с LF, как

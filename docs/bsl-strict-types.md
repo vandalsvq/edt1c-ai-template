@@ -533,7 +533,7 @@ grep -nE '^[[:space:]]*//.*[^[:space:]] {2,}-'
 
 ## 18. Ловушки анализатора EDT: код замечания, причина, лечение
 
-Замечания `get_diagnostics` ищутся здесь по коду. Нумерация `SU*` - плагина codepilot1c, в `@skip-check` её писать нельзя (§19).
+Замечания `get_project_errors` ищутся здесь по коду `SU*` (его же принимает фильтр `checkId`). В `@skip-check` нумерацию `SU*` писать нельзя, только символьный id проверки (§19).
 
 | Код и симптом | Причина | Лечение |
 | --- | --- | --- |
@@ -563,6 +563,6 @@ grep -nE '^[[:space:]]*//.*[^[:space:]] {2,}-'
 
 - **один объект** - EDT создаёт файл `<Имя>.suppress` рядом с объектом в `src/` (`src/CommonModules/prj_Перечисления/prj_Перечисления.suppress`, запись `<suppressions key="com.e1c.v8codestyle.md:common-module-name-client-server" value="true"/>`). Файл коммитится, иначе подавление остаётся на одной машине;
 - **проверка целиком для проекта** - `.settings/Default.cset` (JSON, `"<id-проверки>": { "enabled": false }`, в git). Исключений по объектам внутри `.cset` нет. Что реально записал EDT, смотреть в дереве;
-- **коды `SU*`** - нумерация плагина codepilot1c, в `@skip-check` их писать нельзя; неверный id EDT молча игнорирует.
+- **коды `SU*`** - короткая нумерация проверок, в `@skip-check` их писать нельзя: нужен символьный id (код проверки в строке `get_project_errors`, описание - `get_check_description`); неверный id EDT молча игнорирует.
 
 Id проверки по тексту ошибки: jar `com.e1c.v8codestyle.bsl` из `bundles.info` активной установки EDT, в нём `messages_ru.properties` даёт класс проверки по тексту, строковые константы класса (`re.findall(rb'[ -~]{4,}')` по `.class`; `strings` на macOS на них падает) - id вида `method-too-many-params`. Тексты проверок метаданных - `check.descriptions/ru/*.html` в jar `com.e1c.v8codestyle.md`.

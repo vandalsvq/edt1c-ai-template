@@ -10,9 +10,9 @@
 ├── README.md           # Этот файл
 ├── .gitignore          # Игнор для EDT, 1С, macOS, Python, IDE
 ├── .gitattributes      # *.bin binary - двоичные макеты EDT без конвертации EOL
-├── .mcp.json.example   # Пример подключения MCP-сервера codepilot1c
+├── .mcp.json.example   # Пример подключения MCP-сервера EDT-MCP
 ├── .claude/
-│   ├── settings.json                    # Общие настройки (commit'ятся): читающие инструменты codepilot1c без запроса
+│   ├── settings.json                    # Общие настройки (commit'ятся): читающие инструменты EDT-MCP и codepilot1c без запроса
 │   ├── settings.local.json.example      # Пример локальных permissions (скопировать в settings.local.json)
 │   ├── agents/
 │   │   ├── stage-form-designer.md       # Верстальщик этапа: собирает форму инструментами MCP до исполнителя
@@ -54,8 +54,9 @@
 │   ├── bsl-strict-types.md
 │   ├── bsp-common-modules.md
 │   ├── bsl-check-setup.md               # Чеклист установки skill bsl-check (зависит от vandalsvq/hbk_md)
-│   ├── codepilot1c-reference.md         # Справочник по MCP-серверу codepilot1c
+│   ├── codepilot1c-reference.md         # Справочник по MCP-серверу codepilot1c (EDT старше 2026.1): соответствие вызовов EDT-MCP, раздел для CLAUDE.md
 │   ├── common-pictures.md               # Общие картинки: манифест Picture.zip, порядок создания, перенос из поставки 1С
+│   ├── edt-mcp-reference.md             # Справочник по MCP-серверу EDT-MCP (основной): установка, согласие, карта задач, ловушки
 │   ├── form-layout-rules.md             # Компоновка форм: карта формы, раскладка, чем ставится свойство
 │   ├── mdo-integrity.md
 │   ├── model-selection.md
@@ -118,7 +119,7 @@ rm -rf .git && git init
 
 - Заполнит `CLAUDE.md` под проект (имя, тип, префикс, платформа, ветки, коммиты).
 - Адаптирует `README.md` (заголовок, описание, ссылки).
-- Проверит подключение MCP-сервера `codepilot1c`, при необходимости подскажет команду подключения.
+- Выберет MCP-сервер по версии EDT (EDT-MCP или codepilot1c), проверит подключение, при необходимости подскажет команду подключения.
 - Подключит skill `bsl-check` (по `docs/bsl-check-setup.md`) или удалит его, если не нужен.
 - Создаст `.claude/settings.local.json` из примера.
 - Очистит примеры из `planning/examples/`.
@@ -151,9 +152,13 @@ rm -rf .git && git init
 
 ## Благодарности и смежные проекты
 
-- **[ondysss/codepilot1c-edt](https://github.com/ondysss/codepilot1c-edt)** (AGPL-3.0) - плагин для 1C:EDT, вокруг которого построена вся инструментальная часть шаблона. Одновременно расширение IDE и MCP-сервер: даёт агенту типизацию, анализ логики, метаданные, формы, СКД, роли, диагностику, отладчик и профилировщик рантайма, прогон YAxUnit - через понимание модели EDT, а не текстовый разбор файлов. Ставится в EDT через update site `https://ondysss.github.io/codepilot1c-edt/` (Help → Install New Software → «1C Copilot»), поднимает MCP по HTTP на `http://127.0.0.1:8765/mcp`.
+- **[DitriXNew/EDT-MCP](https://github.com/DitriXNew/EDT-MCP)** (AGPL-3.0) - плагин 1C:EDT, основной MCP-сервер шаблона: отдаёт агенту модель EDT через её API - метаданные, формы, BSL, диагностику, базу, отладчик и YAxUnit. Поддерживает EDT 2026.1 и 2026.2. Ставится в EDT через сайт `https://ditrixnew.github.io/EDT-MCP/` (Справка → Установить новое ПО → «EDT MCP Server Feature»), поднимает MCP по HTTP.
 
-  Справочник инструментов со сценариями - [`docs/codepilot1c-reference.md`](docs/codepilot1c-reference.md), подключение - [`.mcp.json.example`](.mcp.json.example).
+  Справочник - [`docs/edt-mcp-reference.md`](docs/edt-mcp-reference.md), подключение - [`.mcp.json.example`](.mcp.json.example).
+
+- **[ondysss/codepilot1c-edt](https://github.com/ondysss/codepilot1c-edt)** (AGPL-3.0) - плагин для 1C:EDT, MCP-сервер шаблона для проектов на EDT старше 2026.1; на нём выросла инструментальная часть шаблона. Одновременно расширение IDE и MCP-сервер: даёт агенту типизацию, анализ логики, метаданные, формы, СКД, роли, диагностику, отладчик и профилировщик рантайма, прогон YAxUnit - через понимание модели EDT, а не текстовый разбор файлов. Ставится в EDT через update site `https://ondysss.github.io/codepilot1c-edt/` (Help → Install New Software → «1C Copilot»), поднимает MCP по HTTP на `http://127.0.0.1:8765/mcp`.
+
+  Справочник инструментов со сценариями и таблица соответствия вызовов EDT-MCP - [`docs/codepilot1c-reference.md`](docs/codepilot1c-reference.md).
 
 - **[Nikolay-Shirokov/cc-1c-skills](https://github.com/Nikolay-Shirokov/cc-1c-skills)** (MIT) - большой набор навыков для AI-агентов под полный цикл разработки на 1С:Предприятие 8.3: внешние обработки и отчёты, управляемые формы, табличные документы, СКД, роли, метаданные, расширения, работа с базами, веб-публикация и тестирование через веб-клиент. Поддерживает не только Claude Code, но и Cursor, Codex, Gemini CLI и другие агенты.
 

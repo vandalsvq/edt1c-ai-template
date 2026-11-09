@@ -15,7 +15,8 @@ description: Отправить правки переносимых файлов
 
 3. **Переносимый набор** (только эти пути, остальное не поднимать):
    - `docs/bsl-*.md`, `docs/bsp-common-modules.md`, `docs/mdo-integrity.md`, `docs/testability.md`
-   - `docs/codepilot1c-reference.md`, `docs/model-selection.md`, `docs/bsl-check-setup.md`, `docs/yaxunit-bootstrap.md`
+   - `docs/edt-mcp-reference.md`, `docs/codepilot1c-reference.md`, `docs/model-selection.md`, `docs/bsl-check-setup.md`, `docs/yaxunit-bootstrap.md`
+   - **вызовы MCP** в ролях, скиллах и `docs/` шаблона - EDT-MCP. Проект на EDT-MCP поднимает их как есть; проект на codepilot1c поднимает правку без замены вызовов на codepilot1c (шаблон на них не переписывается), а свою находку о codepilot1c - в `docs/codepilot1c-reference.md`, в том числе в таблицу «Соответствие EDT-MCP»
    - `docs/skd-mxl-toolkit.md`, `docs/common-pictures.md`, `docs/stage-cycle.md`, `docs/form-layout-rules.md`
    - `.claude/skills/` - **кроме** `skd-*` и `mxl-*`; `.claude/agents/`
    - `tools/` - проходы по правилам: `nested-calls/` (вложенные вызовы и его набор примеров),

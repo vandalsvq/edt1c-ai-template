@@ -621,4 +621,4 @@
 
 - Подробные doc-комментарии - в исходниках БСП хост-проекта базовой конфигурации. Путь к модулю: `<хост-проект>/src/CommonModules/<ИмяМодуля>/Module.bsl` (каталог - см. [`../CLAUDE.md`](../CLAUDE.md) → «EDT-воркспейс»)
 - Платформенные методы и типы - через `/bsl-check` (skill `bsl-check`)
-- Сценарии работы с инструментами codepilot1c - [`docs/codepilot1c-reference.md`](codepilot1c-reference.md)
+- Сценарии работы с инструментами MCP-сервера EDT - [`docs/edt-mcp-reference.md`](edt-mcp-reference.md) (при codepilot1c - [`docs/codepilot1c-reference.md`](codepilot1c-reference.md))
