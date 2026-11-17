@@ -233,6 +233,14 @@ claude mcp list 2>/dev/null | grep -iE 'edtmcp|codepilot1c'
 - `tools/form-audit/form-audit.py` - каталог исходников, признак двуязычного проекта, `ЦВЕТА_ЗНАЧЕНИЯМИ` по параметру «Цвета в формах»;
 - `tools/yaxunit/yaxunit.py` - только если YAxUnit подключён: проекты основного кода и тестов, имена расширений, ветка разработки; конфиг стенда машины - копией `tools/yaxunit/stand.example.json` в `tools/yaxunit/stand.json` (файл в `.gitignore`). YAxUnit не подключён - каталог оставить как есть, строку YAxUnit в «Тестировании» `CLAUDE.md` пометить «не подключён».
 
+### Шаг 5.Е. Лицензия шаблона и правила участия
+
+`LICENSE` и `CONTRIBUTING.md` в корне - файлы самого шаблона, а не проекта:
+
+- `CONTRIBUTING.md` - удали (`git rm CONTRIBUTING.md`): это правила участия в шаблоне.
+- `LICENSE` - перенеси в `licenses/edt1c-ai-template-LICENSE` (`git mv LICENSE licenses/edt1c-ai-template-LICENSE`). MIT требует сохранять уведомление об авторских правах в копиях: файлы, пришедшие из шаблона, остаются под ним, а код проекта под ним не оказывается.
+- Своя лицензия проекта в корне - спроси пользователя: положить его `LICENSE` (тогда добавить его в первый коммит, шаг 9) или обойтись без него (обычно для закрытого репозитория).
+
 ### Шаг 6. Локальные permissions Claude Code
 
 Если `.claude/settings.local.json` отсутствует - скопируй из `.claude/settings.local.json.example`. Если шаг 5.A уже создал/изменил файл - пропусти.
@@ -255,7 +263,7 @@ claude mcp list 2>/dev/null | grep -iE 'edtmcp|codepilot1c'
 - **Да** - выполни:
 
   ```bash
-  git add CLAUDE.md README.md docs/ specs/ planning/ .claude/skills/ .claude/settings.json .claude/settings.local.json.example .gitignore <EDT-каталог>/
+  git add CLAUDE.md README.md licenses/ docs/ specs/ planning/ .claude/skills/ .claude/settings.json .claude/settings.local.json.example .gitignore <EDT-каталог>/
   git commit -m "init: настройка проекта <ИмяПроекта>"
   ```
 

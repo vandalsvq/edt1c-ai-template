@@ -8,6 +8,8 @@
 .
 ├── CLAUDE.md           # Главный документ для Claude Code: соглашения, ссылки на docs/specs
 ├── README.md           # Этот файл
+├── LICENSE             # Лицензия MIT на весь репозиторий
+├── CONTRIBUTING.md     # Как предложить правку: issue, pull request, требования
 ├── .gitignore          # Игнор для EDT, 1С, macOS, Python, IDE
 ├── .gitattributes      # *.bin binary - двоичные макеты EDT без конвертации EOL
 ├── .mcp.json.example   # Пример подключения MCP-сервера EDT-MCP
@@ -167,3 +169,15 @@ rm -rf .git && git init
   Остальное не берётся: подход апстрима **дополняет** этот шаблон, а не пересекается с ним: `cc-1c-skills` даёт агенту абстракции над XML-форматами и CLI конфигуратора и работает без EDT, а `edt1c-ai-template` строится вокруг EDT, MCP-сервера и методологии SDD. Если работаете в конфигураторе или нужен агент вне Claude Code - смотреть туда в первую очередь.
 
 - **[vandalsvq/hbk_md](https://github.com/vandalsvq/hbk_md)** - распакованный справочник синтаксиса 1С (`shcntx_ru`) в markdown, на котором работает skill `bsl-check` (см. [`docs/bsl-check-setup.md`](docs/bsl-check-setup.md)).
+
+## Участие в проекте
+
+Исправления, правила, скиллы и инструменты принимаются через issue и pull request - порядок и требования в [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
+## Внедрение и обучение
+
+Автор шаблона может помочь с его внедрением в проект или команду и провести обучение работе с ним - по договорённости. Связаться: <https://t.me/vandalsvq>.
+
+## Лицензия
+
+Шаблон распространяется под лицензией MIT - текст в [`LICENSE`](LICENSE). Вендоренные навыки `skd-*` и `mxl-*` идут под собственной лицензией апстрима (MIT, [`licenses/cc-1c-skills-LICENSE`](licenses/cc-1c-skills-LICENSE)); тексты лицензий сторонних частей - в каталоге [`licenses/`](licenses/).
