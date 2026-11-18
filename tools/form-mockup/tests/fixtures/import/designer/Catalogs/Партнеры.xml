@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MetaDataObject xmlns="http://v8.1c.ru/8.3/MDClasses" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.20">
+	<Catalog uuid="00000000-0000-0000-0000-000000000001">
+		<Properties>
+			<Name>Партнеры</Name>
+			<Synonym>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Партнеры</v8:content>
+				</v8:item>
+			</Synonym>
+			<StandardAttributes>
+				<xr:StandardAttribute name="Description">
+					<xr:Synonym>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Рабочее наименование</v8:content>
+						</v8:item>
+					</xr:Synonym>
+				</xr:StandardAttribute>
+			</StandardAttributes>
+			<ObjectPresentation>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Партнер</v8:content>
+				</v8:item>
+			</ObjectPresentation>
+		</Properties>
+		<ChildObjects>
+			<Attribute uuid="00000000-0000-0000-0000-000000000002">
+				<Properties>
+					<Name>ИНН</Name>
+					<Synonym>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>ИНН партнера</v8:content>
+						</v8:item>
+					</Synonym>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+					</Type>
+				</Properties>
+			</Attribute>
+			<Attribute uuid="00000000-0000-0000-0000-000000000003">
+				<Properties>
+					<Name>ОсновнойМенеджер</Name>
+					<Synonym/>
+					<Type>
+						<v8:Type>cfg:CatalogRef.Пользователи</v8:Type>
+					</Type>
+				</Properties>
+			</Attribute>
+			<Attribute uuid="00000000-0000-0000-0000-000000000004">
+				<Properties>
+					<Name>ДатаРегистрации</Name>
+					<Synonym>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Зарегистрирован</v8:content>
+						</v8:item>
+					</Synonym>
+					<Type>
+						<v8:Type>xs:dateTime</v8:Type>
+					</Type>
+				</Properties>
+			</Attribute>
+			<Attribute uuid="00000000-0000-0000-0000-000000000009">
+				<Properties>
+					<Name>ВидПартнера</Name>
+					<Synonym/>
+					<Type>
+						<v8:Type>cfg:EnumRef.ВидыПартнеров</v8:Type>
+					</Type>
+				</Properties>
+			</Attribute>
+			<TabularSection uuid="00000000-0000-0000-0000-000000000005">
+				<Properties>
+					<Name>Контакты</Name>
+					<Synonym>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Контактные лица</v8:content>
+						</v8:item>
+					</Synonym>
+				</Properties>
+				<ChildObjects>
+					<Attribute uuid="00000000-0000-0000-0000-000000000006">
+						<Properties>
+							<Name>КонтактноеЛицо</Name>
+							<Synonym>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Контакт</v8:content>
+								</v8:item>
+							</Synonym>
+							<Type>
+								<v8:Type>cfg:CatalogRef.КонтактныеЛица</v8:Type>
+							</Type>
+						</Properties>
+					</Attribute>
+					<Attribute uuid="00000000-0000-0000-0000-000000000007">
+						<Properties>
+							<Name>Доля</Name>
+							<Synonym/>
+							<Type>
+								<v8:Type>xs:decimal</v8:Type>
+							</Type>
+						</Properties>
+					</Attribute>
+				</ChildObjects>
+			</TabularSection>
+		</ChildObjects>
+	</Catalog>
+</MetaDataObject>

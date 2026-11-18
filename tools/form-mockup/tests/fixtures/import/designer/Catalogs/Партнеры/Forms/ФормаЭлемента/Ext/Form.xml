@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Form xmlns="http://v8.1c.ru/8.3/xcf/logform" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.20">
+	<AutoCommandBar name="ФормаКоманднаяПанель" id="-1">
+		<ChildItems>
+			<Button name="ФормаСправка" id="40">
+				<Type>CommandBarButton</Type>
+				<CommandName>Form.StandardCommand.Help</CommandName>
+				<ExtendedTooltip name="ФормаСправкаРасширеннаяПодсказка" id="41"/>
+			</Button>
+			<Button name="ФормаЗаписатьИЗакрыть" id="42">
+				<Type>CommandBarButton</Type>
+				<CommandName>Form.StandardCommand.WriteAndClose</CommandName>
+				<ExtendedTooltip name="ФормаЗаписатьИЗакрытьРасширеннаяПодсказка" id="43"/>
+			</Button>
+			<Button name="ФормаПроверить" id="44">
+				<Type>CommandBarButton</Type>
+				<CommandName>Form.Command.Проверить</CommandName>
+				<ExtendedTooltip name="ФормаПроверитьРасширеннаяПодсказка" id="45"/>
+			</Button>
+		</ChildItems>
+	</AutoCommandBar>
+	<ChildItems>
+		<UsualGroup name="ГруппаШапка" id="1">
+			<ShowTitle>false</ShowTitle>
+			<ExtendedTooltip name="ГруппаШапкаРасширеннаяПодсказка" id="2"/>
+			<ChildItems>
+				<InputField name="Наименование" id="3">
+					<DataPath>Объект.Description</DataPath>
+					<ContextMenu name="НаименованиеКонтекстноеМеню" id="4"/>
+					<ExtendedTooltip name="НаименованиеРасширеннаяПодсказка" id="5"/>
+				</InputField>
+				<InputField name="ИНН" id="6">
+					<DataPath>Объект.ИНН</DataPath>
+					<ContextMenu name="ИННКонтекстноеМеню" id="7"/>
+					<ExtendedTooltip name="ИННРасширеннаяПодсказка" id="8"/>
+				</InputField>
+			</ChildItems>
+		</UsualGroup>
+		<Pages name="Страницы" id="9">
+			<PagesRepresentation>TabsOnTop</PagesRepresentation>
+			<ExtendedTooltip name="СтраницыРасширеннаяПодсказка" id="10"/>
+			<ChildItems>
+				<Page name="СтраницаОсновное" id="11">
+					<Title>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Основное</v8:content>
+						</v8:item>
+					</Title>
+					<ExtendedTooltip name="СтраницаОсновноеРасширеннаяПодсказка" id="12"/>
+					<ChildItems>
+						<InputField name="ОсновнойМенеджер" id="13">
+							<DataPath>Объект.ОсновнойМенеджер</DataPath>
+							<ContextMenu name="ОсновнойМенеджерКонтекстноеМеню" id="14"/>
+							<ExtendedTooltip name="ОсновнойМенеджерРасширеннаяПодсказка" id="15"/>
+						</InputField>
+						<InputField name="ДатаРегистрации" id="16">
+							<DataPath>Объект.ДатаРегистрации</DataPath>
+							<Visible>false</Visible>
+							<ContextMenu name="ДатаРегистрацииКонтекстноеМеню" id="17"/>
+							<ExtendedTooltip name="ДатаРегистрацииРасширеннаяПодсказка" id="18"/>
+						</InputField>
+						<InputField name="ВидПартнера" id="48">
+							<DataPath>Объект.ВидПартнера</DataPath>
+							<ContextMenu name="ВидПартнераКонтекстноеМеню" id="49"/>
+							<ExtendedTooltip name="ВидПартнераРасширеннаяПодсказка" id="50"/>
+						</InputField>
+						<CheckBoxField name="Активен" id="19">
+							<DataPath>Активен</DataPath>
+							<TitleLocation>Right</TitleLocation>
+							<CheckBoxType>Switcher</CheckBoxType>
+							<ContextMenu name="АктивенКонтекстноеМеню" id="20"/>
+							<ExtendedTooltip name="АктивенРасширеннаяПодсказка" id="21"/>
+						</CheckBoxField>
+						<LabelField name="Сайт" id="22">
+							<DataPath>Сайт</DataPath>
+							<Hiperlink>true</Hiperlink>
+							<ContextMenu name="СайтКонтекстноеМеню" id="23"/>
+							<ExtendedTooltip name="СайтРасширеннаяПодсказка" id="24"/>
+						</LabelField>
+						<LabelDecoration name="Пояснение" id="25">
+							<Title formatted="true">
+								<v8:item>
+									<v8:lang>en</v8:lang>
+									<v8:content>Partner card</v8:content>
+								</v8:item>
+								<v8:item>
+									<v8:lang>ru</v8:lang>
+									<v8:content>Карточка &lt;b&gt;партнера&lt;/&gt;</v8:content>
+								</v8:item>
+							</Title>
+							<ContextMenu name="ПояснениеКонтекстноеМеню" id="26"/>
+							<ExtendedTooltip name="ПояснениеРасширеннаяПодсказка" id="27"/>
+						</LabelDecoration>
+						<Button name="ОткрытьИсторию" id="28">
+							<Type>Hyperlink</Type>
+							<CommandName>Form.Command.Проверить</CommandName>
+							<ExtendedTooltip name="ОткрытьИсториюРасширеннаяПодсказка" id="29"/>
+						</Button>
+						<FutureKindField name="НовыйВидПоля" id="46">
+							<DataPath>Сайт</DataPath>
+						</FutureKindField>
+					</ChildItems>
+				</Page>
+				<Page name="СтраницаКонтакты" id="30">
+					<Title>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Контакты</v8:content>
+						</v8:item>
+					</Title>
+					<ExtendedTooltip name="СтраницаКонтактыРасширеннаяПодсказка" id="31"/>
+					<ChildItems>
+						<Table name="Контакты" id="32">
+							<DataPath>Объект.Контакты</DataPath>
+							<AutoCommandBar name="КонтактыКоманднаяПанель" id="33"/>
+							<ExtendedTooltip name="КонтактыРасширеннаяПодсказка" id="34"/>
+							<SearchStringAddition name="КонтактыСтрокаПоиска" id="47"/>
+							<ChildItems>
+								<InputField name="КонтактыКонтактноеЛицо" id="35">
+									<DataPath>Объект.Контакты.КонтактноеЛицо</DataPath>
+									<ExtendedTooltip name="КонтактыКонтактноеЛицоРасширеннаяПодсказка" id="36"/>
+								</InputField>
+								<InputField name="КонтактыДоля" id="37">
+									<DataPath>Объект.Контакты.Доля</DataPath>
+									<ExtendedTooltip name="КонтактыДоляРасширеннаяПодсказка" id="38"/>
+								</InputField>
+							</ChildItems>
+						</Table>
+					</ChildItems>
+				</Page>
+			</ChildItems>
+		</Pages>
+	</ChildItems>
+	<Attributes>
+		<Attribute name="Объект" id="1">
+			<Type>
+				<v8:Type>cfg:CatalogObject.Партнеры</v8:Type>
+			</Type>
+			<MainAttribute>true</MainAttribute>
+		</Attribute>
+		<Attribute name="Активен" id="2">
+			<Title>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Партнер активен</v8:content>
+				</v8:item>
+			</Title>
+			<Type>
+				<v8:Type>xs:boolean</v8:Type>
+			</Type>
+		</Attribute>
+		<Attribute name="Сайт" id="3">
+			<Type>
+				<v8:Type>xs:string</v8:Type>
+			</Type>
+		</Attribute>
+	</Attributes>
+	<Commands>
+		<Command name="Проверить" id="1">
+			<Title>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Проверить контрагента</v8:content>
+				</v8:item>
+			</Title>
+		</Command>
+	</Commands>
+</Form>

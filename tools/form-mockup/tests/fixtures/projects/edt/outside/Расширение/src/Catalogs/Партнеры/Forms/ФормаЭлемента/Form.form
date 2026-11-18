@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form:Form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:core="http://g5.1c.ru/v8/dt/mcore"
+    xmlns:form="http://g5.1c.ru/v8/dt/form">
+  <items xsi:type="form:FormField">
+    <name>ИНН</name><visible>true</visible>
+    <dataPath xsi:type="form:DataPath"><segments>Объект.ИНН</segments></dataPath>
+    <type>InputField</type>
+    <extInfo xsi:type="form:InputFieldExtInfo"><autoMaxWidth>true</autoMaxWidth></extInfo>
+  </items>
+  <items xsi:type="form:FormField">
+    <name>Рейтинг</name><visible>true</visible>
+    <dataPath xsi:type="form:DataPath"><segments>Объект.ext_Рейтинг</segments></dataPath>
+    <type>InputField</type>
+    <extInfo xsi:type="form:InputFieldExtInfo"><autoMaxWidth>true</autoMaxWidth></extInfo>
+  </items>
+  <attributes>
+    <name>Объект</name>
+    <id>1</id>
+    <valueType><types>CatalogObject.Партнеры</types></valueType>
+    <main>true</main>
+  </attributes>
+</form:Form>

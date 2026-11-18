@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MetaDataObject xmlns="http://v8.1c.ru/8.3/MDClasses" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:cmi="http://v8.1c.ru/8.2/managed-application/cmi" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xen="http://v8.1c.ru/8.3/xcf/enums" xmlns:xpr="http://v8.1c.ru/8.3/xcf/predef" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.20">
+	<Catalog uuid="3014d9c1-cb00-49fb-81b3-e8ced354975f">
+		<InternalInfo>
+			<xr:GeneratedType name="CatalogObject._ДемоПартнеры" category="Object">
+				<xr:TypeId>31fe70b8-8268-4f5c-8326-d73541b35fc7</xr:TypeId>
+				<xr:ValueId>4457634e-b1ff-422c-a9a5-5d08657404c8</xr:ValueId>
+			</xr:GeneratedType>
+			<xr:GeneratedType name="CatalogRef._ДемоПартнеры" category="Ref">
+				<xr:TypeId>53aa5507-8792-43fa-b077-418c5f5e73d5</xr:TypeId>
+				<xr:ValueId>bc2ba2fa-9db8-4467-936c-8bbbfa975afb</xr:ValueId>
+			</xr:GeneratedType>
+			<xr:GeneratedType name="CatalogSelection._ДемоПартнеры" category="Selection">
+				<xr:TypeId>19019250-d2a1-469d-8d95-114a23ecb73b</xr:TypeId>
+				<xr:ValueId>879586de-cbdd-4fb8-a5bb-28ad21a3a445</xr:ValueId>
+			</xr:GeneratedType>
+			<xr:GeneratedType name="CatalogList._ДемоПартнеры" category="List">
+				<xr:TypeId>5ac54920-44e8-49e8-89ac-2a5f356e9d4a</xr:TypeId>
+				<xr:ValueId>a6a44fe2-91ac-4d34-b12b-ef5e5a5d4972</xr:ValueId>
+			</xr:GeneratedType>
+			<xr:GeneratedType name="CatalogManager._ДемоПартнеры" category="Manager">
+				<xr:TypeId>06c22533-d3d8-4d2c-afad-5b20f033ece2</xr:TypeId>
+				<xr:ValueId>49f74e92-1ac6-4df5-909c-1706e70517ef</xr:ValueId>
+			</xr:GeneratedType>
+		</InternalInfo>
+		<Properties>
+			<ObjectBelonging>Adopted</ObjectBelonging>
+			<Name>_ДемоПартнеры</Name>
+			<Comment/>
+			<CodeLength>9</CodeLength>
+			<DescriptionLength>150</DescriptionLength>
+			<CodeType>String</CodeType>
+			<CodeAllowedLength>Variable</CodeAllowedLength>
+		</Properties>
+		<ChildObjects>
+			<Attribute uuid="523d19b5-0dd0-4377-9e32-3b28b327d814">
+				<InternalInfo/>
+				<Properties>
+					<ObjectBelonging>Adopted</ObjectBelonging>
+					<Name>ВидПартнера</Name>
+					<Comment/>
+					<Type>
+						<v8:Type>cfg:EnumRef._ДемоЮридическоеФизическоеЛицо</v8:Type>
+					</Type>
+				</Properties>
+			</Attribute>
+			<Attribute uuid="39e61ad4-d7ea-4829-9ee6-697c44063695">
+				<InternalInfo/>
+				<Properties>
+					<ObjectBelonging>Adopted</ObjectBelonging>
+					<Name>Конкурент</Name>
+					<Comment/>
+					<Type>
+						<v8:Type>xs:boolean</v8:Type>
+					</Type>
+				</Properties>
+			</Attribute>
+			<Attribute uuid="2567d728-2d7d-419c-88eb-a8f504204d3f">
+				<InternalInfo/>
+				<Properties>
+					<ObjectBelonging>Adopted</ObjectBelonging>
+					<Name>Поставщик</Name>
+					<Comment/>
+					<Type>
+						<v8:Type>xs:boolean</v8:Type>
+					</Type>
+				</Properties>
+			</Attribute>
+			<Attribute uuid="66180705-bbbf-48aa-ba5b-945edeeffba6">
+				<InternalInfo/>
+				<Properties>
+					<ObjectBelonging>Adopted</ObjectBelonging>
+					<Name>ГруппаДоступа</Name>
+					<Comment/>
+					<Type>
+						<v8:Type>cfg:CatalogRef._ДемоГруппыДоступаПартнеров</v8:Type>
+					</Type>
+				</Properties>
+			</Attribute>
+			<Attribute uuid="558e76c6-6ad0-479a-935d-64f823d428f5">
+				<InternalInfo/>
+				<Properties>
+					<ObjectBelonging>Adopted</ObjectBelonging>
+					<Name>Клиент</Name>
+					<Comment/>
+					<Type>
+						<v8:Type>xs:boolean</v8:Type>
+					</Type>
+				</Properties>
+			</Attribute>
+			<Attribute uuid="7513997a-2d5b-4500-ac76-5bc312727f14">
+				<InternalInfo/>
+				<Properties>
+					<ObjectBelonging>Adopted</ObjectBelonging>
+					<Name>ПрочиеОтношения</Name>
+					<Comment/>
+					<Type>
+						<v8:Type>xs:boolean</v8:Type>
+					</Type>
+				</Properties>
+			</Attribute>
+		</ChildObjects>
+	</Catalog>
+</MetaDataObject>

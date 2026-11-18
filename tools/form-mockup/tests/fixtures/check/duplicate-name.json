@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "form": {
+    "title": "Фикстура",
+    "items": [
+      {
+        "type": "InputField",
+        "name": "Контрагент"
+      },
+      {
+        "type": "UsualGroup",
+        "name": "Группа",
+        "items": [
+          {
+            "type": "InputField",
+            "name": "Контрагент"
+          }
+        ]
+      }
+    ]
+  }
+}

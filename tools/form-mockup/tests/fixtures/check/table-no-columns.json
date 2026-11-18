@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "form": {
+    "title": "Фикстура",
+    "items": [
+      {
+        "type": "Table",
+        "name": "Таблица",
+        "items": []
+      }
+    ]
+  }
+}

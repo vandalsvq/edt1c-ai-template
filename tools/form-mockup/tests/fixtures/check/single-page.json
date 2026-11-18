@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "form": {
+    "title": "Фикстура",
+    "items": [
+      {
+        "type": "Pages",
+        "name": "Страницы",
+        "items": [
+          {
+            "type": "Page",
+            "name": "Закладка",
+            "title": "Закладка",
+            "items": [
+              {
+                "type": "InputField",
+                "name": "Поле"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

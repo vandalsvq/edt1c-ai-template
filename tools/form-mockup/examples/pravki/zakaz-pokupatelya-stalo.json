@@ -1,0 +1,312 @@
+{
+  "version": 1,
+  "form": {
+    "title": "Заказ покупателя",
+    "formKind": "DocumentObjectForm",
+    "width": 100,
+    "commandBar": {
+      "type": "AutoCommandBar",
+      "name": "ФормаКоманднаяПанель",
+      "autoFill": true,
+      "items": [
+        {
+          "type": "Popup",
+          "name": "ПодменюПечать",
+          "title": "Печать",
+          "picture": "StdPicture.Print",
+          "items": [
+            {
+              "type": "Button",
+              "name": "ПечатьЗаказ",
+              "title": "Заказ покупателя",
+              "commandName": "Form.Command.ПечатьЗаказ"
+            },
+            {
+              "type": "Button",
+              "name": "ПечатьСчет",
+              "title": "Счет на оплату",
+              "commandName": "Form.Command.ПечатьСчет"
+            }
+          ]
+        },
+        {
+          "type": "Popup",
+          "name": "ПодменюСоздатьНаОсновании",
+          "title": "Создать на основании",
+          "items": [
+            {
+              "type": "Button",
+              "name": "СоздатьРеализацию",
+              "title": "Реализация товаров",
+              "commandName": "Form.Command.СоздатьРеализацию"
+            }
+          ]
+        }
+      ]
+    },
+    "items": [
+      {
+        "type": "UsualGroup",
+        "name": "ГруппаШапка",
+        "group": "AlwaysHorizontal",
+        "representation": "None",
+        "items": [
+          {
+            "type": "UsualGroup",
+            "name": "ГруппаШапкаЛево",
+            "group": "Vertical",
+            "representation": "None",
+            "items": [
+              {
+                "type": "InputField",
+                "name": "Контрагент",
+                "dataPath": "Объект.Контрагент",
+                "dataType": "ref",
+                "choiceButton": true,
+                "openButton": true,
+                "markIncomplete": true,
+                "sample": "ООО Ромашка"
+              },
+              {
+                "type": "InputField",
+                "name": "Договор",
+                "dataPath": "Объект.Договор",
+                "dataType": "ref",
+                "dropListButton": true,
+                "sample": "Договор поставки № 15"
+              },
+              {
+                "type": "InputField",
+                "name": "Склад",
+                "dataPath": "Объект.Склад",
+                "dataType": "ref",
+                "choiceButton": true,
+                "sample": "Основной склад"
+              }
+            ]
+          },
+          {
+            "type": "UsualGroup",
+            "name": "ГруппаШапкаПраво",
+            "group": "Vertical",
+            "representation": "None",
+            "items": [
+              {
+                "type": "InputField",
+                "name": "ДатаОтгрузки",
+                "title": "Дата отгрузки",
+                "dataPath": "Объект.ДатаОтгрузки",
+                "dataType": "date",
+                "sample": "05.11.2026"
+              },
+              {
+                "type": "InputField",
+                "name": "СпособОплаты",
+                "dataPath": "Объект.СпособОплаты",
+                "dataType": "ref",
+                "dropListButton": true,
+                "sample": "Безналичная",
+                "note": "предложение"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Pages",
+        "name": "ГруппаСтраницы",
+        "currentPage": "ГруппаТовары",
+        "items": [
+          {
+            "type": "Page",
+            "name": "ГруппаТовары",
+            "title": "Товары",
+            "items": [
+              {
+                "type": "Table",
+                "name": "Товары",
+                "dataPath": "Объект.Товары",
+                "titleLocation": "None",
+                "footer": true,
+                "heightInTableRows": 6,
+                "commandBar": {
+                  "type": "AutoCommandBar",
+                  "name": "ТоварыКоманднаяПанель",
+                  "autoFill": true,
+                  "items": [
+                    {
+                      "type": "Button",
+                      "name": "ТоварыПодобрать",
+                      "title": "Подбор",
+                      "commandName": "Form.Command.ПодобратьТовары",
+                      "note": "открывает форму подбора с остатками"
+                    },
+                    {
+                      "type": "Button",
+                      "name": "ТоварыЗаполнитьПоОстаткам",
+                      "title": "Заполнить по остаткам",
+                      "commandName": "Form.Command.ЗаполнитьПоОстаткам",
+                      "note": "заполняет товары остатками склада"
+                    }
+                  ]
+                },
+                "items": [
+                  {
+                    "type": "LabelField",
+                    "name": "ТоварыНомерСтроки",
+                    "title": "N",
+                    "dataPath": "Объект.Товары.НомерСтроки",
+                    "width": 3
+                  },
+                  {
+                    "type": "InputField",
+                    "name": "ТоварыНоменклатура",
+                    "title": "Номенклатура",
+                    "dataPath": "Объект.Товары.Номенклатура",
+                    "dataType": "ref",
+                    "width": 25
+                  },
+                  {
+                    "type": "ColumnGroup",
+                    "name": "ТоварыГруппаПозиция",
+                    "title": "Позиция",
+                    "group": "Horizontal",
+                    "showInHeader": true,
+                    "items": [
+                      {
+                        "type": "InputField",
+                        "name": "ТоварыКоличество",
+                        "title": "Количество",
+                        "dataPath": "Объект.Товары.Количество",
+                        "dataType": "number",
+                        "width": 10
+                      },
+                      {
+                        "type": "InputField",
+                        "name": "ТоварыЦена",
+                        "title": "Цена",
+                        "dataPath": "Объект.Товары.Цена",
+                        "dataType": "number",
+                        "width": 12
+                      }
+                    ]
+                  },
+                  {
+                    "type": "InputField",
+                    "name": "ТоварыСуммаСНДС",
+                    "title": "Сумма с НДС",
+                    "dataPath": "Объект.Товары.Сумма",
+                    "dataType": "number",
+                    "width": 12,
+                    "footerText": "8 900,00",
+                    "renamedFrom": "ТоварыСумма"
+                  },
+                  {
+                    "type": "ColumnGroup",
+                    "name": "ТоварыГруппаНДС",
+                    "title": "НДС",
+                    "group": "Horizontal",
+                    "showInHeader": true,
+                    "items": [
+                      {
+                        "type": "InputField",
+                        "name": "ТоварыСтавкаНДС",
+                        "title": "% НДС",
+                        "dataPath": "Объект.Товары.СтавкаНДС",
+                        "dataType": "ref",
+                        "width": 8
+                      },
+                      {
+                        "type": "InputField",
+                        "name": "ТоварыСуммаНДС",
+                        "title": "Сумма НДС",
+                        "dataPath": "Объект.Товары.СуммаНДС",
+                        "dataType": "number",
+                        "width": 12,
+                        "footerText": "1 483,33"
+                      }
+                    ]
+                  }
+                ],
+                "sample": [
+                  [
+                    "1",
+                    "Стол письменный",
+                    "2",
+                    "1 500,00",
+                    "3 000,00",
+                    "20%",
+                    "500,00"
+                  ],
+                  [
+                    "2",
+                    "Кресло офисное",
+                    "2",
+                    "2 950,00",
+                    "5 900,00",
+                    "20%",
+                    "983,33"
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "type": "Page",
+            "name": "ГруппаДополнительно",
+            "title": "Дополнительно",
+            "items": [
+              {
+                "type": "UsualGroup",
+                "name": "ГруппаДоставка",
+                "title": "Доставка",
+                "group": "Vertical",
+                "representation": "NormalSeparation",
+                "items": [
+                  {
+                    "type": "InputField",
+                    "name": "АдресДоставки",
+                    "dataPath": "Объект.АдресДоставки",
+                    "horizontalStretch": true,
+                    "sample": "Москва, ул. Тверская, 1"
+                  },
+                  {
+                    "type": "InputField",
+                    "name": "ВремяДоставки",
+                    "dataPath": "Объект.ВремяДоставки",
+                    "dataType": "date",
+                    "sample": "10:00"
+                  }
+                ]
+              },
+              {
+                "type": "InputField",
+                "name": "Комментарий",
+                "dataPath": "Объект.Комментарий",
+                "multiLine": true,
+                "height": 3,
+                "horizontalStretch": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "UsualGroup",
+        "name": "ГруппаПодвал",
+        "group": "AlwaysHorizontal",
+        "representation": "None",
+        "childItemsHorizontalAlign": "Right",
+        "items": [
+          {
+            "type": "LabelField",
+            "name": "СуммаДокумента",
+            "title": "Итого к оплате",
+            "dataPath": "Объект.СуммаДокумента",
+            "sample": "8 900,00"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "form": {
+    "title": "Заказы покупателей",
+    "formKind": "ListForm",
+    "commandBarLocation": "None",
+    "items": [
+      {
+        "type": "UsualGroup",
+        "name": "ГруппаОтбор",
+        "group": "HorizontalIfPossible",
+        "representation": "None",
+        "items": [
+          { "type": "InputField", "name": "ОтборКонтрагент", "title": "Контрагент", "dataPath": "ОтборКонтрагент", "dataType": "ref", "choiceButton": true, "clearButton": true, "inputHint": "Все контрагенты" },
+          { "type": "InputField", "name": "ОтборСтатус", "title": "Статус", "dataPath": "ОтборСтатус", "dropListButton": true, "clearButton": true, "choiceList": ["Новый", "В работе", "Отгружен", "Закрыт"], "sample": "В работе" },
+          { "type": "CheckBoxField", "name": "ТолькоМои", "title": "Только мои", "dataPath": "ТолькоМои", "titleLocation": "Right", "sample": false }
+        ]
+      },
+      {
+        "type": "Table",
+        "name": "Список",
+        "dataPath": "Список",
+        "titleLocation": "None",
+        "readOnly": true,
+        "commandBar": {
+          "type": "AutoCommandBar",
+          "name": "СписокКоманднаяПанель",
+          "autoFill": true
+        },
+        "items": [
+          { "type": "LabelField", "name": "СписокДата", "title": "Дата", "dataPath": "Список.Дата" },
+          { "type": "LabelField", "name": "СписокНомер", "title": "Номер", "dataPath": "Список.Номер" },
+          { "type": "LabelField", "name": "СписокКонтрагент", "title": "Контрагент", "dataPath": "Список.Контрагент" },
+          { "type": "LabelField", "name": "СписокСумма", "title": "Сумма", "dataPath": "Список.СуммаДокумента" },
+          { "type": "LabelField", "name": "СписокСтатус", "title": "Статус", "dataPath": "Список.Статус" },
+          { "type": "LabelField", "name": "СписокОтветственный", "title": "Ответственный", "dataPath": "Список.Ответственный" }
+        ],
+        "sample": [
+          ["28.10.2026 10:15:02", "00-000123", "ООО Ромашка", "8 900,00", "В работе", "Иванов И. И."],
+          ["29.10.2026 14:40:51", "00-000124", "ИП Сидоров", "12 450,00", "Новый", "Петрова А. С."],
+          ["30.10.2026 09:05:17", "00-000125", "ООО Василек", "3 200,00", "Отгружен", "Иванов И. И."]
+        ]
+      }
+    ]
+  }
+}

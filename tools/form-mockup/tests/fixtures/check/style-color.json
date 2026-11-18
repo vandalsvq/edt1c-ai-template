@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "form": {
+    "title": "Фикстура: цвет стиля без значения",
+    "items": [
+      { "type": "LabelDecoration", "name": "СоЗначением", "title": "Есть в styles", "textColor": "style:ГиперссылкаЦвет" },
+      { "type": "LabelDecoration", "name": "ПлатформыБезЗначения", "title": "Рамка кнопки", "backColor": "style:ButtonBorderColor" },
+      { "type": "LabelDecoration", "name": "Разметка", "formatted": true, "title": "<color style:НетТакого>текст</> и <color style:ГиперссылкаЦвет>ссылка</>" },
+      { "type": "UsualGroup", "name": "Группа", "titleTextColor": "style:ПоясняющийТекст", "items": [
+        { "type": "InputField", "name": "Поле", "backColor": "#FFFFFF" }
+      ] }
+    ]
+  },
+  "styles": { "ГиперссылкаЦвет": "#1C55AE" }
+}

@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "form": {
+    "title": "Фикстура",
+    "items": [
+      {
+        "type": "UsualGroup",
+        "name": "Г1",
+        "items": [
+          {
+            "type": "UsualGroup",
+            "name": "Г2",
+            "items": [
+              {
+                "type": "UsualGroup",
+                "name": "Г3",
+                "items": [
+                  {
+                    "type": "UsualGroup",
+                    "name": "Г4",
+                    "items": [
+                      {
+                        "type": "UsualGroup",
+                        "name": "Г5",
+                        "items": [
+                          {
+                            "type": "InputField",
+                            "name": "Поле"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

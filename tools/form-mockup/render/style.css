@@ -1,0 +1,839 @@
+/* Макет формы 1С, интерфейс «Такси», светлая тема.
+   Размеры и цвета - переменные, подогнаны по снимкам 1С витрины элементов
+   (клиент macOS, масштаб 100 %); следующая калибровка правит их здесь. */
+
+:root {
+  --ch: 10px;                /* ширина символа - единица `width` модели (поле табличного документа 30 = 300 px) */
+  --search-min: 140px;       /* поле поиска в панели таблицы уже не сжимается */
+  --row: 24px;               /* высота поля ввода */
+  --line: 17px;              /* строка текста: надпись, заголовок, флажок */
+  --table-row: 28px;         /* строка таблицы и шапки */
+  --input-btn: 21px;         /* кнопка в поле ввода */
+  --gap-v: 9px;              /* между элементами по вертикали */
+  --gap-h: 11px;             /* между элементами по горизонтали */
+  --title-gap: 6px;          /* заголовок поля → поле */
+  --font: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  --font-size: 13.33px;      /* Arial 10 pt */
+  --group-font-size: 16px;   /* заголовок группы с выделением */
+  --text: #333333;
+  --title: #4d4d4d;
+  --muted: #c8c8c8;
+  --tip: #8c8c8c;            /* текст расширенной подсказки, отображаемой рядом с элементом */
+  --link: #1c55ae;
+  --accent: #009646;         /* заголовки групп, флажок, выключатель, выбранное в тумблере */
+  --border: #a0a0a0;
+  --border-light: #d7d7d7;
+  --field-bg: #ffffff;
+  --header-bg: #f2f2f2;
+  --header-line: #cccccc;
+  --row-line: #e6e6e6;
+  --current-row: #fef2c7;
+  --default-btn: #ffdd33;
+  --default-btn-border: #d1aa1a;
+  --button-bg: #f2f2f2;
+  --incomplete: #ff0000;
+  --tab-bg: #ebebeb;
+  --tab-border: #b3b3b3;
+  --splitter: #d7d7d7;
+  --window-bg: #ffffff;
+  --page-bg: #e9e9e9;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 16px;
+  background: var(--page-bg);
+  font-family: var(--font);
+  font-size: var(--font-size);
+  color: var(--text);
+}
+body.fm-static { background: #ffffff; padding: 8px; }
+
+/* Панель инструментов страницы - вне формы, на снимке её нет */
+.fm-toolbar {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 12px;
+  color: #555;
+}
+.fm-toolbar label { display: flex; gap: 4px; align-items: center; cursor: pointer; }
+.fm-static .fm-toolbar { display: none; }
+
+/* Окно формы */
+.fm-window {
+  display: inline-flex;
+  flex-direction: column;
+  background: var(--window-bg);
+  border: 1px solid #c8c8c8;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .12);
+  min-width: 420px;
+  vertical-align: top;
+}
+.fm-caption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px 6px 10px;
+}
+.fm-caption-title {
+  flex: 1;
+  contain: inline-size;
+  font-size: 19px;
+  color: #3d3d3d;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fm-caption-icon { width: 18px; height: 18px; color: #9a9a9a; flex: none; }
+.fm-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-v);
+  padding: 4px 12px 12px 12px;
+  flex: 1;
+}
+
+/* Элементы - общее */
+.fm-item { position: relative; }
+/* Скрытые элементы рисуются только при «Показать скрытые» - бледно, пунктиром */
+.fm-hidden, .fm-hidden > .fm-control { opacity: .45; outline: 1px dashed #888; outline-offset: 1px; }
+/* Скрытое видимостью пользователя - видно в 1С через «Изменить форму»: синяя пунктирная рамка */
+.fm-user-hidden { outline: 1px dashed #5b8bd0; outline-offset: 1px; }
+
+/* Раскладка: элементы - по своей ширине, растягиваемые - на всю ширину родителя */
+.fm-body, .fm-page, .fm-group-content.fm-vertical { align-items: flex-start; }
+.fm-stretch, .fm-pages { align-self: stretch; }
+.fm-hug { align-self: flex-start; justify-self: start; }
+/* Мягкое поле в строке и группа с оформлением растут по месту до предела, посчитанного проходом
+   раскладки (softGrowth): в столбце - поперек, в сетке сквозного выравнивания - по колонке, в строке - flex */
+.fm-vertical:not(.fm-through) > .fm-soft-grow, .fm-page > .fm-soft-grow { align-self: stretch; }
+.fm-through > .fm-soft-grow { justify-self: stretch; }
+.fm-horizontal > .fm-soft-grow { flex: 1 1 auto; }
+.fm-field.fm-soft-grow > .fm-control { flex: 1 1 auto; }
+.fm-horizontal > .fm-grow { flex: 1 1 auto; }
+/* Командная панель в строке группы своей ширины не имеет (contain): берет остаток строки,
+   иначе все кнопки ушли бы в «Еще» */
+.fm-horizontal > .fm-cmdbar { flex: 1 1 0; min-width: 120px; }
+.fm-horizontal > .fm-cmdbar.fm-fixed { flex: none; }
+
+/* Разделители 1С между соседними растягиваемыми элементами - пунктиром */
+.fm-splitter-v { align-self: stretch; flex: none; width: 0; border-left: 1px dotted var(--splitter); position: relative; cursor: col-resize; }
+/* Полоса захвата шире видимой линии */
+.fm-splitter-v::after { content: ""; position: absolute; top: 0; bottom: 0; left: -5px; width: 10px; }
+.fm-static .fm-splitter-v { cursor: default; }
+.fm-splitter-h { align-self: stretch; grid-column: 1 / -1; justify-self: stretch; height: 0; margin: -4px 0; border-top: 1px dotted var(--splitter); }
+.fm-through > .fm-stretch, .fm-through > .fm-pages, .fm-through > .fm-cmdbar { justify-self: stretch; }
+/* Растягивание по высоте (fm-vstretch): при заданной высоте формы растягиваемые по высоте
+   элементы делят остаток окна - в столбце растут, в строке тянутся на ее высоту */
+.fm-vertical:not(.fm-through) > .fm-vstretch,
+.fm-group.fm-vstretch > .fm-group-content,
+.fm-field.fm-vstretch > .fm-control,
+.fm-table.fm-vstretch > .fm-table-view { flex: 1 1 auto; }
+.fm-horizontal > .fm-vstretch, .fm-through > .fm-vstretch { align-self: stretch; }
+/* Свернутая и всплывающая группы - одна строка заголовка, остаток высоты не берут */
+.fm-vertical:not(.fm-through) > .fm-vstretch.fm-collapsed,
+.fm-vertical:not(.fm-through) > .fm-vstretch.fm-popup-group { flex: none; }
+.fm-disabled { opacity: .55; }
+.fm-clip { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Имена элементов поверх (переключатель «Показать имена»): бирку элемента (`fm-name-tag`) рисует слой поверх
+   формы (`fm-name-label`) - ее не обрезают панели и таблицы */
+.fm-name-tag { display: none; }
+.fm-name-label {
+  position: absolute;
+  padding: 0 3px;
+  font: 10px/12px Menlo, Consolas, monospace;
+  color: #6b4e00;
+  background: #fff3c4;
+  border: 1px solid #e3c766;
+  border-radius: 2px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Группы */
+.fm-group { display: flex; flex-direction: column; gap: var(--gap-v); min-width: 0; }
+.fm-group-content { display: flex; flex-direction: column; gap: var(--gap-v); min-width: 0; }
+.fm-group-content.fm-horizontal { flex-direction: row; align-items: flex-start; gap: var(--gap-h); }
+.fm-group-content.fm-wrap { flex-wrap: wrap; row-gap: var(--gap-v); }
+.fm-group-content.fm-align-Center { justify-content: center; }
+.fm-group-content.fm-align-Right { justify-content: flex-end; }
+.fm-group-content.fm-vertical.fm-align-Center { align-items: center; }
+.fm-group-content.fm-vertical.fm-align-Right { align-items: flex-end; }
+
+/* Сквозное выравнивание: заголовки полей вертикальной группы - одной колонкой */
+.fm-group-content.fm-through {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  column-gap: var(--title-gap);
+  row-gap: var(--gap-v);
+  align-items: center;
+  justify-items: start;
+  /* растянутая по высоте сетка не раздает остаток обычным строкам - только растягиваемым (1fr) */
+  align-content: start;
+}
+.fm-through > .fm-field.fm-tl-Left { display: contents; }
+.fm-through > .fm-field.fm-stretch > .fm-control,
+.fm-through > .fm-field.fm-soft > .fm-control { justify-self: stretch; }
+/* Поле без заголовка в колонку не встает - от левого края (7.7.13.7.2: выравнивание - одинаковая ширина
+   заголовков слева; снимок консоли запросов: «Результат запроса» под «Выводить результаты запроса:») */
+.fm-through > .fm-field.fm-soft.fm-tl-None { justify-self: stretch; }
+.fm-through > :not(.fm-tl-Left) { grid-column: 1 / -1; }
+.fm-through > .fm-field.fm-tl-Left > .fm-field-title { grid-column: 1; }
+
+/* Заголовок группы в «Такси» - зеленый; у выделения (слабое, обычное, сильное) - крупнее.
+   Сильное выделение - зеленая черта слева от содержимого; рамок у групп нет */
+.fm-group { gap: 3px; }
+/* Положение элемента в группе и надпись-распорка */
+.fm-horizontal > .fm-grow-item { flex: 1 1 auto; }
+.fm-decoration.fm-label.fm-label-back { padding: 2px 3px; }
+.fm-button-link > .fm-img, .fm-button-link > svg, .fm-button-link > .fm-picture-stub { vertical-align: -3px; margin-right: 4px; }
+/* Вертикальное положение в строке группы: у группы - для всех подчиненных, у элемента - свое */
+.fm-horizontal.fm-valign-Center { align-items: center; }
+.fm-horizontal.fm-valign-Bottom { align-items: flex-end; }
+.fm-horizontal > .fm-gva-Top { align-self: flex-start; }
+.fm-horizontal > .fm-gva-Center { align-self: center; }
+.fm-horizontal > .fm-gva-Bottom { align-self: flex-end; }
+.fm-horizontal > .fm-gha-Right { margin-left: auto; }
+.fm-horizontal > .fm-gha-Center { margin-left: auto; margin-right: auto; }
+.fm-vertical:not(.fm-through) > .fm-gha-Right { align-self: flex-end; }
+.fm-vertical:not(.fm-through) > .fm-gha-Center { align-self: center; }
+.fm-through > .fm-gha-Right { justify-self: end; }
+.fm-through > .fm-gha-Center { justify-self: center; }
+/* Фон группы выходит за край на поля: содержимое остается на своих местах (сквозное выравнивание) */
+.fm-group.fm-backcolor { padding: 3px 6px; margin: -3px -6px; }
+.fm-group-title { color: var(--accent); white-space: nowrap; line-height: var(--line); }
+.fm-sep-Weak > .fm-group-title,
+.fm-sep-Normal > .fm-group-title,
+.fm-sep-Strong > .fm-group-title { font-size: var(--group-font-size); line-height: 20px; }
+.fm-sep-Strong > .fm-group-content { border-left: 3px solid var(--accent); padding-left: 8px; }
+/* Свертываемая и всплывающая группы - заголовок зеленой ссылкой */
+.fm-collapsible > .fm-group-title,
+.fm-popup-group > .fm-group-title { cursor: pointer; text-decoration: underline; text-underline-offset: 3px; align-self: flex-start; }
+/* Всплывающая группа: ссылка по центру строки, содержимое - окном поверх формы */
+.fm-popup-group { position: relative; }
+.fm-horizontal > .fm-popup-group { align-self: center; }
+.fm-popup-group > .fm-group-content {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 30;
+  background: var(--window-bg);
+  border: 1px solid #b3b3b3;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .25);
+  padding: 14px 40px 14px 14px;
+  width: max-content;
+  max-width: 90vw;
+}
+.fm-popup-group.fm-popup-right > .fm-group-content { left: auto; right: 0; }
+/* Крестик - в правом отступе окна (40px), не над содержимым. У окна-строки (flex) отсчет от края с
+   отступом; у окна-сетки (сквозное выравнивание) - от последней линии колонок, то есть края содержимого:
+   линии заданы явно, иначе браузеры расходятся (Chrome - край колонок, Safari - край с отступом) */
+.fm-popup-close { position: absolute; top: 8px; right: 11px; width: 18px; height: 18px; color: #555; cursor: pointer; }
+.fm-through > .fm-popup-close { grid-column: 1 / -1; grid-row: 1; top: -6px; right: -29px; }
+.fm-popup-close > svg { width: 18px; height: 18px; }
+.fm-collapsible > .fm-group-content { padding-left: 10px; }
+body:not(.fm-layout-pass) .fm-collapsed > .fm-group-content { display: none; }
+.fm-collapse-picture > .fm-group-title { text-decoration: none; }
+.fm-collapse-picture > .fm-group-title::before {
+  content: ""; display: inline-block; width: 6px; height: 6px; margin: 0 9px 3px 3px;
+  border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg);
+}
+.fm-collapse-picture.fm-collapsed > .fm-group-title::before { margin: 0 9px 1px 1px; transform: rotate(-45deg); }
+
+/* Страницы (закладки) */
+.fm-pages { display: flex; flex-direction: column; min-width: 0; }
+.fm-tabs { display: flex; position: relative; z-index: 1; }
+.fm-tab {
+  padding: 5px 10px 4px 10px;
+  line-height: var(--line);
+  background: var(--tab-bg);
+  border: 1px solid var(--tab-border);
+  border-bottom: none;
+  margin-left: -1px;
+  color: var(--text);
+  cursor: pointer;
+  white-space: nowrap;
+  max-width: 260px;
+}
+.fm-tab:first-child { margin-left: 0; }
+.fm-tab.fm-current { background: var(--window-bg); margin-bottom: -1px; padding-bottom: 5px; }
+.fm-page {
+  border: 1px solid var(--tab-border);
+  padding: 8px 10px 10px 10px;
+  min-width: 0;
+}
+body:not(.fm-layout-pass):not(.fm-pages-pass) .fm-page:not(.fm-current) { display: none; }
+.fm-pages.fm-tabs-bottom { flex-direction: column-reverse; }
+.fm-pages.fm-tabs-bottom .fm-tab { border-top: none; border-bottom: 1px solid var(--tab-border); }
+.fm-pages.fm-tabs-bottom .fm-tab.fm-current { margin: -1px 0 0 0; }
+.fm-pages.fm-tabs-side { flex-direction: row; }
+.fm-pages.fm-tabs-side.fm-tabs-right { flex-direction: row-reverse; }
+.fm-pages.fm-tabs-side .fm-tabs { flex-direction: column; padding: 2px 0 0 0; }
+.fm-pages.fm-tabs-side .fm-tab { border: 1px solid var(--tab-border); border-right: none; margin: -1px 0 0 0; padding: 7px 16px 7px 10px; }
+.fm-pages.fm-tabs-side .fm-tab:first-child { margin-top: 0; }
+.fm-pages.fm-tabs-side .fm-tab.fm-current { margin-right: -1px; padding-bottom: 7px; }
+.fm-pages.fm-tabs-none > .fm-tabs { display: none; }
+.fm-pages.fm-tabs-none > .fm-page { border: none; padding: 0; }
+.fm-page { flex: 1; align-content: start; }
+
+/* Поля */
+.fm-field { display: flex; align-items: center; gap: var(--title-gap); min-width: 0; }
+.fm-field.fm-tall { align-items: flex-start; }
+.fm-field.fm-tall > .fm-field-title { align-self: start; margin-top: 3px; }
+.fm-field.fm-tl-Top { flex-direction: column; align-items: flex-start; gap: 2px; }
+/* Заголовок сверху шире поля - целиком (Г-10 БП: «Автоматическое заполнение реквизитов по ИНН или наименованию:»):
+   обертка не уже заголовка, предел ширины поля - у самого поля */
+.fm-field.fm-tl-Top, .fm-field.fm-tl-Bottom { min-width: min-content; }
+.fm-field.fm-tl-Top > .fm-field-title, .fm-field.fm-tl-Bottom > .fm-field-title { max-width: none; overflow: visible; }
+.fm-field.fm-tl-Bottom { flex-direction: column-reverse; align-items: flex-start; gap: 2px; }
+.fm-field.fm-tl-Right { flex-direction: row-reverse; justify-content: flex-end; }
+.fm-field.fm-stretch { align-self: stretch; }
+.fm-field.fm-stretch > .fm-control { flex: 1; }
+.fm-field.fm-tl-Top.fm-stretch > .fm-control { align-self: stretch; }
+/* Заголовок сверху или снизу: поле своей высоты, а не flex-остаток (иначе многострочное схлопывается) */
+.fm-field.fm-tl-Top.fm-stretch > .fm-control, .fm-field.fm-tl-Bottom.fm-stretch > .fm-control { flex: none; align-self: stretch; }
+/* Многострочное поле ввода с «Растягивать по вертикали»: заголовок сверху или снизу - поле забирает
+   остаток высоты обертки; заголовок сбоку - поле на всю высоту строки, ширина своя */
+.fm-field.fm-tall.fm-vstretch.fm-tl-Top > .fm-control, .fm-field.fm-tall.fm-vstretch.fm-tl-Bottom > .fm-control { flex: 1 1 auto; }
+.fm-field.fm-tall.fm-vstretch:not(.fm-tl-Top):not(.fm-tl-Bottom) > .fm-control { align-self: stretch; }
+.fm-field.fm-tall.fm-vstretch:not(.fm-tl-Top):not(.fm-tl-Bottom):not(.fm-stretch) > .fm-control { flex: none; }
+/* Растягиваемое поле в строке группы забирает остаток строки (ГИСМ, «Описание номенклатуры») */
+.fm-horizontal > .fm-field.fm-stretch { flex: 1 1 auto; }
+.fm-horizontal > .fm-field.fm-stretch.fm-capped { flex: 0 1 auto; }
+/* Строка и ссылка тянутся по месту до своего предела (max-width у поля) */
+.fm-horizontal > .fm-field.fm-soft.fm-tl-Top,
+.fm-horizontal > .fm-field.fm-soft.fm-tl-None { flex: 1 1 auto; }
+.fm-field.fm-soft.fm-tl-Top > .fm-control { align-self: stretch; }
+.fm-field.fm-soft.fm-tl-None > .fm-control { flex: 1; }
+/* Подсказка у поля: «?» после поля или текст рядом (ОтображениеПодсказки) */
+.fm-xtip { display: flex; min-width: 0; }
+.fm-xtip-Button, .fm-xtip-Left, .fm-xtip-Right { flex-direction: row; align-items: center; gap: 6px; }
+.fm-xtip-Top, .fm-xtip-Bottom { flex-direction: column; align-items: stretch; gap: 2px; }
+.fm-xtip-Button > .fm-input, .fm-xtip-Left > .fm-input, .fm-xtip-Right > .fm-input { flex: 1 1 auto; }
+.fm-xtip-Button > .fm-label { flex: 0 0 auto; }
+.fm-help-btn { flex: none; color: #2b6cb0; cursor: help; line-height: var(--line); padding: 0 2px; }
+.fm-field.fm-tl-Right > .fm-help-btn { margin-left: 2px; }
+.fm-xtip-text { color: var(--tip); white-space: normal; line-height: var(--line); }
+/* Подсказка сверху и снизу не растит окно: форма без ширины подогнана под реквизиты, текст переносится
+   в ширине поля (проверено 03.11.2026 на форме с подсказкой снизу) */
+.fm-xtip-Top > .fm-xtip-text, .fm-xtip-Bottom > .fm-xtip-text { contain: inline-size; }
+/* Флажок и переключатель с подсказкой снизу или сверху: поле своей ширины, текст подсказки - по ширине
+   места (колонки полей, столбца группы), а не квадрата; окно он не растит (contain выше). Пара «квадрат +
+   заголовок» с подсказкой рядом не сжимается: текст подсказки справа не наезжает на заголовок */
+.fm-xtip > .fm-field { flex: none; }
+.fm-xtip-wide { align-items: flex-start; }
+.fm-xtip-wide > .fm-xtip-text { align-self: stretch; }
+.fm-field > .fm-xtip-wide { flex: 1 1 auto; }
+.fm-through > .fm-xtip-wide, .fm-through > .fm-field.fm-tl-Left > .fm-xtip-wide { justify-self: stretch; }
+.fm-body > .fm-wide-tip, .fm-page > .fm-wide-tip, .fm-vertical:not(.fm-through) > .fm-wide-tip { align-self: stretch; }
+/* Заголовок слева у поля с подсказкой снизу или сверху - на уровне поля, как у многострочного */
+.fm-field.fm-tl-Left.fm-xtip-below > .fm-field-title { align-self: start; margin-top: 3px; }
+.fm-field.fm-tl-Left.fm-xtip-above > .fm-field-title { align-self: end; margin-bottom: 3px; }
+/* В узком окне сжимается поле, а не заголовок (Г-9); предела у заголовка нет - «Наименование (ширина 30,
+   макс. 50), если возможно:» на закладке «Ширины» витрины целиком, 342 px */
+.fm-field-title { color: var(--title); white-space: nowrap; line-height: var(--line); flex: none; }
+.fm-field.fm-tl-Right > .fm-field-title { color: var(--text); }
+/* Заголовок в несколько строк: ширину ставит рендерер (titleLines) */
+.fm-field-title.fm-title-lines { white-space: pre-line; text-overflow: clip; max-width: none; }
+/* Автоперенос заголовков колонки (Г-3): ширину ставит рендерер (wrapColumn), перенос по словам */
+.fm-field-title.fm-title-wrap { white-space: normal; text-overflow: clip; overflow: visible; }
+
+.fm-input {
+  display: flex;
+  align-items: stretch;
+  height: var(--row);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: var(--field-bg);
+  min-width: 0;
+}
+.fm-input.fm-multiline { align-items: flex-start; }
+.fm-input.fm-readonly { border-color: var(--border-light); }
+.fm-input-value {
+  flex: 1;
+  min-width: 0;
+  padding: 0 4px;
+  line-height: calc(var(--row) - 2px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fm-multiline .fm-input-value { white-space: pre-wrap; line-height: 17px; padding-top: 2px; }
+.fm-input-value.fm-number { text-align: right; }
+.fm-input-value.fm-hint { color: var(--muted); }
+/* Незаполненное обязательное - тонкая красная черта внизу поля */
+/* Незаполненное обязательное - красная пунктирная черта по низу значения, как в «Такси» */
+.fm-input.fm-incomplete > .fm-input-value {
+  background: repeating-linear-gradient(90deg, var(--incomplete) 0 1px, transparent 1px 3px) no-repeat 4px calc(100% - 2px) / calc(100% - 8px) 1px;
+}
+.fm-input-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--input-btn);
+  flex: none;
+  border-left: 1px solid var(--border);
+  color: var(--title);
+  font-size: 11px;
+}
+.fm-input-btn svg { width: 12px; height: 12px; }
+
+.fm-label-value { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: var(--line); }
+.fm-hyperlink { color: var(--link); cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+
+/* Флажок, выключатель, тумблер, переключатель */
+.fm-check {
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  position: relative;
+}
+/* Галочка 1С крупнее квадрата и выходит за его правый верхний угол */
+.fm-check svg { position: absolute; left: 1px; top: -4px; width: 17px; height: 17px; }
+.fm-switch {
+  width: 34px;
+  height: 16px;
+  margin: 3px 0;
+  border-radius: 8px;
+  background: #cfcfcf;
+  position: relative;
+  flex: none;
+}
+.fm-switch::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: -2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid #c4c4c4;
+  box-sizing: border-box;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+}
+.fm-switch.fm-on { background: var(--accent); }
+.fm-switch.fm-on::after { left: 16px; }
+.fm-tumbler { display: inline-flex; border: 1px solid #bdbdbd; border-radius: 2px; overflow: hidden; flex: none; }
+.fm-tumbler > span { padding: 2px 13px; line-height: var(--line); background: var(--button-bg); border-left: 1px solid #bdbdbd; white-space: nowrap; }
+.fm-tumbler > span:first-child { border-left: none; }
+.fm-tumbler > span.fm-on { background: #fff; color: var(--accent); }
+.fm-radio-list { display: grid; column-gap: 20px; row-gap: 8px; line-height: var(--line); }
+.fm-radio-item { display: flex; align-items: center; gap: 7px; white-space: nowrap; }
+.fm-radio {
+  width: 15px;
+  height: 15px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: #fff;
+  flex: none;
+  position: relative;
+}
+.fm-radio.fm-on::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* Командные панели и кнопки */
+/* Панель не расширяет форму (contain): лишнее уходит в «Еще» */
+.fm-cmdbar { display: flex; align-items: center; gap: 9px; min-width: 0; overflow: hidden; flex: none; align-self: stretch; contain: inline-size; padding-bottom: 2px; }
+.fm-cmdbar.fm-align-Right { justify-content: flex-end; }
+.fm-cmdbar.fm-align-Center { justify-content: center; }
+.fm-cmdbar-items { display: flex; align-items: center; gap: 9px; min-width: 0; flex: 0 1 auto; overflow: hidden; padding-bottom: 2px; }
+/* Поле поиска, положенное в панель дополнением, - у правого края, кнопки после него - за ним */
+.fm-cmdbar-items > .fm-search-placed { margin-left: auto; }
+.fm-cmdbar-items:has(> .fm-search-placed) { flex: 1 1 auto; }
+.fm-search-control { padding: 0 6px; }
+/* «Еще» подменю всех действий поля - у правого края панели */
+.fm-cmdbar-items > .fm-all-actions { margin-left: auto; }
+.fm-cmdbar-items:has(> .fm-all-actions) { flex: 1 1 auto; }
+.fm-cmdbar-tail { display: flex; align-items: center; gap: 9px; margin-left: auto; flex: 0 1000 auto; min-width: 0; }
+/* Узкая таблица: кнопки остаются, поле поиска сжимается до своего минимума (снимок ГИСМ, «Номера КиЗ») */
+.fm-cmdbar-tail > :not(.fm-search) { flex: none; }
+/* Кнопка растет по тексту: ширина из модели - нижняя граница */
+.fm-button, .fm-popup {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 25px;
+  min-width: 36px;
+  padding: 0 13px;
+  border: 1px solid #bdbdbd;
+  border-radius: 2px;
+  background: linear-gradient(#ffffff, #f2f2f2);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .15);
+  color: var(--text);
+  white-space: nowrap;
+  flex: none;
+}
+.fm-button.fm-default {
+  background: linear-gradient(#ffe57f, var(--default-btn));
+  border-color: var(--default-btn-border);
+  font-weight: bold;
+}
+/* Кнопка-значок - 30 px, как в 1С (снимок 1С: панели над табличным документом) */
+.fm-button.fm-icon-only { padding: 0 6px; min-width: 0; }
+.fm-button svg, .fm-popup svg { width: 16px; height: 16px; flex: none; }
+/* Картинка конфигурации; полоса из нескольких состояний - первым кадром слева */
+.fm-picture-stub { display: inline-flex; flex: none; color: #9a9a9a; }
+.fm-picture-stub svg { width: 16px; height: 16px; }
+.fm-th-picture { display: inline-flex; align-items: center; gap: 4px; }
+.fm-th > .fm-th-icon { display: flex; justify-content: center; height: var(--table-row); padding: 0; }
+.fm-tab .fm-img, .fm-tab .fm-picture-stub, .fm-tab > svg { vertical-align: -3px; margin-right: 4px; }
+.fm-img { width: 16px; height: 16px; flex: none; object-fit: cover; object-position: left center; }
+.fm-picture:not(.fm-picture-icon) > .fm-img { width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; }
+.fm-measure { position: absolute; visibility: hidden; white-space: nowrap; left: 0; top: 0; }
+.fm-popup::after { content: "▾"; color: #777; font-size: 10px; }
+.fm-button-text { white-space: nowrap; }
+/* Кнопка вида «Гиперссылка»: текст ссылкой, без рамки, по высоте поля */
+.fm-button-link { display: inline-flex; align-items: center; min-height: 24px; white-space: nowrap; flex: none; }
+/* Группа кнопок командной панели: кнопки порознь, от соседей - двойной промежуток */
+.fm-button-group { display: inline-flex; gap: 9px; margin: 0 11px; flex: none; }
+/* Между двумя группами подряд - один двойной промежуток, а не два (снимок 1С: ~20 px) */
+.fm-button-group + .fm-button-group { margin-left: 0; }
+.fm-button-group:first-child { margin-left: 0; }
+.fm-button-group:last-child { margin-right: 0; }
+/* Стандартные «вверх / вниз» таблицы - слитной парой */
+.fm-button-group.fm-joined { gap: 0; }
+.fm-button-group.fm-joined > .fm-button { border-radius: 0; margin-left: -1px; }
+.fm-button-group.fm-joined > .fm-button:first-child { border-radius: 2px 0 0 2px; margin-left: 0; }
+.fm-button-group.fm-joined > .fm-button:last-child { border-radius: 0 2px 2px 0; }
+.fm-search {
+  display: flex;
+  align-items: stretch;
+  height: 24px;
+  width: 240px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--muted);
+  background: #fff;
+  flex: 0 1 240px;
+  min-width: var(--search-min);
+  overflow: hidden;
+}
+.fm-search-text { flex: 1; padding: 0 5px; line-height: 22px; overflow: hidden; white-space: nowrap; }
+
+/* Таблица */
+.fm-table { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.fm-table.fm-stretch { align-self: stretch; }
+/* В строке группы растягиваемая таблица забирает свободное место: при заданной ширине формы распорки
+   нет, и своей ширины у таблицы нет - иначе она сжимается в ноль (по снимку 1С) */
+.fm-horizontal > .fm-table.fm-stretch { flex: 1 1 auto; }
+.fm-table-grid {
+  display: grid;
+  border: 1px solid var(--border);
+  background: #fff;
+  min-width: 0;
+  overflow: hidden;
+}
+/* Область прокрутки таблицы: свою ширину окну не навязывает (contain), ее задает распорка */
+.fm-table-view { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; contain: inline-size; min-width: 0; }
+.fm-table-view::-webkit-scrollbar { display: none; }
+/* Закрепленная колонка (`fixingInTable`) при прокрутке стоит на месте */
+.fm-fixed-col { position: sticky; z-index: 2; }
+.fm-td.fm-fixed-col { background: #fff; }
+.fm-td.fm-fixed-col.fm-current-row { background: var(--current-row); }
+/* Сетка не обрезает сама: иначе закрепленная колонка липнет к ней, а не к области прокрутки */
+.fm-table-view > .fm-table-grid { width: 100%; box-sizing: border-box; overflow: visible; border: none; }
+/* Рамка - у области прокрутки: сетка шире области, и ее правая граница ушла бы за край (ГИСМ, «Товары») */
+.fm-table-view { border: 1px solid var(--border); background: #fff; }
+.fm-table-spacer { height: 0; max-width: 100%; margin-top: -5px; }
+.fm-table-hscroll { display: none; height: 12px; margin-top: -5px; padding: 2px 16px; border: 1px solid var(--border); border-top: none; background: #fff; }
+.fm-table-hscroll.fm-shown { display: block; }
+.fm-table-hscroll-thumb { height: 6px; border-radius: 3px; background: #a0a0a0; }
+/* Шапка и подвал 1С: текст слева и сверху, строка - --table-row; строки группы колонок
+   «Вертикально» - одна под другой через линию */
+.fm-th, .fm-tf {
+  background: var(--header-bg);
+  border-right: 1px solid var(--header-line);
+  color: var(--title);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.fm-th { border-bottom: 1px solid var(--header-line); }
+.fm-tf { border-top: 1px solid var(--header-line); min-width: 0; }
+.fm-th > span, .fm-tf > span, .fm-td > span {
+  padding: 0 8px;
+  line-height: var(--table-row);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fm-th > span + span, .fm-tf > span + span, .fm-th > span + .fm-th-line, .fm-th > .fm-th-line + span,
+.fm-th > .fm-th-line + .fm-th-line { border-top: 1px solid var(--header-line); }
+/* Строка вертикальной группы колонок из нескольких колонок - в ряд через линию */
+.fm-th-line, .fm-td-line { display: flex; min-width: 0; }
+.fm-th-line > span, .fm-td-line > span { min-width: 0; padding: 0 8px; line-height: var(--table-row); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fm-th-line > span + span { border-left: 1px solid var(--header-line); }
+.fm-td-line > span + span { border-left: 1px solid var(--row-line); }
+/* Скрытая колонка - рамка внутри ячейки шапки */
+.fm-th.fm-user-hidden, .fm-th.fm-hidden { outline-offset: -2px; }
+.fm-td {
+  border-right: 1px solid var(--row-line);
+  border-bottom: 1px solid var(--row-line);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.fm-td > span + span { border-top: 1px solid var(--row-line); }
+.fm-td.fm-number { text-align: right; }
+.fm-td.fm-current-row { background: var(--current-row); }
+.fm-td > span > svg { width: 12px; height: 12px; margin-right: 6px; vertical-align: -1px; }
+.fm-td.fm-tree-child > span { padding-left: 46px; }
+/* «Автовысота ячейки»: длинное значение переносится по словам, строка таблицы выше */
+.fm-td > span.fm-td-wrap, .fm-td-line > span.fm-td-wrap {
+  white-space: normal;
+  text-overflow: clip;
+  overflow-wrap: anywhere;
+  line-height: var(--line);
+  padding-top: calc((var(--table-row) - var(--line)) / 2);
+  padding-bottom: calc((var(--table-row) - var(--line)) / 2);
+}
+/* Картинка подвала колонки - перед текстом подвала */
+.fm-tf > .fm-tf-picture { display: flex; align-items: center; gap: 4px; }
+.fm-td .fm-check { vertical-align: middle; }
+.fm-table-empty { background: #fff; }
+/* Оформление таблицы: без линий сетки, чередование цвета строк (альтернативный фон поля «Такси»).
+   Линии снимаются только в содержимом: шапка и подвал расчерчены всегда (владелец 07.11.2026) */
+.fm-no-hlines > .fm-td, .fm-no-hlines > .fm-td > span + span { border-bottom-color: transparent; border-top-color: transparent; }
+.fm-no-vlines > .fm-td, .fm-no-vlines > .fm-td .fm-td-line > span + span { border-right-color: transparent; border-left-color: transparent; }
+.fm-alternate > .fm-td.fm-even-row:not(.fm-current-row) { background: #F4FBF7; }
+
+/* Декорации и заглушки */
+.fm-decoration { min-width: 0; }
+.fm-decoration.fm-label { white-space: pre-wrap; color: var(--text); }
+.fm-picture, .fm-stub {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
+  border: 1px dashed #b5b5b5;
+  background: repeating-linear-gradient(45deg, #fafafa, #fafafa 6px, #f3f3f3 6px, #f3f3f3 12px);
+  color: #8a8a8a;
+  font-size: 12px;
+  text-align: center;
+  min-width: 0;
+}
+.fm-picture svg, .fm-stub svg { width: 22px; height: 22px; }
+/* Картинка без размера - значок своего размера, без рамки заглушки */
+.fm-picture.fm-picture-icon { width: 24px; height: 24px; border: none; background: none; flex: none; }
+.fm-picture.fm-picture-icon svg { width: 16px; height: 16px; }
+.fm-picture.fm-picture-std { border: none; background: none; }
+.fm-picture.fm-picture-natural { border: none; background: none; flex: none; }
+.fm-picture.fm-picture-natural > .fm-img { width: auto; height: auto; }
+.fm-stub.fm-picture-empty { border: none; background: none; }
+/* Ячейка коллекции картинки значений: окно в одну ячейку полосы (16 - ячейка ldpi, точный размер - по картинке) */
+.fm-values-picture { display: inline-block; flex: none; width: 16px; height: 16px; overflow: hidden; line-height: 0; }
+.fm-values-picture > .fm-img { width: auto; height: auto; max-width: none; max-height: none; object-fit: none; }
+.fm-values-picture.fm-values-whole { width: auto; height: auto; }
+.fm-td .fm-values-picture { vertical-align: middle; }
+/* Окно кадра - без отступов подписи заглушки (.fm-stub > span): при border-box они съедают ячейку и сдвигают кадр */
+.fm-stub > span.fm-values-picture { padding: 0; max-width: none; }
+/* Поле надписи в рамке: текст не прилипает к рамке */
+.fm-label-value.fm-bordered { display: inline-block; padding: 0 3px; }
+/* Табличный документ (замер снимка 1С): колонка 63 px, строка 14 px, номера строк 33 px.
+   Части - поверх поля: размер поля задает раскладка, а не число нарисованных строк */
+.fm-stub.fm-sheet {
+  display: block;
+  position: relative;
+  border: 1px solid var(--border);
+  background: #fff;
+  overflow: hidden;
+  font-size: 10px;
+  color: #444;
+}
+.fm-sheet > div { position: absolute; overflow: hidden; background: #f2f2f2; }
+.fm-sheet-corner { left: 0; top: 0; width: 33px; height: 14px; box-sizing: border-box; border-right: 1px solid #c8c8c8; border-bottom: 1px solid #c8c8c8; }
+.fm-sheet-columns { left: 33px; right: 0; top: 0; height: 14px; display: flex; box-sizing: border-box; border-bottom: 1px solid #c8c8c8; }
+.fm-sheet-columns > span { flex: none; width: 63px; box-sizing: border-box; border-right: 1px solid #d8d8d8; text-align: center; line-height: 13px; }
+.fm-sheet-rows { left: 0; top: 14px; bottom: 0; width: 33px; display: flex; flex-direction: column; box-sizing: border-box; border-right: 1px solid #c8c8c8; }
+.fm-sheet-rows > span { flex: none; height: 14px; text-align: center; line-height: 14px; }
+.fm-sheet-rows > span.fm-sheet-current, .fm-sheet-columns > span.fm-sheet-current { color: #000; background: #e4e4e4; }
+.fm-sheet > .fm-sheet-cells {
+  left: 33px; right: 0; top: 14px; bottom: 0;
+  background:
+    linear-gradient(#dcebfa, #dcebfa) 0 0 / 62px 13px no-repeat,
+    linear-gradient(90deg, transparent 62px, #e6e6e6 62px) 0 0 / 63px 14px,
+    linear-gradient(transparent 13px, #ececec 13px) 0 0 / 63px 14px,
+    #fff;
+}
+/* Текстовый документ: белое поле с бежевой полосой слева */
+.fm-stub.fm-textdoc {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+.fm-textdoc-gutter { flex: none; width: 16px; background: #ebe6d4; }
+.fm-picture > span, .fm-stub > span { max-width: 100%; padding: 0 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fm-decoration.fm-label { line-height: var(--line); }
+.fm-decoration.fm-label.fm-hyperlink { color: var(--link); }
+/* В строке группы 1С ставит однострочный элемент по середине строки высотой с поле ввода:
+   надпись и поле надписи опускаются на полразницы высот (многострочная - первой строкой),
+   если в строке есть поле ввода или кнопка; строка из одних надписей - высотой с надпись */
+.fm-horizontal:has(> .fm-field > .fm-input, > .fm-button, > .fm-popup, > .fm-button-group, > .fm-cmdbar) > .fm-decoration.fm-label:not(.fm-gva-Top),
+.fm-horizontal:has(> .fm-field > .fm-input, > .fm-button, > .fm-popup, > .fm-button-group, > .fm-cmdbar) > .fm-field:has(> .fm-label-value):not(.fm-gva-Top) { padding-top: calc((var(--row) - var(--line)) / 2); }
+.fm-horizontal.fm-valign-Center > .fm-decoration.fm-label,
+.fm-horizontal.fm-valign-Center > .fm-field:has(> .fm-label-value),
+.fm-horizontal > .fm-gva-Center { padding-top: 0; }
+
+/* Подсказка при наведении */
+.fm-tip {
+  position: fixed;
+  z-index: 100;
+  max-width: 380px;
+  padding: 6px 8px;
+  background: #fffff0;
+  border: 1px solid #c9c39a;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .18);
+  font-size: 12px;
+  line-height: 16px;
+  pointer-events: none;
+  display: none;
+}
+.fm-tip b { font-family: Menlo, Consolas, monospace; font-weight: normal; color: #6b4e00; }
+.fm-tip .fm-tip-note { color: #555; font-style: italic; }
+.fm-hover { outline: 1px solid rgba(28, 93, 168, .5); outline-offset: 1px; }
+
+/* Раскрытое подменю - список команд поверх формы */
+.fm-popup.fm-open { background: #e6e6e6; }
+.fm-menu {
+  position: absolute;
+  z-index: 50;
+  min-width: 160px;
+  padding: 4px 0;
+  background: var(--window-bg);
+  border: 1px solid #b3b3b3;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .25);
+  font: var(--font-size) var(--font);
+  color: var(--text);
+}
+.fm-menu-item { position: relative; display: flex; align-items: center; gap: 8px; padding: 4px 24px 4px 8px; white-space: nowrap; cursor: default; }
+.fm-menu-item:hover { background: #fdf0c4; }
+.fm-menu-picture { width: 16px; height: 16px; flex: none; display: inline-flex; }
+.fm-menu-picture > svg, .fm-menu-picture > img { width: 16px; height: 16px; }
+.fm-menu-sep { height: 0; margin: 4px 0; border-top: 1px solid #e0e0e0; }
+.fm-menu-empty { padding: 4px 12px; color: var(--tip); }
+.fm-menu-key { margin-left: auto; padding-left: 40px; color: #9a9a9a; }
+.fm-menu-disabled { color: #aaa; }
+.fm-menu-sub::after { content: "›"; position: absolute; right: 8px; color: #777; }
+.fm-menu-item > .fm-menu { display: none; left: 100%; top: -5px; }
+.fm-menu-item:hover > .fm-menu { display: block; }
+/* Кнопка формы «Овальная» - скругленные края (по снимку 1С) */
+.fm-button.fm-oval { border-radius: 999px; padding-left: 12px; padding-right: 12px; }
+/* Пометка кнопки: нажатая - «вдавлена», как в «Такси»; щелчок на макете нажимает и отжимает */
+.fm-button.fm-checkable { cursor: pointer; }
+.fm-button.fm-checked {
+  background: linear-gradient(#d9d9d9, #e9e9e9);
+  border-color: #9a9a9a;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, .28);
+}
+.fm-menu-item.fm-menu-checked > .fm-menu-picture { outline: 1px solid #9a9a9a; outline-offset: 1px; background: #e9e9e9; border-radius: 2px; }
+/* Выпадающий список поля: щелчок по полю раскрывает пункты, текущее значение отмечено */
+.fm-droplist { cursor: pointer; }
+.fm-list-menu { padding: 2px 0; }
+.fm-list-menu > .fm-menu-item { padding: 4px 10px; }
+.fm-menu-item.fm-menu-current { background: #fdf0c4; }
+/* Наведение переносит подсветку: текущее значение не остается выделенным рядом с пунктом под курсором */
+.fm-list-menu:hover > .fm-menu-current:not(:hover) { background: none; }
+
+/* Правки: рамки и номера - слоем поверх формы, раскладку не меняют */
+:root {
+  --diff-added: #2e9b3a;
+  --diff-changed: #e0a800;
+  --diff-moved: #2f6fd6;
+  --diff-removed: #d93025;
+  --note: #8e44ad;          /* номера примечаний - не цвет правки */
+}
+.fm-stage { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 16px; }
+.fm-stage > #fm-root { flex: 0 1 auto; min-width: 0; }
+.fm-modes { display: flex; gap: 10px; padding-right: 6px; border-right: 1px solid #ccc; }
+.fm-modes label { display: flex; gap: 4px; align-items: center; cursor: pointer; }
+
+.fm-diff-layer { position: absolute; left: 0; top: 0; width: 0; height: 0; pointer-events: none; z-index: 40; }
+.fm-diff-frame { position: absolute; border: 2px solid; border-radius: 3px; }
+.fm-diff-frame.fm-diff-added { border-color: var(--diff-added); }
+.fm-diff-frame.fm-diff-changed { border-color: var(--diff-changed); }
+.fm-diff-frame.fm-diff-moved { border-color: var(--diff-moved); }
+.fm-diff-frame.fm-diff-removed { border-color: var(--diff-removed); border-style: dashed; }
+.fm-diff-frame.fm-diff-ghost { border-color: var(--diff-moved); border-style: dashed; opacity: .55; }
+.fm-diff-frame.fm-diff-active { box-shadow: 0 0 0 3px rgba(47, 111, 214, .25); animation: fm-diff-flash 1s ease-out 2; }
+@keyframes fm-diff-flash { 50% { box-shadow: 0 0 0 7px rgba(47, 111, 214, .35); } }
+.fm-diff-badge {
+  display: inline-block;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 9px;
+  font: bold 11px/18px Arial, sans-serif;
+  text-align: center;
+  color: #fff;
+  background: #777;
+}
+.fm-diff-layer > .fm-diff-badge { position: absolute; box-shadow: 0 0 0 1.5px #fff; }
+.fm-diff-badge.fm-diff-added { background: var(--diff-added); }
+.fm-diff-badge.fm-diff-changed { background: var(--diff-changed); color: #3b2f00; }
+.fm-diff-badge.fm-diff-moved { background: var(--diff-moved); }
+.fm-diff-badge.fm-diff-removed { background: var(--diff-removed); }
+.fm-diff-badge.fm-diff-ghost { background: #9db8e6; }
+/* Примечание - тонкой пунктирной рамкой: элемент виден под ней, номер - как в колонке «№» таблицы */
+.fm-diff-frame.fm-diff-note { border: 1.5px dashed var(--note); }
+.fm-diff-badge.fm-diff-note { background: var(--note); }
+/* Удаленное зачеркнуто, тень перенесенного бледная */
+.fm-diff-on .fm-diff-removed-el, .fm-diff-on .fm-diff-removed-el * { text-decoration: line-through; text-decoration-color: var(--diff-removed); }
+.fm-diff-on .fm-diff-ghost-el { opacity: .35; }
+
+.fm-diff-legend { display: none; gap: 14px; margin-bottom: 8px; font: 12px Arial, sans-serif; color: #444; }
+.fm-diff-on .fm-diff-legend { display: flex; flex-wrap: wrap; }
+.fm-diff-legend-item { display: inline-flex; align-items: center; gap: 5px; }
+.fm-diff-swatch { display: inline-block; width: 14px; height: 10px; border: 2px solid; border-radius: 2px; }
+.fm-diff-swatch.fm-diff-added { border-color: var(--diff-added); }
+.fm-diff-swatch.fm-diff-changed { border-color: var(--diff-changed); }
+.fm-diff-swatch.fm-diff-moved { border-color: var(--diff-moved); }
+.fm-diff-swatch.fm-diff-removed { border-color: var(--diff-removed); border-style: dashed; }
+
+/* Список правок справа от формы, на узком окне - под ней; на снимке его нет */
+.fm-changes { display: none; flex: 0 0 320px; max-height: calc(100vh - 80px); overflow: auto; position: sticky; top: 16px;
+  background: #fff; border: 1px solid #d0d0d0; font: 12px/16px Arial, sans-serif; color: #333; }
+.fm-diff-on .fm-changes { display: block; }
+.fm-static .fm-changes { display: none; }
+.fm-changes-title { padding: 8px 10px; font-weight: bold; border-bottom: 1px solid #e3e3e3; }
+.fm-change { padding: 7px 10px; border-bottom: 1px solid #eee; cursor: pointer; }
+.fm-change:hover { background: #f4f7fc; }
+.fm-change.fm-change-active { background: #e8f0fc; }
+.fm-change.fm-change-absent { opacity: .6; }
+.fm-change-head { display: flex; align-items: center; gap: 6px; }
+.fm-change-title { font-weight: bold; }
+.fm-change-what { margin-left: auto; color: #666; white-space: nowrap; }
+.fm-change-name { margin-top: 2px; font: 11px Menlo, Consolas, monospace; color: #6b4e00; }
+.fm-change-detail { margin-top: 2px; color: #555; }
+.fm-tip .fm-tip-diff { margin-top: 4px; font-weight: bold; }
+/* Номер правки, элемент которой не виден (в подменю, в «Еще»), - у видимого предка, пунктирной обводкой */
+.fm-diff-layer > .fm-diff-badge.fm-diff-hidden-badge { border: 1px dashed #fff; line-height: 16px; }
+/* Группа колонок «в ячейке» с картинкой: картинка и текст в строку (обкатка) */
+.fm-td.fm-td-incell { flex-direction: row; align-items: center; justify-content: flex-start; }
+.fm-td.fm-td-incell > span + span { border-top: 0; }
+.fm-td.fm-td-incell > span:first-child { padding-right: 0; }

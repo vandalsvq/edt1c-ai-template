@@ -1,0 +1,360 @@
+{
+  "description": "Панель свойств конструктора: группы, блоки и порядок свойств по видам - по палитре свойств конфигуратора. Свойство вида, которого нет у элемента по схеме, не выводится; виды без своего списка - по default (порядок поля ввода). locked - свойства, которые панель показывает, но не правит. defaults - значения платформы по умолчанию для незаданных свойств (model.md); свойство без умолчания показывается пустым («Авто»). places - применимость по месту элемента (сверка со справочником синтаксиса 8.3.27): вид (* - все виды) → свойство → места, где оно имеет смысл в 1С: column - колонка таблицы, body - вне таблицы и командной панели, commandBar - кнопка в командной панели, form - кнопка среди элементов формы; пустой список - у вида в 1С такого свойства нет. Вне своих мест свойство не показывается, если не записано в модели. derived - данные для рисования, которые конструктор переносит в элемент из реквизита по пути к данным (тип значения и его квалификаторы): панель элемента их не показывает, тип правится у реквизита. element - свойства самого поля (в EDT - вне extInfo, по корпусам форм): при смене вида они остаются, прочие - свойства вида (ширина, высота, растягивание, максимумы, рамка, шрифт и цвета значения, кнопки) - сбрасываются, как в конфигураторе. Модель и схему файл не меняет.",
+  "kinds": {
+    "Form": [
+      { "group": "Основные", "blocks": [["title", "autoTitle", "group"]] },
+      { "group": "Использование", "blocks": [
+        ["commandBarLocation", "excludedCommands", "showTitle", "showCloseButton", "help"]
+      ] },
+      { "group": "Расположение", "blocks": [["width", "height"]] },
+      { "group": "Макет", "blocks": [["formKind", "note"]] }
+    ],
+    "InputField": [
+      { "group": "Основные", "blocks": [
+        ["name", "title", "type", "dataPath", "titleLocation", "visible", "userVisible", "enabled", "readOnly", "multiLine", "format"]
+      ] },
+      { "group": "Использование", "blocks": [
+        ["dropListButton", "choiceButton", "clearButton", "openButton", "createButton", "choiceButtonRepresentation", "choiceList", "listChoiceMode", "markIncomplete", "autoMarkIncomplete"],
+        ["showInHeader", "showInFooter", "fixingInTable", "footerText", "cellHyperlink", "autoCellHeight"],
+        ["toolTip", "toolTipRepresentation", "inputHint", "extendedTooltip", "extendedTooltipTextColor"]
+      ] },
+      { "group": "Оформление", "blocks": [
+        ["titleTextColor", "titleFont", "backColor", "textColor", "borderColor", "font", "choiceButtonPicture"],
+        ["headerPicture", "headerBackColor", "footerPicture", "footerBackColor", "footerTextColor", "footerFont"]
+      ] },
+      { "group": "Расположение", "blocks": [
+        ["width", "height"],
+        ["autoMaxWidth", "maxWidth", "autoMaxHeight", "maxHeight"],
+        ["headerHorizontalAlign", "footerHorizontalAlign"],
+        ["groupHorizontalAlign", "groupVerticalAlign"],
+        ["horizontalStretch", "verticalStretch"],
+        ["titleHeight"]
+      ] },
+      { "group": "Макет", "blocks": [["note", "sample", "renamedFrom"]] }
+    ],
+    "CheckBoxField": [
+      { "group": "Основные", "blocks": [
+        ["name", "title", "type", "dataPath", "titleLocation", "visible", "userVisible", "enabled", "readOnly", "checkBoxType", "format"]
+      ] },
+      { "group": "Использование", "blocks": [
+        ["showInHeader", "showInFooter", "fixingInTable", "cellHyperlink", "autoCellHeight"],
+        ["toolTip", "toolTipRepresentation", "extendedTooltip", "extendedTooltipTextColor"]
+      ] },
+      { "group": "Оформление", "blocks": [["titleTextColor", "titleFont", "borderColor"], ["headerPicture", "headerBackColor", "footerPicture", "footerBackColor", "footerTextColor", "footerFont"]] },
+      { "group": "Расположение", "blocks": [
+        ["width", "height"],
+        ["verticalAlign"],
+        ["headerHorizontalAlign", "footerHorizontalAlign"],
+        ["groupHorizontalAlign", "groupVerticalAlign"],
+        ["horizontalStretch", "verticalStretch"],
+        ["titleHeight"]
+      ] },
+      { "group": "Макет", "blocks": [["note", "sample", "renamedFrom"]] }
+    ],
+    "RadioButtonField": [
+      { "group": "Основные", "blocks": [["name", "title", "type", "dataPath", "titleLocation", "visible", "userVisible", "enabled", "readOnly", "radioButtonType"]] },
+      { "group": "Использование", "blocks": [
+        ["choiceList", "columnsCount"],
+        ["showInHeader", "fixingInTable"],
+        ["toolTip", "toolTipRepresentation", "extendedTooltip", "extendedTooltipTextColor"]
+      ] },
+      { "group": "Оформление", "blocks": [["titleTextColor", "headerPicture"]] },
+      { "group": "Расположение", "blocks": [
+        ["width", "height"],
+        ["groupHorizontalAlign", "groupVerticalAlign"],
+        ["horizontalStretch", "verticalStretch"],
+        ["titleHeight"]
+      ] },
+      { "group": "Макет", "blocks": [["note", "sample", "renamedFrom"]] }
+    ],
+    "LabelField": [
+      { "group": "Основные", "blocks": [["name", "title", "type", "dataPath", "titleLocation", "visible", "userVisible", "enabled", "readOnly", "hyperlink"]] },
+      { "group": "Использование", "blocks": [
+        ["showInHeader", "showInFooter", "fixingInTable", "footerText", "cellHyperlink", "autoCellHeight"],
+        ["toolTip", "toolTipRepresentation", "extendedTooltip", "extendedTooltipTextColor"]
+      ] },
+      { "group": "Оформление", "blocks": [
+        ["titleTextColor", "titleFont", "backColor", "textColor", "borderColor", "border", "font"],
+        ["headerPicture", "headerBackColor", "footerPicture", "footerBackColor", "footerTextColor", "footerFont"]
+      ] },
+      { "group": "Расположение", "blocks": [
+        ["width", "height"],
+        ["autoMaxWidth", "maxWidth", "autoMaxHeight", "maxHeight"],
+        ["horizontalAlign", "verticalAlign"],
+        ["headerHorizontalAlign", "footerHorizontalAlign"],
+        ["groupHorizontalAlign", "groupVerticalAlign"],
+        ["horizontalStretch", "verticalStretch"],
+        ["titleHeight"]
+      ] },
+      { "group": "Макет", "blocks": [["note", "sample", "renamedFrom"]] }
+    ],
+    "PictureField": [
+      { "group": "Основные", "blocks": [["name", "title", "type", "dataPath", "titleLocation", "visible", "userVisible", "enabled", "readOnly", "valuesPicture", "hyperlink"]] },
+      { "group": "Использование", "blocks": [
+        ["showInHeader", "showInFooter", "fixingInTable", "cellHyperlink", "autoCellHeight"],
+        ["toolTip", "toolTipRepresentation", "extendedTooltip", "extendedTooltipTextColor"]
+      ] },
+      { "group": "Оформление", "blocks": [
+        ["titleTextColor", "titleFont", "pictureSize", "textColor", "font", "borderColor", "border"],
+        ["headerPicture", "headerBackColor", "footerPicture", "footerBackColor", "footerTextColor", "footerFont"]
+      ] },
+      { "group": "Расположение", "blocks": [
+        ["width", "height"],
+        ["autoMaxWidth", "maxWidth", "autoMaxHeight", "maxHeight"],
+        ["headerHorizontalAlign", "footerHorizontalAlign"],
+        ["groupHorizontalAlign", "groupVerticalAlign"],
+        ["horizontalStretch", "verticalStretch"],
+        ["titleHeight"]
+      ] },
+      { "group": "Макет", "blocks": [["note", "sample", "renamedFrom"]] }
+    ],
+    "UsualGroup": [
+      { "group": "Основные", "blocks": [["name", "title", "visible", "userVisible", "enabled", "behavior", "collapsed", "controlRepresentation", "representation", "group", "united", "throughAlign"]] },
+      { "group": "Использование", "blocks": [["toolTip", "toolTipRepresentation", "extendedTooltip", "extendedTooltipTextColor", "showTitle"]] },
+      { "group": "Оформление", "blocks": [["titleTextColor", "backColor"]] },
+      { "group": "Расположение", "blocks": [
+        ["width", "height"],
+        ["groupHorizontalAlign", "groupVerticalAlign", "childItemsHorizontalAlign", "childItemsVerticalAlign"],
+        ["horizontalStretch", "verticalStretch"]
+      ] },
+      { "group": "Макет", "blocks": [["note", "renamedFrom"]] }
+    ],
+    "Pages": [
+      { "group": "Основные", "blocks": [["name", "title", "visible", "userVisible", "enabled", "currentPage"]] },
+      { "group": "Использование", "blocks": [["toolTip", "toolTipRepresentation", "extendedTooltip", "extendedTooltipTextColor", "pagesRepresentation"]] },
+      { "group": "Расположение", "blocks": [
+        ["width", "height"],
+        ["groupHorizontalAlign", "groupVerticalAlign"],
+        ["horizontalStretch", "verticalStretch"]
+      ] },
+      { "group": "Макет", "blocks": [["note", "renamedFrom"]] }
+    ],
+    "Page": [
+      { "group": "Основные", "blocks": [["name", "title", "visible", "userVisible", "enabled", "group"]] },
+      { "group": "Использование", "blocks": [["toolTip", "toolTipRepresentation", "extendedTooltip", "extendedTooltipTextColor", "picture"]] },
+      { "group": "Расположение", "blocks": [
+        ["width", "height"],
+        ["horizontalStretch", "verticalStretch"],
+        ["groupHorizontalAlign", "groupVerticalAlign"]
+      ] },
+      { "group": "Макет", "blocks": [["note", "renamedFrom"]] }
+    ],
+    "ColumnGroup": [
+      { "group": "Основные", "blocks": [["name", "title", "visible", "userVisible", "enabled", "group"]] },
+      { "group": "Использование", "blocks": [["toolTip", "toolTipRepresentation", "extendedTooltip", "extendedTooltipTextColor", "showInHeader", "fixingInTable"]] },
+      { "group": "Оформление", "blocks": [["headerPicture", "headerBackColor"]] },
+      { "group": "Расположение", "blocks": [
+        ["width", "height"],
+        ["horizontalStretch", "verticalStretch"],
+        ["headerHorizontalAlign"],
+        ["groupHorizontalAlign", "groupVerticalAlign"]
+      ] },
+      { "group": "Макет", "blocks": [["note", "renamedFrom"]] }
+    ],
+    "Table": [
+      { "group": "Основные", "blocks": [
+        ["name", "title", "dataPath", "titleLocation", "visible", "userVisible", "enabled", "readOnly", "multipleChoice"]
+      ] },
+      { "group": "Использование", "blocks": [
+        ["commandBarLocation", "changeRowSet", "changeRowOrder", "excludedCommands", "representation", "header", "footer"],
+        ["rowPictureDataPath", "rowsPicture"],
+        ["toolTip", "toolTipRepresentation", "extendedTooltip", "extendedTooltipTextColor"],
+        ["searchStringLocation", "viewStatusLocation", "searchControlLocation"],
+        ["showInHeader", "fixingInTable"]
+      ] },
+      { "group": "Оформление", "blocks": [
+        ["horizontalLines", "verticalLines", "useAlternationRowColor", "backColor", "textColor", "borderColor", "font", "titleFont", "titleTextColor", "headerPicture"]
+      ] },
+      { "group": "Расположение", "blocks": [
+        ["width", "height"],
+        ["heightInTableRows"],
+        ["groupHorizontalAlign", "groupVerticalAlign"],
+        ["horizontalStretch", "verticalStretch"],
+        ["titleHeight"]
+      ] },
+      { "group": "Макет", "blocks": [["note", "sample", "renamedFrom"]] }
+    ],
+    "LabelDecoration": [
+      { "group": "Основные", "blocks": [["name", "title", "visible", "userVisible", "enabled", "hyperlink", "formatted"]] },
+      { "group": "Использование", "blocks": [["toolTip", "toolTipRepresentation", "extendedTooltip", "extendedTooltipTextColor"]] },
+      { "group": "Оформление", "blocks": [["textColor", "backColor"]] },
+      { "group": "Расположение", "blocks": [
+        ["width", "height"],
+        ["groupHorizontalAlign", "groupVerticalAlign"],
+        ["horizontalStretch", "verticalStretch"]
+      ] },
+      { "group": "Макет", "blocks": [["note", "renamedFrom"]] }
+    ],
+    "PictureDecoration": [
+      { "group": "Основные", "blocks": [["name", "title", "visible", "userVisible", "enabled", "picture", "hyperlink"]] },
+      { "group": "Использование", "blocks": [["toolTip", "toolTipRepresentation", "extendedTooltip", "extendedTooltipTextColor"]] },
+      { "group": "Расположение", "blocks": [
+        ["width", "height"],
+        ["groupHorizontalAlign", "groupVerticalAlign"],
+        ["horizontalStretch", "verticalStretch"]
+      ] },
+      { "group": "Макет", "blocks": [["note", "renamedFrom"]] }
+    ],
+    "Button": [
+      { "group": "Основные", "blocks": [["name", "title", "buttonType", "commandName", "visible", "userVisible", "enabled", "representation", "picture", "defaultButton", "check", "locationInCommandBar"]] },
+      { "group": "Использование", "blocks": [["toolTip", "toolTipRepresentation", "extendedTooltip", "extendedTooltipTextColor"]] },
+      { "group": "Оформление", "blocks": [["borderColor", "font", "shape"]] },
+      { "group": "Расположение", "blocks": [
+        ["width", "height"],
+        ["groupHorizontalAlign", "groupVerticalAlign"],
+        ["horizontalStretch", "verticalStretch"]
+      ] },
+      { "group": "Макет", "blocks": [["note", "renamedFrom"]] }
+    ],
+    "ButtonGroup": [
+      { "group": "Основные", "blocks": [["name", "title", "commandSource", "representation", "visible", "userVisible", "enabled"]] },
+      { "group": "Использование", "blocks": [["toolTip", "toolTipRepresentation", "extendedTooltip", "extendedTooltipTextColor"]] },
+      { "group": "Расположение", "blocks": [
+        ["width", "height"],
+        ["groupHorizontalAlign", "groupVerticalAlign"],
+        ["horizontalStretch", "verticalStretch"]
+      ] },
+      { "group": "Макет", "blocks": [["note", "renamedFrom"]] }
+    ],
+    "Popup": [
+      { "group": "Основные", "blocks": [["name", "title", "commandSource", "visible", "userVisible", "enabled", "representation"]] },
+      { "group": "Использование", "blocks": [["toolTip", "toolTipRepresentation", "extendedTooltip", "extendedTooltipTextColor", "picture"]] },
+      { "group": "Расположение", "blocks": [
+        ["width", "height"],
+        ["horizontalStretch", "verticalStretch"],
+        ["groupHorizontalAlign", "groupVerticalAlign"]
+      ] },
+      { "group": "Макет", "blocks": [["note", "renamedFrom"]] }
+    ],
+    "CommandBar": [
+      { "group": "Основные", "blocks": [["name", "title", "commandSource", "visible", "userVisible", "enabled", "autoFill"]] },
+      { "group": "Использование", "blocks": [["toolTip", "toolTipRepresentation", "extendedTooltip", "extendedTooltipTextColor", "horizontalAlign"]] },
+      { "group": "Расположение", "blocks": [
+        ["width", "height"],
+        ["groupHorizontalAlign", "groupVerticalAlign"],
+        ["horizontalStretch", "verticalStretch"]
+      ] },
+      { "group": "Макет", "blocks": [["note", "renamedFrom"]] }
+    ],
+    "AutoCommandBar": [
+      { "group": "Основные", "blocks": [
+        ["name", "autoFill", "horizontalAlign"],
+        ["title", "visible", "userVisible", "enabled"]
+      ] },
+      { "group": "Использование", "blocks": [["toolTip", "toolTipRepresentation", "extendedTooltip", "extendedTooltipTextColor"]] },
+      { "group": "Расположение", "blocks": [
+        ["width", "height"],
+        ["groupHorizontalAlign", "groupVerticalAlign"],
+        ["horizontalStretch", "verticalStretch"]
+      ] },
+      { "group": "Макет", "blocks": [["note", "renamedFrom"]] }
+    ],
+    "Addition": [
+      { "group": "Основные", "blocks": [
+        ["name", "additionType", "additionSource"],
+        ["title", "visible", "userVisible", "enabled"]
+      ] },
+      { "group": "Использование", "blocks": [["toolTip", "toolTipRepresentation", "extendedTooltip", "extendedTooltipTextColor"]] },
+      { "group": "Расположение", "blocks": [
+        ["width", "height"],
+        ["groupHorizontalAlign", "groupVerticalAlign"],
+        ["horizontalStretch", "verticalStretch"]
+      ] },
+      { "group": "Макет", "blocks": [["note", "renamedFrom"]] }
+    ],
+    "Attribute": [
+      { "group": "Основные", "blocks": [["name", "title", "valueType", "main"], ["length", "digits", "fractionDigits", "dateFractions", "mainTable"]] }
+    ],
+    "Command": [
+      { "group": "Основные", "blocks": [["name", "title", "action"]] },
+      { "group": "Использование", "blocks": [["toolTip"]] },
+      { "group": "Оформление", "blocks": [["picture", "representation"]] }
+    ]
+  },
+  "default": [
+    { "group": "Основные", "blocks": [
+      ["name", "title", "type", "dataPath", "titleLocation", "visible", "userVisible", "enabled", "readOnly", "multiLine", "format"]
+    ] },
+    { "group": "Использование", "blocks": [
+      ["dropListButton", "choiceButton", "clearButton", "openButton", "createButton", "choiceButtonRepresentation", "choiceList", "listChoiceMode", "markIncomplete", "autoMarkIncomplete"],
+      ["showInHeader", "showInFooter", "fixingInTable", "footerText", "cellHyperlink", "autoCellHeight"],
+      ["toolTip", "toolTipRepresentation", "inputHint", "extendedTooltip", "extendedTooltipTextColor"]
+    ] },
+    { "group": "Оформление", "blocks": [
+      ["titleTextColor", "titleFont", "backColor", "textColor", "borderColor", "font", "choiceButtonPicture"],
+      ["headerPicture", "headerBackColor", "footerPicture", "footerBackColor", "footerTextColor", "footerFont"]
+    ] },
+    { "group": "Расположение", "blocks": [
+      ["width", "height"],
+      ["autoMaxWidth", "maxWidth", "autoMaxHeight", "maxHeight"],
+      ["headerHorizontalAlign", "footerHorizontalAlign"],
+      ["groupHorizontalAlign", "groupVerticalAlign"],
+      ["horizontalStretch", "verticalStretch"],
+      ["titleHeight"]
+    ] },
+    { "group": "Макет", "blocks": [["note", "sample", "renamedFrom", "sourceType"]] }
+  ],
+  "places": {
+    "*": {
+      "showInHeader": ["column"], "fixingInTable": ["column"], "footerText": ["column"],
+      "headerPicture": ["column"], "headerHorizontalAlign": ["column"], "hyperlink": ["body"],
+      "headerBackColor": ["column"], "showInFooter": ["column"], "footerPicture": ["column"],
+      "footerHorizontalAlign": ["column"], "footerBackColor": ["column"], "footerTextColor": ["column"],
+      "footerFont": ["column"], "cellHyperlink": ["column"], "autoCellHeight": ["column"]
+    },
+    "Button": { "locationInCommandBar": ["commandBar"], "toolTip": [] },
+    "InputField": { "autoMaxHeight": ["body"], "maxHeight": ["body"] },
+    "CheckBoxField": { "width": [], "height": [], "horizontalStretch": [], "verticalStretch": [] },
+    "RadioButtonField": { "width": [], "height": [], "horizontalStretch": [], "verticalStretch": [] },
+    "Addition": { "height": [], "verticalStretch": [] }
+  },
+  "locked": ["renamedFrom", "sourceType"],
+  "derived": ["dataType", "length", "digits", "fractionDigits", "dateFractions", "enumValues"],
+  "element": ["name", "title", "titleLocation", "titleHeight", "titleFont", "titleTextColor", "dataPath", "visible",
+    "userVisible", "enabled", "readOnly", "toolTip", "toolTipRepresentation", "extendedTooltip", "extendedTooltipTextColor",
+    "groupHorizontalAlign", "groupVerticalAlign", "horizontalAlign", "verticalAlign", "showInHeader", "headerHorizontalAlign",
+    "headerPicture", "headerBackColor", "showInFooter", "footerText", "footerFont", "footerHorizontalAlign", "footerPicture",
+    "footerBackColor", "footerTextColor", "fixingInTable", "cellHyperlink", "autoCellHeight", "sample", "note", "renamedFrom"],
+  "defaults": {
+    "*": {
+      "visible": true, "userVisible": true, "enabled": true, "readOnly": false,
+      "titleLocation": "Auto", "toolTipRepresentation": "Auto",
+      "groupHorizontalAlign": "Auto", "groupVerticalAlign": "Auto", "fixingInTable": "None",
+      "showInFooter": true, "cellHyperlink": false, "autoCellHeight": false, "footerHorizontalAlign": "Auto"
+    },
+    "Form": {
+      "group": "Vertical", "commandBarLocation": "Auto", "help": false, "autoTitle": true, "showTitle": true,
+      "showCloseButton": true
+    },
+    "AutoCommandBar": { "autoFill": true, "horizontalAlign": "Auto" },
+    "CommandBar": { "autoFill": false, "horizontalAlign": "Auto" },
+    "Button": { "representation": "Auto", "defaultButton": false, "locationInCommandBar": "Auto", "shape": "Usual" },
+    "ButtonGroup": { "representation": "Auto" },
+    "Popup": { "representation": "Auto" },
+    "UsualGroup": {
+      "group": "Vertical", "representation": "None", "showTitle": true, "behavior": "Usual", "collapsed": false,
+      "controlRepresentation": "TitleHyperlink", "united": true, "throughAlign": "Auto",
+      "childItemsHorizontalAlign": "Auto", "childItemsVerticalAlign": "Auto"
+    },
+    "Pages": { "pagesRepresentation": "Auto" },
+    "Page": { "group": "Vertical" },
+    "InputField": { "autoMaxWidth": true, "autoMaxHeight": true, "choiceButtonRepresentation": "Auto", "listChoiceMode": false },
+    "LabelField": {
+      "autoMaxWidth": true, "autoMaxHeight": true, "hyperlink": false, "horizontalAlign": "Auto", "verticalAlign": "Auto",
+      "border": "WithoutBorder"
+    },
+    "PictureField": { "autoMaxWidth": true, "autoMaxHeight": true, "hyperlink": false, "border": "Single" },
+    "CheckBoxField": { "checkBoxType": "Auto", "verticalAlign": "Auto" },
+    "RadioButtonField": { "radioButtonType": "Auto" },
+    "Table": {
+      "representation": "List", "header": true, "footer": false, "commandBarLocation": "Auto",
+      "changeRowSet": true, "changeRowOrder": true, "searchStringLocation": "Auto", "heightInTableRows": 5,
+      "multipleChoice": false, "viewStatusLocation": "Auto", "searchControlLocation": "Auto", "horizontalLines": true,
+      "verticalLines": true, "useAlternationRowColor": false
+    },
+    "LabelDecoration": { "formatted": false, "hyperlink": false },
+    "PictureDecoration": { "hyperlink": false },
+    "Attribute": { "main": false, "dateFractions": "DateTime" },
+    "Command": { "representation": "Auto" }
+  }
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdclass:Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mdclass="http://g5.1c.ru/v8/dt/metadata/mdclass" uuid="33333333-3333-3333-3333-333333333333">
+  <name>Демо</name>
+  <synonym>
+    <key>ru</key>
+    <value>Демо для импорта</value>
+  </synonym>
+  <styleItems>StyleItem._ДемоЦветАкцента</styleItems>
+  <commonPictures>CommonPicture._ДемоЗначок</commonPictures>
+  <commonPictures>CommonPicture._ДемоСтатус</commonPictures>
+  <catalogs>Catalog._ДемоДоговоры</catalogs>
+  <dataProcessors>DataProcessor.ВитринаЭлементов</dataProcessors>
+</mdclass:Configuration>

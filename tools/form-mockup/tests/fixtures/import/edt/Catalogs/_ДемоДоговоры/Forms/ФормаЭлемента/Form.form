@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form:Form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:core="http://g5.1c.ru/v8/dt/mcore"
+    xmlns:form="http://g5.1c.ru/v8/dt/form">
+  <items xsi:type="form:FormField">
+    <name>Наименование</name><id>1</id><visible>true</visible><enabled>true</enabled>
+    <dataPath xsi:type="form:DataPath"><segments>Объект.Description</segments></dataPath>
+    <type>InputField</type>
+    <extInfo xsi:type="form:InputFieldExtInfo"><autoMaxWidth>true</autoMaxWidth><autoMaxHeight>true</autoMaxHeight></extInfo>
+  </items>
+  <items xsi:type="form:FormField">
+    <name>ДатаПодписания</name><id>2</id><visible>true</visible><enabled>true</enabled>
+    <dataPath xsi:type="form:DataPath"><segments>Объект.ДатаПодписания</segments></dataPath>
+    <type>InputField</type>
+    <extInfo xsi:type="form:InputFieldExtInfo">
+      <autoMaxWidth>true</autoMaxWidth><autoMaxHeight>true</autoMaxHeight><autoMarkIncomplete>true</autoMarkIncomplete>
+    </extInfo>
+  </items>
+  <items xsi:type="form:FormField">
+    <name>Вид</name><id>3</id><visible>true</visible><enabled>true</enabled>
+    <dataPath xsi:type="form:DataPath"><segments>Объект.Вид</segments></dataPath>
+    <type>InputField</type>
+    <extInfo xsi:type="form:InputFieldExtInfo">
+      <autoMaxWidth>true</autoMaxWidth><autoMaxHeight>true</autoMaxHeight><listChoiceMode>true</listChoiceMode>
+      <choiceList><value xsi:type="core:StringValue"><value>С покупателем</value></value></choiceList>
+      <choiceList><value xsi:type="core:StringValue"><value>С поставщиком</value></value></choiceList>
+    </extInfo>
+  </items>
+  <items xsi:type="form:Table">
+    <name>Этапы</name><id>4</id><visible>true</visible><enabled>true</enabled>
+    <dataPath xsi:type="form:DataPath"><segments>Объект.Этапы</segments></dataPath>
+    <titleLocation>None</titleLocation>
+    <items xsi:type="form:FormField">
+      <name>ЭтапыНаименование</name><id>5</id><visible>true</visible><enabled>true</enabled>
+      <dataPath xsi:type="form:DataPath"><segments>Объект.Этапы.Наименование</segments></dataPath>
+      <type>InputField</type><showInHeader>true</showInHeader>
+      <extInfo xsi:type="form:InputFieldExtInfo"><autoMaxWidth>true</autoMaxWidth><autoMaxHeight>true</autoMaxHeight></extInfo>
+    </items>
+    <changeRowSet>true</changeRowSet>
+    <changeRowOrder>true</changeRowOrder>
+    <header>true</header>
+    <rowsPicture xsi:type="core:PictureRef"><picture>CommonPicture._ДемоСтатус</picture></rowsPicture>
+  </items>
+  <items xsi:type="form:FormField">
+    <name>ЭтапыТребуетсяСогласование</name><id>6</id><visible>true</visible><enabled>true</enabled>
+    <dataPath xsi:type="form:DataPath"><segments>Items.Этапы.CurrentData.ТребуетсяСогласование</segments></dataPath>
+    <type>CheckBoxField</type>
+    <extInfo xsi:type="form:CheckBoxFieldExtInfo"/>
+  </items>
+  <items xsi:type="form:Table">
+    <name>Условия</name><id>7</id><visible>true</visible><enabled>true</enabled>
+    <dataPath xsi:type="form:DataPath"><segments>Объект.Условия</segments></dataPath>
+    <items xsi:type="form:FormField">
+      <name>УсловияИмя</name><id>8</id><visible>true</visible><enabled>true</enabled>
+      <dataPath xsi:type="form:DataPath"><segments>Объект.Условия.Имя</segments></dataPath>
+      <type>InputField</type><showInHeader>true</showInHeader>
+      <extInfo xsi:type="form:InputFieldExtInfo"><autoMaxWidth>true</autoMaxWidth><autoMaxHeight>true</autoMaxHeight></extInfo>
+    </items>
+    <items xsi:type="form:FormField">
+      <name>УсловияПредставление</name><id>9</id><visible>true</visible><enabled>true</enabled>
+      <dataPath xsi:type="form:DataPath"><segments>Объект.Условия.Представление</segments></dataPath>
+      <type>InputField</type><showInHeader>true</showInHeader>
+      <extInfo xsi:type="form:InputFieldExtInfo"><autoMaxWidth>true</autoMaxWidth><autoMaxHeight>true</autoMaxHeight></extInfo>
+    </items>
+    <changeRowSet>true</changeRowSet>
+    <changeRowOrder>true</changeRowOrder>
+    <header>true</header>
+    <horizontalLines>true</horizontalLines>
+    <verticalLines>true</verticalLines>
+  </items>
+  <items xsi:type="form:FormGroup">
+    <name>ГруппаПодсказка</name><id>10</id><visible>true</visible><enabled>true</enabled>
+    <title><key>ru</key><value>Подсказка</value></title>
+    <titleTextColor xsi:type="core:ColorRef"><color>Style.ButtonTextColor</color></titleTextColor>
+    <items xsi:type="form:Decoration">
+      <name>ТекстПодсказки</name><id>11</id><visible>true</visible><enabled>true</enabled>
+      <title><key>ru</key><value>Сроки этапов считаются от даты подписания</value></title>
+      <textColor xsi:type="core:ColorRef"><color>Style._ДемоЦветАкцента</color></textColor>
+      <type>Label</type>
+      <autoMaxWidth>true</autoMaxWidth><autoMaxHeight>true</autoMaxHeight>
+      <extInfo xsi:type="form:LabelDecorationExtInfo"><horizontalAlign>Left</horizontalAlign></extInfo>
+    </items>
+    <type>UsualGroup</type>
+    <extInfo xsi:type="form:UsualGroupExtInfo">
+      <group>Vertical</group><behavior>Collapsible</behavior><showTitle>true</showTitle><collapsed>true</collapsed>
+      <throughAlign>Auto</throughAlign>
+    </extInfo>
+  </items>
+  <autoCommandBar>
+    <name>ФормаКоманднаяПанель</name><id>-1</id><horizontalAlign>Left</horizontalAlign><autoFill>true</autoFill>
+  </autoCommandBar>
+  <autoTitle>true</autoTitle>
+  <group>Vertical</group>
+  <showTitle>true</showTitle>
+  <showCloseButton>true</showCloseButton>
+  <attributes>
+    <name>Объект</name>
+    <id>1</id>
+    <valueType><types>CatalogObject._ДемоДоговоры</types></valueType>
+    <main>true</main>
+    <savedData>true</savedData>
+    <additionalColumns>
+      <tablePath xsi:type="form:DataPath"><segments>Объект.Условия</segments></tablePath>
+      <columns>
+        <name>Представление</name>
+        <title><key>ru</key><value>Представление условия</value></title>
+        <id>1</id>
+        <valueType><types>String</types></valueType>
+      </columns>
+    </additionalColumns>
+  </attributes>
+</form:Form>

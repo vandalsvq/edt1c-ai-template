@@ -1,0 +1,180 @@
+{
+  "version": 1,
+  "form": {
+    "title": "Заказ покупателя",
+    "formKind": "DocumentObjectForm",
+    "width": 100,
+    "commandBar": {
+      "type": "AutoCommandBar",
+      "name": "ФормаКоманднаяПанель",
+      "autoFill": true,
+      "items": [
+        {
+          "type": "Popup",
+          "name": "ПодменюПечать",
+          "title": "Печать",
+          "picture": "StdPicture.Print",
+          "items": [
+            { "type": "Button", "name": "ПечатьСчет", "title": "Счет на оплату", "commandName": "Form.Command.ПечатьСчет" },
+            { "type": "Button", "name": "ПечатьЗаказ", "title": "Заказ покупателя", "commandName": "Form.Command.ПечатьЗаказ" }
+          ]
+        },
+        {
+          "type": "Popup",
+          "name": "ПодменюСоздатьНаОсновании",
+          "title": "Создать на основании",
+          "items": [
+            { "type": "Button", "name": "СоздатьРеализацию", "title": "Реализация товаров", "commandName": "Form.Command.СоздатьРеализацию" }
+          ]
+        }
+      ]
+    },
+    "items": [
+      {
+        "type": "UsualGroup",
+        "name": "ГруппаШапка",
+        "group": "AlwaysHorizontal",
+        "representation": "None",
+        "items": [
+          {
+            "type": "UsualGroup",
+            "name": "ГруппаШапкаЛево",
+            "group": "Vertical",
+            "representation": "None",
+            "items": [
+              { "type": "InputField", "name": "Контрагент", "dataPath": "Объект.Контрагент", "dataType": "ref", "choiceButton": true, "openButton": true, "markIncomplete": true, "sample": "ООО Ромашка" },
+              { "type": "InputField", "name": "Договор", "dataPath": "Объект.Договор", "dataType": "ref", "dropListButton": true, "sample": "Договор поставки № 15" }
+            ]
+          },
+          {
+            "type": "UsualGroup",
+            "name": "ГруппаШапкаПраво",
+            "group": "Vertical",
+            "representation": "None",
+            "items": [
+              { "type": "InputField", "name": "ДатаОтгрузки", "title": "Отгрузка", "dataPath": "Объект.ДатаОтгрузки", "dataType": "date", "sample": "05.11.2026" },
+              { "type": "CheckBoxField", "name": "Предоплата", "title": "Требуется предоплата", "dataPath": "Объект.Предоплата", "titleLocation": "Right", "sample": true }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Pages",
+        "name": "ГруппаСтраницы",
+        "currentPage": "ГруппаТовары",
+        "items": [
+          {
+            "type": "Page",
+            "name": "ГруппаТовары",
+            "title": "Товары",
+            "items": [
+              {
+                "type": "Table",
+                "name": "Товары",
+                "dataPath": "Объект.Товары",
+                "titleLocation": "None",
+                "footer": true,
+                "heightInTableRows": 6,
+                "commandBar": {
+                  "type": "AutoCommandBar",
+                  "name": "ТоварыКоманднаяПанель",
+                  "autoFill": true,
+                  "items": [
+                    { "type": "Button", "name": "ТоварыПодобрать", "title": "Подбор", "commandName": "Form.Command.ПодобратьТовары", "note": "открывает форму подбора с остатками" }
+                  ]
+                },
+                "items": [
+                  { "type": "LabelField", "name": "ТоварыНомерСтроки", "title": "N", "dataPath": "Объект.Товары.НомерСтроки", "width": 3 },
+                  { "type": "InputField", "name": "ТоварыНоменклатура", "title": "Номенклатура", "dataPath": "Объект.Товары.Номенклатура", "dataType": "ref", "width": 25 },
+                  {
+                    "type": "ColumnGroup",
+                    "name": "ТоварыГруппаПозиция",
+                    "title": "Позиция",
+                    "group": "Horizontal",
+                    "showInHeader": true,
+                    "items": [
+                      { "type": "InputField", "name": "ТоварыКоличество", "title": "Количество", "dataPath": "Объект.Товары.Количество", "dataType": "number", "width": 10 },
+                      { "type": "InputField", "name": "ТоварыЦена", "title": "Цена", "dataPath": "Объект.Товары.Цена", "dataType": "number", "width": 12 }
+                    ]
+                  },
+                  { "type": "InputField", "name": "ТоварыСумма", "title": "Сумма", "dataPath": "Объект.Товары.Сумма", "dataType": "number", "width": 12, "footerText": "8 900,00" },
+                  {
+                    "type": "ColumnGroup",
+                    "name": "ТоварыГруппаНДС",
+                    "title": "НДС",
+                    "group": "Horizontal",
+                    "showInHeader": true,
+                    "items": [
+                      { "type": "InputField", "name": "ТоварыСтавкаНДС", "title": "% НДС", "dataPath": "Объект.Товары.СтавкаНДС", "dataType": "ref", "width": 8 },
+                      { "type": "InputField", "name": "ТоварыСуммаНДС", "title": "Сумма НДС", "dataPath": "Объект.Товары.СуммаНДС", "dataType": "number", "width": 12, "footerText": "1 483,33" }
+                    ]
+                  }
+                ],
+                "sample": [
+                  ["1", "Стол письменный", "2", "1 500,00", "3 000,00", "20%", "500,00"],
+                  ["2", "Кресло офисное", "2", "2 950,00", "5 900,00", "20%", "983,33"]
+                ]
+              }
+            ]
+          },
+          {
+            "type": "Page",
+            "name": "ГруппаДополнительно",
+            "title": "Дополнительно",
+            "items": [
+              { "type": "InputField", "name": "Склад", "dataPath": "Объект.Склад", "dataType": "ref", "choiceButton": true, "sample": "Основной склад" },
+              { "type": "InputField", "name": "Комментарий", "dataPath": "Объект.Комментарий", "multiLine": true, "height": 3, "horizontalStretch": true }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "UsualGroup",
+        "name": "ГруппаПодвал",
+        "group": "AlwaysHorizontal",
+        "representation": "None",
+        "childItemsHorizontalAlign": "Right",
+        "items": [
+          { "type": "LabelField", "name": "СуммаДокумента", "title": "Итого к оплате", "dataPath": "Объект.СуммаДокумента", "sample": "8 900,00" }
+        ]
+      }
+    ]
+  },
+  "attributes": [
+    { "name": "Объект", "valueType": "DocumentObject.ЗаказПокупателя", "main": true }
+  ],
+  "types": {
+    "Catalog.Контрагенты": {
+      "attributes": [
+        { "name": "Code", "title": "Код", "valueType": "String", "length": 9 },
+        { "name": "Description", "title": "Наименование", "valueType": "String", "length": 100 },
+        { "name": "ИНН", "valueType": "String", "length": 12 },
+        { "name": "ГоловнойКонтрагент", "valueType": "CatalogRef.Контрагенты" }
+      ]
+    },
+    "Document.ЗаказПокупателя": {
+      "title": "Заказ покупателя",
+      "attributes": [
+        { "name": "Number", "title": "Номер", "valueType": "String", "length": 11 },
+        { "name": "Date", "title": "Дата", "valueType": "Date" },
+        { "name": "Контрагент", "valueType": "CatalogRef.Контрагенты" },
+        { "name": "Договор", "valueType": "CatalogRef.ДоговорыКонтрагентов" },
+        { "name": "ДатаОтгрузки", "valueType": "Date" },
+        { "name": "Предоплата", "valueType": "Boolean" },
+        { "name": "Склад", "valueType": "CatalogRef.Склады" },
+        { "name": "Комментарий", "valueType": "String", "length": 0 },
+        { "name": "СуммаДокумента", "valueType": "Number", "digits": 15, "fractionDigits": 2 }
+      ],
+      "tabularSections": [
+        { "name": "Товары", "columns": [
+          { "name": "Номенклатура", "valueType": "CatalogRef.Номенклатура" },
+          { "name": "Количество", "valueType": "Number", "digits": 15, "fractionDigits": 3 },
+          { "name": "Цена", "valueType": "Number", "digits": 15, "fractionDigits": 2 },
+          { "name": "Сумма", "valueType": "Number", "digits": 15, "fractionDigits": 2 },
+          { "name": "СтавкаНДС", "title": "Ставка НДС", "valueType": "EnumRef.СтавкиНДС" },
+          { "name": "СуммаНДС", "title": "Сумма НДС", "valueType": "Number", "digits": 15, "fractionDigits": 2 }
+        ] }
+      ]
+    }
+  }
+}

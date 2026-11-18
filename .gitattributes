@@ -1,3 +1,7 @@
 # Двоичные макеты EDT (Template.bin: zip-архив исходников макета, self-contained HTML)
 # хранить байт-в-байт, без конвертации переводов строк
 *.bin binary
+
+# Ярлыки запуска инструмента макетов форм: .cmd читает cmd.exe - переводы строк CRLF на любой машине; .command - bash на Mac, LF
+*.cmd text eol=crlf
+*.command text eol=lf

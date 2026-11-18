@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "form": {
+    "title": "Фикстура",
+    "items": [
+      {
+        "type": "UsualGroup",
+        "name": "ПустаяГруппа",
+        "items": []
+      },
+      {
+        "type": "Pages",
+        "name": "Страницы",
+        "items": [
+          {
+            "type": "Page",
+            "name": "Закладка1",
+            "title": "Закладка1",
+            "items": [
+              {
+                "type": "InputField",
+                "name": "Поле"
+              }
+            ]
+          },
+          {
+            "type": "Page",
+            "name": "ПустаяЗакладка",
+            "title": "ПустаяЗакладка",
+            "items": []
+          }
+        ]
+      }
+    ]
+  }
+}

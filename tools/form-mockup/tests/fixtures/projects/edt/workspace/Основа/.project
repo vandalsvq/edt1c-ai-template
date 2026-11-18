@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+  <name>Основа</name>
+  <comment></comment>
+  <projects>
+  </projects>
+  <natures>
+    <nature>com._1c.g5.v8.dt.core.V8ConfigurationNature</nature>
+  </natures>
+</projectDescription>

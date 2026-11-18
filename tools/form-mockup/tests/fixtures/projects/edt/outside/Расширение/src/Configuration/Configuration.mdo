@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdclass:Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mdclass="http://g5.1c.ru/v8/dt/metadata/mdclass" xmlns:mdclassExtension="http://g5.1c.ru/v8/dt/metadata/mdclass/extension" uuid="44444444-4444-4444-4444-444444444444">
+  <name>Расширение</name>
+  <synonym>
+    <key>ru</key>
+    <value>Расширение для проверки</value>
+  </synonym>
+  <objectBelonging>Adopted</objectBelonging>
+  <extension xsi:type="mdclassExtension:ConfigurationExtension"/>
+  <namePrefix>ext_</namePrefix>
+  <configurationExtensionPurpose>AddOn</configurationExtensionPurpose>
+  <catalogs>Catalog.Партнеры</catalogs>
+  <catalogs>Catalog.ext_Сегменты</catalogs>
+  <commonModules>CommonModule.ОбщийМодуль</commonModules>
+</mdclass:Configuration>

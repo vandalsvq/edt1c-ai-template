@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MetaDataObject xmlns="http://v8.1c.ru/8.3/MDClasses" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.20">
+	<Enum uuid="00000000-0000-0000-0000-000000000010">
+		<Properties>
+			<Name>ВидыПартнеров</Name>
+		</Properties>
+		<ChildObjects>
+			<EnumValue uuid="00000000-0000-0000-0000-000000000011">
+				<Properties>
+					<Name>Покупатель</Name>
+					<Synonym>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Покупатель</v8:content>
+						</v8:item>
+					</Synonym>
+				</Properties>
+			</EnumValue>
+			<EnumValue uuid="00000000-0000-0000-0000-000000000012">
+				<Properties>
+					<Name>ПоставщикИПокупатель</Name>
+					<Synonym/>
+				</Properties>
+			</EnumValue>
+		</ChildObjects>
+	</Enum>
+</MetaDataObject>

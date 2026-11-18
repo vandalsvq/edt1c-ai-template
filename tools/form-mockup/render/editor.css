@@ -1,0 +1,656 @@
+/* Конструктор макета: панель, баннер, три колонки - дерево, макет, свойства. Префикс fe-;
+   макет внутри - стили рендерера (fm-) как есть, в виде 1С. Оболочка конструктора (панель, дерево,
+   свойства, окна выбора) - свое оформление, 1С не повторяет (владелец 03.11.2026): состав и порядок
+   групп свойств - по палитре конфигуратора, вид - светлая нейтральная тема с одним акцентным цветом */
+
+:root {
+  --fe-font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Roboto, Arial, sans-serif;
+  --fe-mono: "SF Mono", Menlo, Consolas, monospace;
+  --fe-text: #1f2328;
+  --fe-muted: #6b7280;
+  --fe-default: #9aa1ab;      /* незаданное свойство - умолчание платформы */
+  --fe-line: #e5e7eb;
+  --fe-line-strong: #d1d5db;
+  --fe-surface: #ffffff;
+  --fe-subtle: #f6f7f9;
+  --fe-hover: #f1f3f6;
+  --fe-accent: #2f6fde;
+  --fe-accent-soft: #e8f0fe;
+  --fe-accent-ring: rgba(47, 111, 222, 0.18);
+  --fe-selected: #2f6fde;
+  --fe-alert: #d14343;
+  --fe-alert-soft: #fdecec;
+  --fe-warn-soft: #fff7e0;
+  --fe-ok: #1f8a4c;
+  --fe-frame: #2f6fde;
+  --fe-radius: 6px;
+  --fe-field-h: 28px;
+}
+
+html, body.fe-editor { height: 100%; }
+body.fe-editor {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  accent-color: var(--fe-accent);
+}
+body.fe-editor ::-webkit-scrollbar { width: 10px; height: 10px; }
+body.fe-editor ::-webkit-scrollbar-thumb { background: #d4d8de; border-radius: 10px; border: 2px solid transparent; background-clip: padding-box; }
+body.fe-editor ::-webkit-scrollbar-thumb:hover { background-color: #b9bfc8; }
+body.fe-editor ::-webkit-scrollbar-track { background: transparent; }
+
+/* Кнопки: вторичная - белая с рамкой, главная - залитая акцентом */
+
+.fe-bar button, .fe-banner button, .fe-props-tools button, .fe-dialog-button {
+  font: 500 12.5px var(--fe-font);
+  height: var(--fe-field-h);
+  padding: 0 12px;
+  color: var(--fe-text);
+  border: 1px solid var(--fe-line-strong);
+  border-radius: var(--fe-radius);
+  background: var(--fe-surface);
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, box-shadow 0.12s;
+}
+.fe-bar button:hover:not(:disabled), .fe-banner button:hover, .fe-props-tools button:hover, .fe-dialog-button:hover:not(:disabled) {
+  background: var(--fe-hover);
+  border-color: #c3c8cf;
+}
+.fe-bar button:focus-visible, .fe-banner button:focus-visible, .fe-props-tools button:focus-visible, .fe-dialog-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--fe-accent-ring);
+  border-color: var(--fe-accent);
+}
+.fe-bar button:disabled, .fe-dialog-button:disabled { color: #b0b5bc; background: var(--fe-subtle); cursor: default; }
+.fe-bar .fe-save, .fe-dialog-ok {
+  color: #fff;
+  background: var(--fe-accent);
+  border-color: var(--fe-accent);
+}
+.fe-bar .fe-save:hover:not(:disabled), .fe-dialog-ok:hover { background: #2861c7; border-color: #2861c7; }
+.fe-bar .fe-save:disabled { color: #fff; background: #a9c1ee; border-color: #a9c1ee; }
+
+/* Верхняя панель */
+
+.fe-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 46px;
+  padding: 0 14px;
+  background: var(--fe-surface);
+  border-bottom: 1px solid var(--fe-line);
+  font: 13px var(--fe-font);
+  color: var(--fe-text);
+  flex: none;
+}
+/* Переход к списку макетов папки */
+.fe-home { color: var(--fe-accent); text-decoration: none; font-weight: 500; white-space: nowrap; }
+.fe-home::before { content: "\2039\00a0"; }
+.fe-home:hover { text-decoration: underline; }
+.fe-toggle { display: flex; gap: 6px; align-items: center; cursor: pointer; color: var(--fe-muted); user-select: none; }
+.fe-toggle input { margin: 0; }
+.fe-status { color: var(--fe-ok); font-size: 12.5px; }
+.fe-status-dirty { color: #a16207; }
+.fe-status-alert { color: var(--fe-alert); font-weight: 600; }
+.fe-error { color: var(--fe-alert); }
+.fe-spacer { flex: 1; }
+.fe-file { color: var(--fe-muted); font: 12px var(--fe-mono); padding: 3px 8px; background: var(--fe-subtle); border-radius: var(--fe-radius); }
+.fe-bar .fe-issues-button.fe-has-issues { color: #8a5a00; border-color: #f0c96a; background: var(--fe-warn-soft); }
+
+.fe-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background: var(--fe-alert-soft);
+  border-bottom: 1px solid #f3c4c4;
+  font: 13px var(--fe-font);
+  color: var(--fe-text);
+  flex: none;
+}
+.fe-banner[hidden] { display: none; }
+/* Папка макетов сменилась: текст в две строки, кнопок нет */
+.fe-folder-banner { flex-wrap: wrap; }
+.fe-banner-note { color: var(--fe-muted); }
+
+.fe-issue-list {
+  position: fixed;
+  top: 52px;
+  right: 14px;
+  z-index: 90;
+  width: min(560px, calc(100vw - 28px));
+  box-sizing: border-box;
+  max-height: 60vh;
+  overflow: auto;
+  padding: 4px;
+  background: var(--fe-surface);
+  border: 1px solid var(--fe-line);
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16);
+  font: 12.5px var(--fe-font);
+}
+.fe-issue-list[hidden] { display: none; }
+/* Замечание - путь строкой над текстом, оба переносятся: длинный путь не уводит текст за край окна */
+.fe-issue { display: flex; flex-direction: column; gap: 2px; padding: 6px 8px; border-radius: var(--fe-radius); cursor: pointer; }
+.fe-issue:hover { background: var(--fe-hover); }
+.fe-issue-path { font: 11.5px var(--fe-mono); color: var(--fe-muted); overflow-wrap: anywhere; }
+.fe-issue-text { overflow-wrap: anywhere; line-height: 1.4; }
+.fe-issue-code { color: var(--fe-muted); font: 11px var(--fe-mono); margin-left: 6px; }
+.fe-issue-blocking .fe-issue-text { color: var(--fe-alert); }
+
+/* Три колонки */
+
+.fe-main { flex: 1; display: flex; min-height: 0; }
+.fe-tree-col, .fe-props-col {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--fe-surface);
+  font: 13px var(--fe-font);
+  color: var(--fe-text);
+}
+.fe-tree-col { width: 300px; }
+.fe-props-col { width: 400px; }
+.fe-split { flex: none; width: 5px; cursor: col-resize; background: var(--fe-surface); border-left: 1px solid var(--fe-line); transition: background 0.12s; }
+.fe-split:hover { background: var(--fe-accent-soft); }
+.fe-col-head {
+  flex: none;
+  padding: 12px 14px 8px;
+  color: var(--fe-text);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.fe-center { flex: 1; min-width: 0; overflow: auto; padding: 20px; background: var(--page-bg); }
+/* Окно формы - своей ширины, как у `render`: там оно ужимается по содержимому в окне замера 2400 px
+   (fmlib/render.py MEASURE_WINDOW без полей страницы), а не по ширине колонки; шире колонки - прокрутка */
+.fe-center > #fm-root { width: max-content; max-width: 2368px; }
+/* Прокрутка макета заметна: форма шире колонки уходит под панель свойств - полоса с дорожкой, а не тень */
+body.fe-editor .fe-center::-webkit-scrollbar { width: 14px; height: 14px; }
+body.fe-editor .fe-center::-webkit-scrollbar-track { background: #e3e6eb; }
+body.fe-editor .fe-center::-webkit-scrollbar-thumb { background: #a3abb7; border: 3px solid #e3e6eb; border-radius: 10px; background-clip: border-box; }
+body.fe-editor .fe-center::-webkit-scrollbar-thumb:hover { background-color: #7d8693; }
+body.fe-editor .fe-center::-webkit-scrollbar-corner { background: #e3e6eb; }
+/* Место броска реквизита или команды на макет: линия до или после элемента, рамка - внутрь контейнера */
+.fe-canvas-drop { position: fixed; z-index: 90; pointer-events: none; background: var(--fe-frame); border-radius: 2px; }
+.fe-canvas-drop-inside { background: rgba(47, 111, 222, 0.08); outline: 2px dashed var(--fe-frame); outline-offset: -1px; }
+.fe-blocked { margin-bottom: 12px; padding: 10px 12px; background: var(--fe-surface); border: 1px solid #f3c4c4; border-radius: 8px; font: 13px var(--fe-font); }
+.fe-blocked[hidden] { display: none; }
+.fe-blocked-title { margin-bottom: 6px; color: var(--fe-alert); font-weight: 600; }
+
+/* Левая колонка: «Элементы / Реквизиты / Команды» сегментом, дерево реквизитов и список команд с панелью кнопок */
+.fe-left-head { display: flex; padding: 10px 14px 8px; }
+.fe-left-head .fe-mode {
+  flex: 1; height: 28px; font: 500 12.5px var(--fe-font); color: var(--fe-muted); cursor: pointer;
+  border: 1px solid var(--fe-line-strong); background: var(--fe-surface);
+}
+.fe-left-head .fe-left-items { border-radius: var(--fe-radius) 0 0 var(--fe-radius); }
+.fe-left-head .fe-left-attrs { border-radius: 0; margin-left: -1px; }
+.fe-left-head .fe-left-commands { border-radius: 0 var(--fe-radius) var(--fe-radius) 0; margin-left: -1px; }
+.fe-left-head .fe-mode-on { color: var(--fe-accent); background: var(--fe-accent-soft); border-color: #b9cff5; position: relative; z-index: 1; }
+.fe-attr-panel { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.fe-attr-panel[hidden], .fe-tree[hidden], .fe-attr-tools[hidden] { display: none; }
+.fe-attr-tools { display: flex; gap: 6px; padding: 0 14px 8px; }
+.fe-attr-tools button {
+  font: 500 12px var(--fe-font); height: 26px; padding: 0 10px; color: var(--fe-text); cursor: pointer;
+  border: 1px solid var(--fe-line-strong); border-radius: var(--fe-radius); background: var(--fe-surface);
+}
+.fe-attr-tools button:hover:not(:disabled) { background: var(--fe-hover); }
+.fe-attr-tools button:disabled { color: #b0b5bc; background: var(--fe-subtle); cursor: default; }
+/* Кнопки панелей со значком: «Добавить» и «Удалить» - значок и текст, перемещение - только значок */
+.fe-tool { display: inline-flex; align-items: center; gap: 5px; }
+.fe-tool svg { width: 14px; height: 14px; flex: none; display: block; }
+.fe-tool:disabled svg { opacity: 0.4; }
+.fe-attr-tools .fe-tool-icon, .fe-list-bar .fe-tool-icon { padding: 0 7px; }
+.fe-attr-tree .fe-pick-info { margin-left: 6px; font-size: 11.5px; }
+/* Реквизиты из метаданных и команды без описания - обычным цветом (владелец: серый читается как «недоступно»),
+   отличие - подсказкой строки и значком замка у реквизита только для просмотра */
+.fe-attr-tree .fe-row.fe-pale .fe-label, .fe-cmd-tree .fe-row.fe-pale .fe-label { color: inherit; }
+.fe-attr-tree .fe-pick-info, .fe-cmd-tree .fe-pick-info { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+/* Узкая левая колонка: значок «есть на форме» остается у правого края, место отдает текст - сначала
+   пояснение (тип, заголовок команды), затем имя до 4 символов с многоточием */
+.fe-attr-tree .fe-pick-info, .fe-cmd-tree .fe-pick-info { flex: 0 1000 auto; }
+.fe-attr-tree .fe-label, .fe-cmd-tree .fe-label { flex: 0 1 auto; min-width: 4ch; overflow: hidden; text-overflow: ellipsis; }
+/* «Есть на форме» - значок-ссылка у правого края строки */
+.fe-usage { margin-left: auto; flex: none; width: 22px; height: 20px; padding: 0; border: none; border-radius: 4px; background: none; color: var(--fe-accent); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+.fe-usage svg { width: 14px; height: 14px; }
+.fe-usage:hover { background: var(--fe-accent-soft); }
+.fe-tree:focus .fe-selected .fe-usage { color: #fff; }
+.fe-tree:focus .fe-selected .fe-usage:hover { background: rgba(255, 255, 255, 0.2); }
+.fe-tree:focus .fe-selected .fe-pick-info { color: #dbe6fb; }
+.fe-props-note { padding: 12px 14px; color: var(--fe-muted); font-size: 12.5px; }
+.fe-value > .fe-type-field { flex: 1; min-width: 0; display: flex; }
+.fe-type-field > .fe-input, .fe-type-field > .fe-box { flex: 1; min-width: 0; }
+
+/* Дерево элементов */
+
+.fe-tree { flex: 1; overflow: auto; padding: 2px 6px 8px; outline: none; }
+.fe-row { display: flex; align-items: center; gap: 5px; height: 26px; padding-right: 6px; border-radius: var(--fe-radius); white-space: nowrap; cursor: default; user-select: none; }
+.fe-row:hover { background: var(--fe-hover); }
+.fe-row.fe-selected { background: var(--fe-accent-soft); }
+.fe-tree:focus .fe-row.fe-selected { background: var(--fe-selected); color: #fff; }
+.fe-row.fe-pale .fe-label { color: #a8aeb6; }
+.fe-tree:focus .fe-row.fe-selected.fe-pale .fe-label { color: #dbe6fb; }
+.fe-twisty { width: 14px; height: 14px; flex: none; display: inline-flex; align-items: center; justify-content: center; color: #8b929c; cursor: pointer; border-radius: 3px; }
+.fe-twisty-on::before {
+  content: ""; width: 5px; height: 5px;
+  border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg); transition: transform 0.12s;
+}
+.fe-twisty-on.fe-open::before { transform: rotate(45deg) translate(-1px, -1px); }
+.fe-twisty-on:hover { color: var(--fe-text); background: rgba(0, 0, 0, 0.06); }
+.fe-tree:focus .fe-selected .fe-twisty, .fe-pick-chosen .fe-twisty { color: #fff; }
+.fe-icon { width: 16px; height: 16px; flex: none; display: inline-flex; }
+.fe-icon svg { width: 16px; height: 16px; }
+/* Правка структуры: панель дерева, палитра, место переноса */
+.fe-item-tools { padding-top: 2px; }
+.fe-menu {
+  position: fixed; z-index: 95; min-width: 230px; max-height: 70vh; overflow: auto; box-sizing: border-box; padding: 4px;
+  background: var(--fe-surface); border: 1px solid var(--fe-line-strong); border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14); font: 13px var(--fe-font); color: var(--fe-text);
+}
+.fe-menu-note { padding: 4px 10px 2px; color: var(--fe-muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fe-menu-head { padding: 8px 10px 2px; color: var(--fe-muted); font: 600 10.5px var(--fe-font); letter-spacing: 0.04em; text-transform: uppercase; }
+.fe-menu-item {
+  display: flex; align-items: center; gap: 8px; width: 100%; height: 26px; padding: 0 10px; border: none;
+  border-radius: var(--fe-radius); background: none; color: inherit; font: inherit; text-align: left; cursor: pointer;
+}
+.fe-menu-item:hover, .fe-menu-item:focus-visible { background: var(--fe-hover); outline: none; }
+.fe-menu-item:focus { background: var(--fe-hover); outline: none; }
+.fe-menu-item:disabled { color: #b0b5bc; background: none; cursor: default; }
+.fe-menu-text { flex: 1; }
+.fe-menu-key { color: var(--fe-muted); font-size: 12px; }
+.fe-menu-line { height: 1px; margin: 4px 6px; background: var(--fe-line); }
+.fe-row.fe-drop-before { box-shadow: inset 0 2px 0 var(--fe-accent); }
+.fe-row.fe-drop-after { box-shadow: inset 0 -2px 0 var(--fe-accent); }
+.fe-row.fe-drop-inside { background: var(--fe-accent-soft); box-shadow: inset 0 0 0 1px var(--fe-accent); }
+
+/* Выбранный элемент на макете - рамкой в слое рендерера */
+.fe-frame { position: absolute; border: 2px solid var(--fe-frame); border-radius: 4px; box-shadow: 0 0 0 3px var(--fe-accent-ring); }
+
+/* Панель свойств */
+
+.fe-props-head { flex: none; border-bottom: 1px solid var(--fe-line); }
+.fe-props-head .fe-col-head { padding-bottom: 4px; }
+/* В узкой панели кнопки не переносят текст, а поиск уходит второй строкой (обкатка: «По группам» и
+   «По алфавиту» ломались на две строки и вылезали из кнопок) */
+.fe-props-tools { display: flex; flex-wrap: wrap; gap: 6px 8px; padding: 6px 14px 10px; align-items: center; }
+.fe-props-tools .fe-search { flex: 1 1 110px; }
+/* «По группам / По алфавиту» - переключатель-сегмент */
+.fe-props-tools .fe-mode { height: 26px; padding: 0 10px; border-radius: 0; border-color: var(--fe-line-strong); color: var(--fe-muted); white-space: nowrap; flex: none; }
+.fe-props-tools .fe-mode-groups { border-radius: var(--fe-radius) 0 0 var(--fe-radius); }
+.fe-props-tools .fe-mode-alpha { border-radius: 0 var(--fe-radius) var(--fe-radius) 0; margin-left: -9px; }
+.fe-props-tools .fe-mode-on, .fe-props-tools .fe-mode-on:hover { color: var(--fe-accent); background: var(--fe-accent-soft); border-color: #b9cff5; position: relative; z-index: 1; }
+.fe-props-tools .fe-icon-button { width: 26px; height: 26px; padding: 0; display: inline-flex; align-items: center; justify-content: center; color: var(--fe-muted); flex: none; }
+.fe-props-tools .fe-icon-button svg { width: 14px; height: 14px; }
+.fe-props-tools .fe-icon-button:hover { color: var(--fe-text); }
+.fe-search, .fe-filter {
+  flex: 1;
+  min-width: 60px;
+  height: 26px;
+  box-sizing: border-box;
+  font: 12.5px var(--fe-font);
+  padding: 0 8px 0 26px;
+  color: var(--fe-text);
+  border: 1px solid var(--fe-line-strong);
+  border-radius: var(--fe-radius);
+  background: var(--fe-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 16 16'%3E%3Ccircle cx='7' cy='7' r='4.5' fill='none' stroke='%239aa1ab' stroke-width='1.5'/%3E%3Cpath d='M10.5 10.5 14 14' stroke='%239aa1ab' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat 8px center;
+}
+.fe-search:focus, .fe-filter:focus { outline: none; border-color: var(--fe-accent); box-shadow: 0 0 0 3px var(--fe-accent-ring); }
+.fe-props { flex: 1; overflow: auto; padding-bottom: 16px; }
+.fe-group { border-bottom: 1px solid var(--fe-line); }
+.fe-group-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px 6px;
+  background: var(--fe-surface);
+  color: var(--fe-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  user-select: none;
+}
+.fe-group-head:hover { color: var(--fe-text); }
+.fe-group-head:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--fe-accent-ring); color: var(--fe-text); }
+.fe-group-head::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg) translate(-1px, -1px);
+  transition: transform 0.12s;
+}
+.fe-folded > .fe-group-head::before { transform: rotate(-45deg); }
+.fe-folded > .fe-block { display: none; }
+.fe-folded > .fe-group-head { padding-bottom: 10px; }
+.fe-block { padding: 2px 0 6px; }
+.fe-block + .fe-block { border-top: 1px dashed var(--fe-line); padding-top: 6px; }
+.fe-prop { position: relative; display: grid; grid-template-columns: minmax(120px, 44%) minmax(0, 1fr); align-items: start; gap: 8px; padding: 3px 14px; }
+.fe-prop-name { min-height: var(--fe-field-h); display: flex; align-items: center; color: #4b5563; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12.5px; }
+/* Заданное в модели - темным названием и меткой слева */
+.fe-set > .fe-prop-name, .fe-size-part.fe-set > .fe-prop-name { color: var(--fe-text); font-weight: 500; }
+.fe-prop.fe-set::before { content: ""; position: absolute; left: 5px; top: 15px; width: 4px; height: 4px; border-radius: 50%; background: var(--fe-accent); }
+.fe-value { display: flex; gap: 4px; align-items: center; min-width: 0; min-height: var(--fe-field-h); }
+.fe-value > .fe-input, .fe-value > .fe-color, .fe-value > .fe-box { flex: 1; min-width: 0; }
+
+/* Поля ввода */
+
+.fe-input { font: 12.5px var(--fe-font); color: var(--fe-text); }
+input.fe-input:not([type="checkbox"]), select.fe-input, textarea.fe-input {
+  box-sizing: border-box;
+  min-height: var(--fe-field-h);
+  padding: 0 8px;
+  border: 1px solid var(--fe-line-strong);
+  border-radius: var(--fe-radius);
+  background: var(--fe-surface);
+  transition: border-color 0.12s, box-shadow 0.12s;
+}
+textarea.fe-input { padding: 5px 8px; line-height: 1.4; resize: vertical; }
+select.fe-input {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 26px;
+  background: var(--fe-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236b7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 9px center;
+  cursor: pointer;
+}
+input.fe-input:not([type="checkbox"]):hover, select.fe-input:hover, textarea.fe-input:hover { border-color: #b9bfc8; }
+input.fe-input:not([type="checkbox"]):focus, select.fe-input:focus, textarea.fe-input:focus {
+  outline: none;
+  border-color: var(--fe-accent);
+  box-shadow: 0 0 0 3px var(--fe-accent-ring);
+}
+.fe-input.fe-default:not([type="checkbox"]) { color: var(--fe-default); }
+input[type="checkbox"].fe-input.fe-default { opacity: 0.55; }
+.fe-input::placeholder { color: #b6bcc4; }
+/* Флажок - у левого края полей ввода, не растягивается */
+.fe-value > input[type="checkbox"].fe-input { flex: none; width: 16px; height: 16px; margin: 0; cursor: pointer; }
+.fe-value > .fe-fill-standard { flex: none; margin-left: 8px; height: 22px; padding: 0 8px; font-size: 12px; }
+/* Поле с кнопками внутри (сброс, «+/-», выбор): рамка - у обертки */
+.fe-box {
+  display: flex;
+  align-items: stretch;
+  flex: 1;
+  min-width: 0;
+  min-height: var(--fe-field-h);
+  box-sizing: border-box;
+  border: 1px solid var(--fe-line-strong);
+  border-radius: var(--fe-radius);
+  background: var(--fe-surface);
+  overflow: hidden;
+  transition: border-color 0.12s, box-shadow 0.12s;
+}
+.fe-box:hover { border-color: #b9bfc8; }
+.fe-box:focus-within { border-color: var(--fe-accent); box-shadow: 0 0 0 3px var(--fe-accent-ring); }
+.fe-box > .fe-input { flex: 1; min-width: 0; border: none !important; box-shadow: none !important; outline: none; background-color: transparent !important; }
+.fe-box-top { align-items: flex-start; }
+.fe-box-top > .fe-in { height: calc(var(--fe-field-h) - 2px); }
+.fe-size-part .fe-box { flex: none; }
+.fe-in {
+  flex: none;
+  width: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #9aa1ab;
+  cursor: pointer;
+  font: 14px var(--fe-font);
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.fe-in:hover { color: var(--fe-text); background: var(--fe-hover); }
+.fe-reset:hover { color: var(--fe-alert); background: var(--fe-alert-soft); }
+.fe-choose { font-weight: 700; letter-spacing: 1px; color: var(--fe-muted); border-left: 1px solid var(--fe-line); }
+.fe-choose:hover { color: var(--fe-accent); background: var(--fe-accent-soft); }
+.fe-spin { display: flex; flex-direction: column; flex: none; border-left: 1px solid var(--fe-line); }
+.fe-spin .fe-in { flex: 1; width: 20px; min-height: 10px; position: relative; }
+.fe-spin .fe-in::after { content: ""; position: absolute; left: 6px; top: 50%; border: 4px solid transparent; }
+.fe-up::after { margin-top: -6px; border-bottom-color: #8b929c !important; }
+.fe-down::after { margin-top: -2px; border-top-color: #8b929c !important; }
+.fe-invalid .fe-input, .fe-invalid .fe-box { border-color: var(--fe-alert) !important; box-shadow: 0 0 0 3px rgba(209, 67, 67, 0.14) !important; }
+.fe-reason { grid-column: 1 / -1; color: var(--fe-alert); font-size: 11.5px; padding-left: 2px; }
+.fe-size { display: flex; flex-wrap: wrap; gap: 6px 16px; }
+.fe-size-part { display: flex; gap: 8px; align-items: center; }
+.fe-size-part .fe-prop-name { min-height: 0; }
+.fe-size-part .fe-input { width: 72px; }
+.fe-size-part .fe-box > .fe-input { width: 50px; }
+.fe-color { display: flex; gap: 6px; align-items: center; }
+.fe-swatch { width: 18px; height: 18px; flex: none; box-sizing: border-box; border: 1px solid rgba(0, 0, 0, 0.18); border-radius: 4px; background: repeating-linear-gradient(45deg, #fff 0 3px, #eceef1 3px 6px); }
+.fe-color .fe-input, .fe-color .fe-box { flex: 1; min-width: 0; }
+.fe-font { display: flex; gap: 4px; }
+.fe-font label {
+  display: flex; gap: 4px; align-items: center; height: 26px; padding: 0 8px;
+  border: 1px solid var(--fe-line-strong); border-radius: var(--fe-radius); cursor: pointer; user-select: none;
+}
+.fe-font label:has(input:checked) { color: var(--fe-accent); background: var(--fe-accent-soft); border-color: #b9cff5; }
+.fe-font input { margin: 0; }
+.fe-font-bold { font-weight: bold; }
+.fe-font-italic { font-style: italic; }
+.fe-font-underline { text-decoration: underline; }
+.fe-font { align-items: center; flex: 1; min-width: 0; }
+.fe-font-summary { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--fe-muted); font-size: 12px; padding: 0 4px; }
+.fe-font > .fe-in { height: 26px; border: 1px solid var(--fe-line-strong); border-radius: var(--fe-radius); }
+/* Окно «Шрифт» */
+.fe-font-grid { display: grid; grid-template-columns: max-content 1fr; gap: 10px 14px; align-items: center; margin: 6px 0 14px; }
+.fe-font-label { color: var(--fe-muted); }
+.fe-font-face, .fe-font-height { height: 30px; box-sizing: border-box; font: 13px var(--fe-font); padding: 0 8px; border: 1px solid var(--fe-line-strong); border-radius: var(--fe-radius); background: var(--fe-surface); color: var(--fe-text); }
+.fe-font-size { width: 110px; justify-self: start; }
+.fe-font-size > .fe-font-height { height: 28px; border: none; padding: 0 8px; }
+.fe-font-styles { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.fe-font-style { display: flex; align-items: center; gap: 6px; }
+.fe-font-sample { padding: 14px 16px; border: 1px dashed var(--fe-line-strong); border-radius: 8px; background: var(--fe-subtle); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.fe-locked { color: var(--fe-muted); font: 12px var(--fe-mono); padding: 0 8px; min-height: var(--fe-field-h); display: flex; align-items: center; background: var(--fe-subtle); border-radius: var(--fe-radius); }
+/* Несколько выделенных: разные значения - другим цветом с надписью, недоступное - серой надписью */
+.fe-locked.fe-unavailable { font: italic 12px var(--fe-font); }
+.fe-input.fe-mixed:not([type="checkbox"]) { color: #a16207; font-style: italic; }
+.fe-input.fe-mixed::placeholder { color: #a16207; font-style: italic; opacity: 1; }
+input[type="checkbox"].fe-input.fe-mixed { accent-color: #a16207; }
+
+/* Окна выбора */
+
+.fe-dialog-back {
+  position: fixed; inset: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: center;
+  /* Без backdrop-filter: размытие всей страницы с макетом пересчитывалось на каждую подсветку строки окна -
+     подсветка запаздывала */
+  background: rgba(15, 23, 42, 0.38);
+}
+.fe-dialog-back[hidden] { display: none; }
+.fe-dialog {
+  width: 580px; max-width: 92vw; max-height: 84vh;
+  display: flex; flex-direction: column;
+  background: var(--fe-surface);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 24px 64px rgba(15, 23, 42, 0.24), 0 2px 8px rgba(15, 23, 42, 0.08);
+  font: 13px var(--fe-font); color: var(--fe-text);
+  overflow: hidden;
+}
+.fe-dialog-wide { width: 800px; }
+/* Подтверждение - вопрос в одну-две строки */
+.fe-dialog-compact { width: 460px; }
+.fe-dialog-compact .fe-dialog-body { min-height: 0; padding-bottom: 18px; }
+.fe-dialog-head { display: flex; align-items: baseline; gap: 10px; padding: 16px 14px 10px 20px; }
+.fe-dialog-title { font-size: 15px; font-weight: 600; color: var(--fe-text); }
+.fe-dialog-sub { flex: 1; min-width: 0; color: var(--fe-muted); font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fe-dialog-close { align-self: center; width: 28px; height: 28px; padding: 0; border: none; border-radius: var(--fe-radius); background: none; color: var(--fe-muted); font: 20px/1 var(--fe-font); cursor: pointer; }
+.fe-dialog-close:hover { background: var(--fe-hover); color: var(--fe-text); }
+.fe-dialog-body { flex: 1; min-height: 120px; overflow: auto; padding: 4px 20px 14px; }
+.fe-dialog-note { color: var(--fe-muted); font-size: 12.5px; margin-bottom: 8px; }
+.fe-dialog-foot { border-top: 1px solid var(--fe-line); padding: 12px 20px; display: flex; flex-direction: column; gap: 10px; background: var(--fe-subtle); }
+.fe-dialog-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.fe-dialog-ok, .fe-dialog-cancel { min-width: 92px; }
+
+/* Списки окон: строки со скруглением, выбранная - акцентом */
+.fe-pick { border: 1px solid var(--fe-line); border-radius: 8px; padding: 4px; }
+.fe-pick-row { display: flex; align-items: center; gap: 8px; min-height: 26px; padding: 0 8px; border-radius: var(--fe-radius); cursor: default; white-space: nowrap; }
+.fe-pick-row:hover { background: var(--fe-hover); }
+.fe-pick-row[hidden] { display: none; }
+.fe-pick-off .fe-pick-name { color: var(--fe-default); }
+.fe-pick-chosen, .fe-pick-chosen:hover { background: var(--fe-selected); color: #fff; }
+.fe-pick-cursor { box-shadow: inset 0 0 0 1.5px var(--fe-accent); }
+.fe-dialog:focus { outline: none; }
+/* Окно типа: поиск и «Составной тип данных» в строку, флажки у строк составного типа */
+.fe-type-bar { display: flex; gap: 14px; align-items: center; margin-bottom: 8px; }
+.fe-type-composite { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.fe-type-list .fe-pick-row input { margin: 0; }
+.fe-type-chosen { margin-top: 8px; }
+.fe-pick-chosen .fe-pick-info, .fe-pick-chosen .fe-twisty { color: #dbe6fb; }
+.fe-pick-info { color: var(--fe-muted); overflow: hidden; text-overflow: ellipsis; font-size: 12px; }
+.fe-pick-empty { color: var(--fe-muted); padding: 10px 8px; }
+.fe-pick-section { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fe-muted); padding: 10px 8px 4px; }
+/* Группа окна выбора команды - заголовком с галочкой, сворачивается; строки группы - с отступом */
+.fe-pick-group { display: flex; align-items: center; gap: 6px; min-height: 28px; margin-top: 4px; padding: 0 8px; border-radius: var(--fe-radius); background: var(--fe-subtle); font-weight: 600; cursor: pointer; user-select: none; }
+.fe-pick-group:first-child { margin-top: 0; }
+.fe-pick-group:hover { background: var(--fe-hover); }
+.fe-pick-group .fe-pick-count { margin-left: auto; font-weight: 400; color: var(--fe-muted); font-size: 12px; }
+.fe-pick-group + .fe-pick-row, .fe-pick-group ~ .fe-pick-row { padding-left: 30px; }
+/* Окно типа: типы верхнего уровня - без отступа папки, между папками */
+.fe-type-list .fe-pick-row[data-flat] { padding-left: 8px; }
+.fe-pick-group[hidden] { display: none; }
+.fe-pick-row .fe-icon { width: 16px; height: 16px; flex: none; align-self: center; }
+.fe-pick-row .fe-icon svg { width: 16px; height: 16px; display: block; }
+.fe-command { display: flex; align-items: center; gap: 8px; min-height: 26px; padding: 0 8px; border-radius: var(--fe-radius); }
+.fe-command:hover { background: var(--fe-hover); }
+.fe-command input { margin: 0; }
+
+/* Поля окон - как поля панели */
+.fe-add-attribute input, .fe-color-part input, .fe-format-value, .fe-format-input {
+  box-sizing: border-box;
+  height: var(--fe-field-h);
+  font: 12.5px var(--fe-font);
+  color: var(--fe-text);
+  padding: 0 8px;
+  border: 1px solid var(--fe-line-strong);
+  border-radius: var(--fe-radius);
+  background: var(--fe-surface);
+}
+select.fe-format-value {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 26px;
+  background: var(--fe-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236b7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 9px center;
+}
+.fe-add-attribute input:focus, .fe-color-part input:focus, .fe-format-value:focus, .fe-format-input:focus {
+  outline: none; border-color: var(--fe-accent); box-shadow: 0 0 0 3px var(--fe-accent-ring);
+}
+.fe-add-attribute { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.fe-add-title { flex-basis: 100%; color: var(--fe-muted); font-weight: 500; }
+.fe-add-attribute input { flex: 1; min-width: 0; width: auto; }
+.fe-add-attribute .fe-add-type { flex: 1.4; }
+.fe-add-attribute .fe-reason { flex-basis: 100%; }
+
+/* Закладки окна - подчеркиванием */
+.fe-tabs { display: flex; gap: 18px; border-bottom: 1px solid var(--fe-line); margin-bottom: 12px; }
+.fe-tab {
+  font: 500 13px var(--fe-font); color: var(--fe-muted);
+  padding: 6px 0 9px; margin-bottom: -1px;
+  border: none; border-bottom: 2px solid transparent; background: none; cursor: pointer;
+}
+.fe-tab:hover { color: var(--fe-text); }
+.fe-tab-on { color: var(--fe-accent); border-bottom-color: var(--fe-accent); }
+.fe-filter { width: 100%; flex: none; margin-bottom: 8px; height: var(--fe-field-h); }
+.fe-swatch-none { background: repeating-linear-gradient(45deg, #fff 0 3px, #dde0e4 3px 6px); }
+
+/* Цвет */
+.fe-color-chooser { display: flex; gap: 20px; align-items: flex-start; }
+.fe-color-lists { flex: 1; min-width: 0; }
+.fe-color-list { max-height: 48vh; overflow: auto; }
+.fe-color-row .fe-swatch { width: 20px; height: 16px; }
+.fe-color-make { width: 210px; display: flex; flex-direction: column; gap: 8px; padding-top: 46px; }
+.fe-color-preview { display: block; width: 100%; height: 64px; border-radius: 10px; }
+.fe-color-value { color: var(--fe-muted); font-size: 12.5px; min-height: 2.6em; }
+.fe-color-part { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: #4b5563; }
+.fe-color-part input { width: 96px; }
+.fe-color-hex { font-family: var(--fe-mono) !important; text-transform: uppercase; }
+.fe-color-picker { width: 100%; height: 32px; padding: 2px; border: 1px solid var(--fe-line-strong); border-radius: var(--fe-radius); background: var(--fe-surface); cursor: pointer; }
+
+/* Формат */
+.fe-format-rows { display: flex; flex-direction: column; gap: 2px; }
+.fe-format-row { display: grid; grid-template-columns: 18px 300px minmax(0, 320px); align-items: center; gap: 10px; min-height: 32px; padding: 0 6px; border-radius: var(--fe-radius); }
+.fe-format-row:hover { background: var(--fe-subtle); }
+.fe-format-row input[type="checkbox"] { margin: 0; }
+.fe-format-value { width: 100%; }
+.fe-format-sample, .fe-format-text { display: flex; align-items: center; gap: 10px; margin-top: 12px; padding: 12px; border-radius: 8px; background: var(--fe-subtle); }
+.fe-format-text { margin-top: 8px; }
+.fe-format-name { color: #4b5563; }
+.fe-format-input { width: 210px; text-align: right; }
+.fe-format-arrow { color: var(--fe-accent); font-weight: 700; }
+.fe-format-shown { padding: 5px 10px; min-width: 220px; min-height: 18px; border-radius: var(--fe-radius); background: var(--fe-surface); border: 1px solid var(--fe-line); white-space: pre; font-weight: 500; }
+.fe-format-result { font: 12.5px var(--fe-mono); color: var(--fe-text); }
+
+/* Список выбора */
+.fe-list-bar { display: flex; gap: 6px; margin-bottom: 10px; }
+.fe-list-bar .fe-list-fill { margin-left: auto; }
+.fe-list { max-height: 48vh; overflow: auto; }
+.fe-list-row { display: flex; align-items: center; gap: 8px; min-height: 30px; padding: 0 6px; border-radius: var(--fe-radius); }
+.fe-list-row:hover { background: var(--fe-hover); }
+.fe-list-number { width: 22px; color: var(--fe-default); text-align: right; font-size: 12px; }
+.fe-list-value { flex: 1; height: 26px; font: 13px var(--fe-font); padding: 0 8px; border: 1px solid transparent; border-radius: var(--fe-radius); background: transparent; color: inherit; }
+.fe-list-value:focus { border-color: var(--fe-accent); box-shadow: 0 0 0 3px var(--fe-accent-ring); background: var(--fe-surface); color: var(--fe-text); outline: none; }
+.fe-list-row.fe-pick-chosen { background: var(--fe-accent-soft); color: var(--fe-text); }
+.fe-list-head, .fe-list-head:hover { min-height: 24px; background: none; color: var(--fe-default); font-size: 12px; }
+.fe-list-cell { flex: 1; padding: 0 9px; }
+.fe-list-row.fe-pick-chosen .fe-list-number { color: var(--fe-accent); }
+
+/* Картинка */
+.fe-picture-library { max-height: 52vh; overflow: auto; }
+.fe-picture-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 4px; padding: 2px; }
+.fe-picture-tile { display: flex; align-items: center; gap: 8px; min-height: 32px; padding: 0 8px; border: 1px solid transparent; border-radius: var(--fe-radius); cursor: default; overflow: hidden; }
+.fe-picture-tile:hover { background: var(--fe-hover); }
+.fe-picture-tile[hidden] { display: none; }
+.fe-picture-tile.fe-pick-chosen { background: var(--fe-accent-soft); border-color: #b9cff5; color: var(--fe-text); }
+.fe-picture-image { width: 22px; height: 22px; flex: none; display: flex; align-items: center; justify-content: center; color: #9aa1ab; }
+.fe-picture-image img { max-width: 20px; max-height: 20px; }
+.fe-picture-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12.5px; }
+.fe-picture-chosen { margin: 10px 0 0; }
+
+/* Правки против «было»: цвета - те же, что у рамок макета (style.css, --diff-*) */
+.fe-right-tabs[hidden], .fe-props-head[hidden], .fe-props[hidden] { display: none; }
+.fe-right-tabs { padding-bottom: 0; }
+.fe-right-tabs .fe-tab-props { border-radius: var(--fe-radius) 0 0 var(--fe-radius); }
+.fe-right-tabs .fe-tab-changes { border-radius: 0 var(--fe-radius) var(--fe-radius) 0; margin-left: -1px; }
+.fe-right-tabs .fe-tab-notes { border-radius: 0; margin-left: -1px; }
+.fe-right-tabs .fe-tab-notes:has(+ .fe-tab-changes[hidden]) { border-radius: 0 var(--fe-radius) var(--fe-radius) 0; }
+.fe-right-tabs .fe-tab-changes[hidden] { display: none; }
+/* Примечания: строка - номер, элемент, текст; щелчок по шапке строки выбирает элемент */
+.fe-notes .fe-note { padding: 8px 14px; border-bottom: 1px solid var(--fe-line); font-size: 12.5px; cursor: pointer; }
+.fe-notes .fe-note:hover { background: var(--fe-hover); }
+.fe-notes .fe-note.fe-note-current { background: var(--fe-accent-soft); }
+.fe-note-text {
+  display: block; box-sizing: border-box; width: 100%; margin-top: 6px; padding: 5px 8px; resize: vertical;
+  border: 1px solid var(--fe-line); border-radius: var(--fe-radius); font: inherit; color: var(--fe-text); background: #fff;
+}
+.fe-note-text:focus { outline: none; border-color: var(--fe-accent); box-shadow: 0 0 0 3px var(--fe-accent-ring); }
+.fe-tree .fe-diff-n { flex: none; margin-left: auto; transform: scale(.9); }
+.fe-row.fe-row-removed { cursor: pointer; }
+.fe-row.fe-row-removed .fe-label { color: #a8aeb6; text-decoration: line-through; text-decoration-color: var(--diff-removed); }
+.fe-row.fe-row-removed .fe-icon { opacity: .45; }
+.fe-row.fe-change-current { background: var(--fe-accent-soft); }
+.fe-props-change { display: flex; gap: 8px; align-items: center; padding: 8px 14px; border-bottom: 1px solid var(--fe-line); font-size: 12.5px; color: var(--fe-muted); cursor: pointer; }
+.fe-props-change:hover { background: var(--fe-hover); }
+.fe-prop-diff > .fe-prop-name::after {
+  content: ""; display: inline-block; width: 6px; height: 6px; margin-left: 5px; border-radius: 50%;
+  background: var(--diff-changed); vertical-align: middle;
+}
+.fe-box-plain { display: inline-flex; align-items: center; gap: 6px; }
+.fe-revert { color: #9a7400; }
+.fe-revert:hover { color: #6b5100; background: #fff4cc; }
+.fe-changes .fe-change { padding: 8px 14px; border-bottom: 1px solid var(--fe-line); cursor: pointer; font-size: 12.5px; }
+.fe-changes .fe-change:hover { background: var(--fe-hover); }
+.fe-changes .fe-change.fe-change-current { background: var(--fe-accent-soft); }
+.fe-change-head { display: flex; gap: 8px; align-items: center; }
+.fe-change-title { font-weight: 600; color: var(--fe-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fe-change-what { margin-left: auto; flex: none; color: var(--fe-muted); font-size: 12px; }
+.fe-change-name, .fe-change-detail { margin: 2px 0 0 28px; color: var(--fe-muted); font-size: 12px; overflow-wrap: anywhere; }

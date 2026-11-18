@@ -1,0 +1,678 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "form-model.schema.json",
+  "title": "Модель управляемой формы 1С для макетов ТЗ",
+  "description": "Дерево элементов формы. Имена видов и свойств - как в платформе 1С (camelCase); свойства без пары в платформе - в реестре x-platform. Справочник - model.md, русские названия - dictionary-ru.json.",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "const": 1 },
+    "form": { "$ref": "#/$defs/Form" },
+    "tags": {
+      "type": "array",
+      "description": "Метки макета: свободный текст - задача, назначение, состояние; по ним стартовая страница фильтрует и ищет. Форму не меняют",
+      "items": { "type": "string", "pattern": "\\S" }
+    },
+    "origin": {
+      "type": "object",
+      "description": "Откуда взят макет: kind - config (форма исходников: object - ключ формы, project - проект), file (перетащенный файл: name), copy (копия макета: from - путь оригинала, folder - папка оригинала, если другая); at - дата и время. Задел для обновления по исходнику, поведения не добавляет",
+      "properties": {
+        "kind": { "enum": ["config", "file", "copy"] },
+        "object": { "type": "string" },
+        "project": { "type": "string" },
+        "name": { "type": "string" },
+        "from": { "type": "string" },
+        "folder": { "type": "string" },
+        "at": { "type": "string" }
+      },
+      "required": ["kind"],
+      "additionalProperties": false
+    },
+    "attributes": {
+      "type": "array",
+      "description": "Реквизиты формы: дерево пути к данным конструктора и проверка путей check. Заполняет импорт из реквизитов формы, конструктор - «Добавить реквизит»; render, table и ru их не показывают",
+      "items": { "$ref": "#/$defs/attribute" }
+    },
+    "types": {
+      "type": "object",
+      "description": "Состав объектных и ссылочных типов: полное имя объекта метаданных (Catalog.Контрагенты) → реквизиты и табличные части. Тип описан один раз, дерево раскрывает его в каждом месте",
+      "additionalProperties": { "$ref": "#/$defs/typeDescription" }
+    },
+    "pictures": {
+      "type": "object",
+      "description": "Картинки для макета: имя картинки элементов (CommonPicture.Имя, StdPicture.Имя) → data URI. Заполняет импорт: общие - из исходников конфигурации, стандартные - из выгрузки платформы (архив инструмента или своя); нет картинки - стандартная рисуется значком макета, прочие - заглушкой",
+      "additionalProperties": { "type": "string", "pattern": "^data:image/" }
+    },
+    "commands": {
+      "type": "array",
+      "description": "Команды формы: имя, заголовок, подсказка, картинка, отображение, действие. Кнопка с командой формы (Form.Command.<Имя>) без своего заголовка, картинки или отображения берет их у команды. Заполняет импорт из команд формы, конструктор - панель «Команды»",
+      "items": { "$ref": "#/$defs/command" }
+    },
+    "styles": {
+      "type": "object",
+      "description": "Цвета стиля для макета: имя элемента стиля (FormTextColor, ГиперссылкаЦвет) → #RRGGBB. Заполняет импорт: все цветовые элементы стиля конфигурации из исходников и использованные формой цвета стиля платформы; конструктор - при выборе цвета стиля. Элемент без значения рендерер рисует без цвета, check замечает",
+      "additionalProperties": { "type": "string", "pattern": "^#[0-9A-F]{6}$" }
+    }
+  },
+  "required": ["version", "form"],
+  "additionalProperties": false,
+  "x-platform": {
+    "model": {
+      "version": "версия формата файла модели",
+      "note": "примечание для ТЗ; в форму не переносится",
+      "sample": "пример значения для картинки; в 1С значение приходит из данных",
+      "renamedFrom": "прежнее имя для сравнения версий формы; в 1С - переименование элемента",
+      "sourceType": "вид элемента в исходном XML, который импорт не распознал (вид модели Unknown - заглушка)",
+      "pictures": "данные картинок для рисования макета; в 1С - общие картинки конфигурации",
+      "types": "состав объектных и ссылочных типов для дерева пути к данным; в 1С - объекты метаданных конфигурации",
+      "styles": "значения цветов стиля для рисования макета; в 1С - элементы стиля конфигурации и стиль платформы"
+    },
+    "indirect": {
+      "form": "сама форма (ФормаКлиентскогоПриложения), корень дерева модели",
+      "type": "тип объекта платформы и его свойство Вид: InputField - ПолеФормы вида ПолеВвода, UsualGroup - ГруппаФормы вида ОбычнаяГруппа; LabelDecoration, PictureDecoration, AutoCommandBar, Addition - имена из XML формы EDT (ДекорацияФормы видов Надпись и Картинка, командная панель формы, дополнение таблицы, вынесенное в панель или форму)",
+      "items": "свойство ПодчиненныеЭлементы (ChildItems); имя - как в XML формы EDT",
+      "formKind": "роль формы у объекта метаданных (основная форма объекта, списка, выбора); задается в свойствах объекта, а не формы",
+      "dataType": "упрощенный тип для картинки; в 1С - тип реквизита формы (ОписаниеТипов)",
+      "length": "длина строки из типа реквизита (КвалификаторыСтроки.Длина), 0 - неограниченная; у ссылки с основным представлением «В виде кода» - длина кода; от нее ширина поля по типу",
+      "digits": "разрядность числа из типа реквизита (КвалификаторыЧисла.Разрядность); от нее ширина поля по типу",
+      "fractionDigits": "разрядность дробной части числа из типа реквизита (КвалификаторыЧисла.РазрядностьДробнойЧасти)",
+      "enumValues": "значения перечисления из типа реквизита (синонимы), для выпадающего списка макета",
+      "collapsed": "начальное состояние свертываемой группы - свойство конфигуратора; в коде - методы Скрыта(), Показать(), Скрыть()",
+      "formatted": "заголовок надписи - ФорматированнаяСтрока; в 1С - тип значения свойства Заголовок",
+      "help": "у формы или ее объекта есть справка (в конфигураторе - Справочная информация): в командной панели формы кнопка «?»",
+      "buttonType": "свойство Вид кнопки (ВидКнопкиФормы); имя type в модели занято видом элемента",
+      "additionType": "вид дополнения таблицы (в XML формы EDT - свойство type); имя type в модели занято видом элемента",
+      "main": "признак основного реквизита формы (в конфигураторе - ОсновнойРеквизит)",
+      "excludedCommands": "стандартные команды таблицы или формы, снятые в «Составе команд» (в XML формы EDT - excludedCommands); в 1С - флажки на закладке «Команды» редактора формы",
+      "dateFractions": "состав даты из типа реквизита (КвалификаторыДаты.ЧастиДаты): дата, время, дата и время; не указан - дата и время, как в EDT"
+    }
+  },
+  "$defs": {
+    "name": {
+      "type": "string",
+      "pattern": "^[A-Za-zА-Яа-яЁё_][A-Za-zА-Яа-яЁё0-9_]*$"
+    },
+    "size": { "type": "integer", "minimum": 0 },
+    "simpleValue": { "type": ["string", "number"] },
+    "stringList": { "type": "array", "items": { "type": "string" } },
+    "choiceList": {
+      "type": "array",
+      "items": {
+        "type": ["string", "object"],
+        "properties": { "value": { "type": "string" }, "presentation": { "type": "string" } },
+        "required": ["value"],
+        "additionalProperties": false
+      }
+    },
+    "titleLocation": { "enum": ["Auto", "None", "Left", "Top", "Right", "Bottom"] },
+    "horizontalAlign": { "enum": ["Auto", "Left", "Center", "Right"] },
+    "commandBarLocation": { "enum": ["Auto", "None", "Top", "Bottom"] },
+    "fixingInTable": { "enum": ["None", "Left", "Right"] },
+    "verticalAlign": { "enum": ["Auto", "Top", "Center", "Bottom"] },
+    "border": {
+      "enum": ["WithoutBorder", "Single", "Double", "DoubleUnderline", "Embossed", "Indented", "Overline", "Rounded", "Underline"],
+      "description": "рамка поля - ТипРамкиЭлементаУправления (стиль BorderDef в XML EDT)"
+    },
+    "color": {
+      "type": "string",
+      "pattern": "^(#[0-9A-F]{6}|[a-z]+|style:[A-Za-zА-Яа-яЁё_][A-Za-zА-Яа-яЁё0-9_]*)$",
+      "description": "#RRGGBB, имя web-цвета (gainsboro) или элемент стиля style:<Имя> - платформы (английским именем, style:FormTextColor) или конфигурации; значение элемента стиля для рисования - в styles модели"
+    },
+    "commandSource": { "type": "string", "pattern": "^(Form|Form[A-Za-z]+|Item\\..+)$" },
+    "font": {
+      "type": "object",
+      "properties": {
+        "faceName": { "type": "string" },
+        "height": { "type": "number", "minimum": 1 },
+        "bold": { "type": "boolean" },
+        "italic": { "type": "boolean" },
+        "underline": { "type": "boolean" },
+        "strikeout": { "type": "boolean" }
+      },
+      "additionalProperties": false,
+      "description": "шрифт: имя (faceName) и размер в пунктах (height) - абсолютного шрифта; без них - шрифт по умолчанию с указанным начертанием"
+    },
+    "childrenGroup": { "enum": ["Vertical", "Horizontal", "HorizontalIfPossible", "AlwaysHorizontal"] },
+
+    "valueType": {
+      "type": ["string", "array"],
+      "items": { "type": "string" },
+      "description": "тип значения - имя типа платформы, как в EDT: String, Number, Date, Boolean, CatalogRef.Имя, DocumentObject.Имя, ValueTable, ValueTree, ValueList, DynamicList; составной - списком"
+    },
+    "attribute": {
+      "type": "object",
+      "properties": {
+        "name": { "$ref": "#/$defs/name" },
+        "title": { "type": "string" },
+        "valueType": { "$ref": "#/$defs/valueType" },
+        "length": { "$ref": "#/$defs/size" },
+        "digits": { "$ref": "#/$defs/size" },
+        "fractionDigits": { "$ref": "#/$defs/size" },
+        "dateFractions": { "enum": ["Date", "Time", "DateTime"] },
+        "main": { "type": "boolean" },
+        "mainTable": { "type": "string" },
+        "columns": { "type": "array", "items": { "$ref": "#/$defs/attribute" } },
+        "additionalColumns": {
+          "type": "object",
+          "additionalProperties": { "type": "array", "items": { "$ref": "#/$defs/attribute" } }
+        }
+      },
+      "required": ["name"],
+      "additionalProperties": false
+    },
+    "command": {
+      "type": "object",
+      "properties": {
+        "name": { "$ref": "#/$defs/name" },
+        "title": { "type": "string" },
+        "toolTip": { "type": "string" },
+        "action": { "type": "string" },
+        "picture": { "type": "string" },
+        "representation": { "enum": ["Auto", "Text", "Picture", "PictureAndText"] }
+      },
+      "required": ["name"],
+      "additionalProperties": false
+    },
+    "tabularSection": {
+      "type": "object",
+      "properties": {
+        "name": { "$ref": "#/$defs/name" },
+        "title": { "type": "string" },
+        "columns": { "type": "array", "items": { "$ref": "#/$defs/attribute" } }
+      },
+      "required": ["name"],
+      "additionalProperties": false
+    },
+    "typeDescription": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "attributes": { "type": "array", "items": { "$ref": "#/$defs/attribute" } },
+        "tabularSections": { "type": "array", "items": { "$ref": "#/$defs/tabularSection" } }
+      },
+      "additionalProperties": false
+    },
+
+    "base": {
+      "properties": {
+        "type": { "type": "string" },
+        "name": { "$ref": "#/$defs/name" },
+        "renamedFrom": { "$ref": "#/$defs/name" },
+        "title": { "type": "string" },
+        "toolTip": { "type": "string" },
+        "extendedTooltip": { "type": "string" },
+        "extendedTooltipTextColor": { "$ref": "#/$defs/color" },
+        "toolTipRepresentation": {
+          "enum": ["Auto", "None", "Balloon", "Button", "ShowAuto", "ShowTop", "ShowBottom", "ShowLeft", "ShowRight"]
+        },
+        "visible": { "type": "boolean" },
+        "userVisible": { "type": "boolean" },
+        "enabled": { "type": "boolean" },
+        "width": { "$ref": "#/$defs/size" },
+        "height": { "$ref": "#/$defs/size" },
+        "horizontalStretch": { "type": "boolean" },
+        "verticalStretch": { "type": "boolean" },
+        "groupHorizontalAlign": { "enum": ["Auto", "Left", "Center", "Right"] },
+        "groupVerticalAlign": { "$ref": "#/$defs/verticalAlign" },
+        "note": { "type": "string" }
+      }
+    },
+    "dataBase": {
+      "properties": {
+        "dataPath": { "type": "string" },
+        "titleLocation": { "$ref": "#/$defs/titleLocation" },
+        "titleHeight": { "$ref": "#/$defs/size" },
+        "titleTextColor": { "$ref": "#/$defs/color" },
+        "readOnly": { "type": "boolean" },
+        "showInHeader": { "type": "boolean" },
+        "fixingInTable": { "$ref": "#/$defs/fixingInTable" },
+        "headerPicture": { "type": "string" }
+      }
+    },
+    "columnBase": {
+      "properties": {
+        "headerHorizontalAlign": { "$ref": "#/$defs/horizontalAlign" },
+        "headerBackColor": { "$ref": "#/$defs/color" },
+        "showInFooter": { "type": "boolean" },
+        "footerPicture": { "type": "string" },
+        "footerHorizontalAlign": { "$ref": "#/$defs/horizontalAlign" },
+        "footerBackColor": { "$ref": "#/$defs/color" },
+        "footerTextColor": { "$ref": "#/$defs/color" },
+        "footerFont": { "$ref": "#/$defs/font" },
+        "cellHyperlink": { "type": "boolean" },
+        "autoCellHeight": { "type": "boolean" }
+      }
+    },
+
+    "Form": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "autoTitle": { "type": "boolean" },
+        "formKind": {
+          "enum": ["DocumentObjectForm", "CatalogObjectForm", "ListForm", "ChoiceForm", "DataProcessorForm"]
+        },
+        "width": { "$ref": "#/$defs/size" },
+        "height": { "$ref": "#/$defs/size" },
+        "group": { "$ref": "#/$defs/childrenGroup" },
+        "commandBar": { "$ref": "#/$defs/AutoCommandBar" },
+        "commandBarLocation": { "$ref": "#/$defs/commandBarLocation" },
+        "help": { "type": "boolean" },
+        "showTitle": { "type": "boolean" },
+        "showCloseButton": { "type": "boolean" },
+        "excludedCommands": { "type": "array", "items": { "type": "string" } },
+        "note": { "type": "string" },
+        "items": { "type": "array", "items": { "$ref": "#/$defs/bodyItem" } }
+      },
+      "additionalProperties": false
+    },
+
+    "bodyItem": {
+      "oneOf": [
+        { "$ref": "#/$defs/UsualGroup" },
+        { "$ref": "#/$defs/Pages" },
+        { "$ref": "#/$defs/InputField" },
+        { "$ref": "#/$defs/CheckBoxField" },
+        { "$ref": "#/$defs/RadioButtonField" },
+        { "$ref": "#/$defs/LabelField" },
+        { "$ref": "#/$defs/Table" },
+        { "$ref": "#/$defs/LabelDecoration" },
+        { "$ref": "#/$defs/PictureDecoration" },
+        { "$ref": "#/$defs/CommandBar" },
+        { "$ref": "#/$defs/Button" },
+        { "$ref": "#/$defs/Popup" },
+        { "$ref": "#/$defs/Addition" },
+        { "$ref": "#/$defs/PictureField" },
+        { "$ref": "#/$defs/StubField" },
+        { "$ref": "#/$defs/Unknown" }
+      ]
+    },
+    "pageItem": {
+      "oneOf": [{ "$ref": "#/$defs/Page" }]
+    },
+    "columnItem": {
+      "oneOf": [
+        { "$ref": "#/$defs/InputField" },
+        { "$ref": "#/$defs/CheckBoxField" },
+        { "$ref": "#/$defs/LabelField" },
+        { "$ref": "#/$defs/ColumnGroup" },
+        { "$ref": "#/$defs/PictureField" },
+        { "$ref": "#/$defs/StubField" },
+        { "$ref": "#/$defs/Unknown" }
+      ]
+    },
+    "commandItem": {
+      "oneOf": [
+        { "$ref": "#/$defs/Button" },
+        { "$ref": "#/$defs/ButtonGroup" },
+        { "$ref": "#/$defs/Popup" },
+        { "$ref": "#/$defs/Addition" },
+        { "$ref": "#/$defs/Unknown" }
+      ]
+    },
+
+    "AutoCommandBar": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/base" }],
+      "properties": {
+        "type": { "const": "AutoCommandBar" },
+        "autoFill": { "type": "boolean" },
+        "horizontalAlign": { "$ref": "#/$defs/horizontalAlign" },
+        "items": { "type": "array", "items": { "$ref": "#/$defs/commandItem" } }
+      },
+      "required": ["type", "name"],
+      "unevaluatedProperties": false
+    },
+    "CommandBar": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/base" }],
+      "properties": {
+        "type": { "const": "CommandBar" },
+        "autoFill": { "type": "boolean" },
+        "horizontalAlign": { "$ref": "#/$defs/horizontalAlign" },
+        "commandSource": { "$ref": "#/$defs/commandSource" },
+        "items": { "type": "array", "items": { "$ref": "#/$defs/commandItem" } }
+      },
+      "required": ["type", "name"],
+      "unevaluatedProperties": false
+    },
+    "Button": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/base" }],
+      "properties": {
+        "type": { "const": "Button" },
+        "buttonType": { "enum": ["UsualButton", "Hyperlink", "CommandBarButton", "CommandBarHyperlink"] },
+        "commandName": { "type": "string" },
+        "picture": { "type": "string" },
+        "representation": { "enum": ["Auto", "Text", "Picture", "PictureAndText"] },
+        "defaultButton": { "type": "boolean" },
+        "check": { "type": "boolean" },
+        "locationInCommandBar": { "enum": ["Auto", "InCommandBar", "InAdditionalSubmenu", "InCommandBarAndInAdditionalSubmenu"] },
+        "borderColor": { "$ref": "#/$defs/color" },
+        "shape": { "enum": ["Usual", "Oval"] },
+        "font": { "$ref": "#/$defs/font" }
+      },
+      "required": ["type", "name"],
+      "unevaluatedProperties": false
+    },
+    "ButtonGroup": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/base" }],
+      "properties": {
+        "type": { "const": "ButtonGroup" },
+        "representation": { "enum": ["Auto", "Usual", "Compact"] },
+        "commandSource": { "$ref": "#/$defs/commandSource" },
+        "items": { "type": "array", "items": { "$ref": "#/$defs/commandItem" } }
+      },
+      "required": ["type", "name"],
+      "unevaluatedProperties": false
+    },
+    "Addition": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/base" }],
+      "properties": {
+        "type": { "const": "Addition" },
+        "additionType": { "enum": ["SearchStringAddition", "SearchControlAddition", "ViewStatusAddition"] },
+        "additionSource": { "type": "string" }
+      },
+      "required": ["type", "name"],
+      "unevaluatedProperties": false
+    },
+    "Popup": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/base" }],
+      "properties": {
+        "type": { "const": "Popup" },
+        "picture": { "type": "string" },
+        "representation": { "enum": ["Auto", "Text", "Picture", "PictureAndText"] },
+        "commandSource": { "$ref": "#/$defs/commandSource" },
+        "items": { "type": "array", "items": { "$ref": "#/$defs/commandItem" } }
+      },
+      "required": ["type", "name"],
+      "unevaluatedProperties": false
+    },
+
+    "UsualGroup": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/base" }],
+      "properties": {
+        "type": { "const": "UsualGroup" },
+        "group": { "$ref": "#/$defs/childrenGroup" },
+        "representation": { "enum": ["Auto", "None", "WeakSeparation", "NormalSeparation", "StrongSeparation"] },
+        "showTitle": { "type": "boolean" },
+        "behavior": { "enum": ["Auto", "Usual", "Collapsible", "PopUp"] },
+        "collapsed": { "type": "boolean" },
+        "controlRepresentation": { "enum": ["TitleHyperlink", "Picture"] },
+        "united": { "type": "boolean" },
+        "throughAlign": { "enum": ["Auto", "Use", "DontUse"] },
+        "childItemsHorizontalAlign": { "$ref": "#/$defs/horizontalAlign" },
+        "childItemsVerticalAlign": { "$ref": "#/$defs/verticalAlign" },
+        "backColor": { "$ref": "#/$defs/color" },
+        "titleTextColor": { "$ref": "#/$defs/color" },
+        "items": { "type": "array", "items": { "$ref": "#/$defs/bodyItem" } }
+      },
+      "required": ["type", "name"],
+      "unevaluatedProperties": false
+    },
+    "Pages": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/base" }],
+      "properties": {
+        "type": { "const": "Pages" },
+        "pagesRepresentation": {
+          "enum": ["Auto", "None", "TabsOnTop", "TabsOnBottom", "TabsOnLeftHorizontal", "TabsOnRightHorizontal"]
+        },
+        "currentPage": { "$ref": "#/$defs/name" },
+        "items": { "type": "array", "items": { "$ref": "#/$defs/pageItem" } }
+      },
+      "required": ["type", "name"],
+      "unevaluatedProperties": false
+    },
+    "Page": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/base" }],
+      "properties": {
+        "type": { "const": "Page" },
+        "group": { "$ref": "#/$defs/childrenGroup" },
+        "picture": { "type": "string" },
+        "items": { "type": "array", "items": { "$ref": "#/$defs/bodyItem" } }
+      },
+      "required": ["type", "name"],
+      "unevaluatedProperties": false
+    },
+    "ColumnGroup": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/base" }],
+      "properties": {
+        "type": { "const": "ColumnGroup" },
+        "group": { "enum": ["Vertical", "Horizontal", "InCell"] },
+        "showInHeader": { "type": "boolean" },
+        "headerHorizontalAlign": { "$ref": "#/$defs/horizontalAlign" },
+        "headerBackColor": { "$ref": "#/$defs/color" },
+        "fixingInTable": { "$ref": "#/$defs/fixingInTable" },
+        "headerPicture": { "type": "string" },
+        "items": { "type": "array", "items": { "$ref": "#/$defs/columnItem" } }
+      },
+      "required": ["type", "name"],
+      "unevaluatedProperties": false
+    },
+
+    "InputField": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/base" }, { "$ref": "#/$defs/dataBase" }, { "$ref": "#/$defs/columnBase" }],
+      "properties": {
+        "autoMaxWidth": { "type": "boolean" },
+        "maxWidth": { "$ref": "#/$defs/size" },
+        "autoMaxHeight": { "type": "boolean" },
+        "maxHeight": { "$ref": "#/$defs/size" },
+        "backColor": { "$ref": "#/$defs/color" },
+        "textColor": { "$ref": "#/$defs/color" },
+        "borderColor": { "$ref": "#/$defs/color" },
+        "font": { "$ref": "#/$defs/font" },
+        "titleFont": { "$ref": "#/$defs/font" },
+        "type": { "const": "InputField" },
+        "dataType": { "enum": ["string", "number", "date", "boolean", "ref"] },
+        "length": { "$ref": "#/$defs/size" },
+        "digits": { "$ref": "#/$defs/size" },
+        "fractionDigits": { "$ref": "#/$defs/size" },
+        "dateFractions": { "enum": ["Date", "Time", "DateTime"] },
+        "format": { "type": "string" },
+        "enumValues": { "$ref": "#/$defs/stringList" },
+        "choiceButton": { "type": "boolean" },
+        "clearButton": { "type": "boolean" },
+        "openButton": { "type": "boolean" },
+        "dropListButton": { "type": "boolean" },
+        "createButton": { "type": "boolean" },
+        "choiceButtonRepresentation": { "enum": ["Auto", "ShowInDropList", "ShowInInputField", "ShowInDropListAndInInputField"] },
+        "choiceButtonPicture": { "type": "string" },
+        "listChoiceMode": { "type": "boolean" },
+        "choiceList": { "$ref": "#/$defs/choiceList" },
+        "multiLine": { "type": "boolean" },
+        "inputHint": { "type": "string" },
+        "markIncomplete": { "type": "boolean" },
+        "autoMarkIncomplete": { "type": "boolean" },
+        "footerText": { "type": "string" },
+        "sample": { "$ref": "#/$defs/simpleValue" }
+      },
+      "required": ["type", "name"],
+      "unevaluatedProperties": false
+    },
+    "CheckBoxField": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/base" }, { "$ref": "#/$defs/dataBase" }, { "$ref": "#/$defs/columnBase" }],
+      "properties": {
+        "type": { "const": "CheckBoxField" },
+        "checkBoxType": { "enum": ["Auto", "CheckBox", "Switch", "Tumbler"] },
+        "titleFont": { "$ref": "#/$defs/font" },
+        "borderColor": { "$ref": "#/$defs/color" },
+        "verticalAlign": { "$ref": "#/$defs/verticalAlign" },
+        "format": { "type": "string" },
+        "sample": { "type": "boolean" }
+      },
+      "required": ["type", "name"],
+      "unevaluatedProperties": false
+    },
+    "RadioButtonField": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/base" }, { "$ref": "#/$defs/dataBase" }],
+      "properties": {
+        "type": { "const": "RadioButtonField" },
+        "radioButtonType": { "enum": ["Auto", "RadioButton", "Tumbler"] },
+        "choiceList": { "$ref": "#/$defs/choiceList" },
+        "columnsCount": { "$ref": "#/$defs/size" },
+        "sample": { "$ref": "#/$defs/simpleValue" }
+      },
+      "required": ["type", "name"],
+      "unevaluatedProperties": false
+    },
+    "LabelField": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/base" }, { "$ref": "#/$defs/dataBase" }, { "$ref": "#/$defs/columnBase" }],
+      "properties": {
+        "type": { "const": "LabelField" },
+        "autoMaxWidth": { "type": "boolean" },
+        "maxWidth": { "$ref": "#/$defs/size" },
+        "autoMaxHeight": { "type": "boolean" },
+        "maxHeight": { "$ref": "#/$defs/size" },
+        "horizontalAlign": { "$ref": "#/$defs/horizontalAlign" },
+        "verticalAlign": { "$ref": "#/$defs/verticalAlign" },
+        "textColor": { "$ref": "#/$defs/color" },
+        "backColor": { "$ref": "#/$defs/color" },
+        "borderColor": { "$ref": "#/$defs/color" },
+        "border": { "$ref": "#/$defs/border" },
+        "font": { "$ref": "#/$defs/font" },
+        "titleFont": { "$ref": "#/$defs/font" },
+        "hyperlink": { "type": "boolean" },
+        "footerText": { "type": "string" },
+        "sample": { "$ref": "#/$defs/simpleValue" }
+      },
+      "required": ["type", "name"],
+      "unevaluatedProperties": false
+    },
+    "Table": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/base" }, { "$ref": "#/$defs/dataBase" }],
+      "properties": {
+        "type": { "const": "Table" },
+        "representation": { "enum": ["List", "Tree", "HierarchicalList"] },
+        "multipleChoice": { "type": "boolean" },
+        "header": { "type": "boolean" },
+        "footer": { "type": "boolean" },
+        "commandBar": { "$ref": "#/$defs/AutoCommandBar" },
+        "commandBarLocation": { "$ref": "#/$defs/commandBarLocation" },
+        "changeRowSet": { "type": "boolean" },
+        "changeRowOrder": { "type": "boolean" },
+        "excludedCommands": { "type": "array", "items": { "type": "string" } },
+        "searchStringLocation": { "enum": ["Auto", "None", "CommandBar", "Top", "Bottom", "PullFromTop"] },
+        "viewStatusLocation": { "enum": ["Auto", "None", "Top", "Bottom"] },
+        "searchControlLocation": { "enum": ["Auto", "None", "CommandBar"] },
+        "heightInTableRows": { "$ref": "#/$defs/size" },
+        "rowPictureDataPath": { "type": "string" },
+        "rowsPicture": { "type": "string" },
+        "horizontalLines": { "type": "boolean" },
+        "verticalLines": { "type": "boolean" },
+        "useAlternationRowColor": { "type": "boolean" },
+        "backColor": { "$ref": "#/$defs/color" },
+        "textColor": { "$ref": "#/$defs/color" },
+        "borderColor": { "$ref": "#/$defs/color" },
+        "font": { "$ref": "#/$defs/font" },
+        "titleFont": { "$ref": "#/$defs/font" },
+        "items": { "type": "array", "items": { "$ref": "#/$defs/columnItem" } },
+        "sample": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": { "type": ["string", "number", "boolean"] }
+          }
+        }
+      },
+      "required": ["type", "name"],
+      "unevaluatedProperties": false
+    },
+    "LabelDecoration": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/base" }],
+      "properties": {
+        "type": { "const": "LabelDecoration" },
+        "textColor": { "$ref": "#/$defs/color" },
+        "backColor": { "$ref": "#/$defs/color" },
+        "formatted": { "type": "boolean" },
+        "hyperlink": { "type": "boolean" }
+      },
+      "required": ["type", "name"],
+      "unevaluatedProperties": false
+    },
+    "PictureDecoration": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/base" }],
+      "properties": {
+        "type": { "const": "PictureDecoration" },
+        "picture": { "type": "string" },
+        "hyperlink": { "type": "boolean" }
+      },
+      "required": ["type", "name"],
+      "unevaluatedProperties": false
+    },
+    "PictureField": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/base" }, { "$ref": "#/$defs/dataBase" }, { "$ref": "#/$defs/columnBase" }],
+      "properties": {
+        "type": { "const": "PictureField" },
+        "valuesPicture": { "type": "string" },
+        "hyperlink": { "type": "boolean" },
+        "pictureSize": {
+          "enum": ["AutoSize", "AutoSizeIgnoreScale", "ByFontSize", "Proportionally", "Stretch", "RealSize", "RealSizeIgnoreScale", "Tile"]
+        },
+        "autoMaxWidth": { "type": "boolean" },
+        "maxWidth": { "$ref": "#/$defs/size" },
+        "autoMaxHeight": { "type": "boolean" },
+        "maxHeight": { "$ref": "#/$defs/size" },
+        "textColor": { "$ref": "#/$defs/color" },
+        "borderColor": { "$ref": "#/$defs/color" },
+        "border": { "$ref": "#/$defs/border" },
+        "font": { "$ref": "#/$defs/font" },
+        "titleFont": { "$ref": "#/$defs/font" },
+        "sample": { "type": "string" }
+      },
+      "required": ["type", "name"],
+      "unevaluatedProperties": false
+    },
+    "StubField": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/base" }, { "$ref": "#/$defs/dataBase" }],
+      "properties": {
+        "type": {
+          "enum": [
+            "SpreadsheetDocumentField",
+            "TextDocumentField",
+            "FormattedDocumentField",
+            "HTMLDocumentField",
+            "PlannerField",
+            "ChartField",
+            "GanttChartField",
+            "DendrogramField",
+            "CalendarField",
+            "ProgressBarField",
+            "TrackBarField",
+            "GraphicalSchemaField",
+            "GeographicalSchemaField",
+            "PDFDocumentField",
+            "PeriodField"
+          ]
+        }
+      },
+      "required": ["type", "name"],
+      "unevaluatedProperties": false
+    },
+    "Unknown": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/base" }],
+      "properties": {
+        "type": { "const": "Unknown" },
+        "sourceType": { "type": "string" }
+      },
+      "required": ["type", "name", "sourceType"],
+      "unevaluatedProperties": false
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "form": {
+    "title": "Фикстура",
+    "items": [
+      {
+        "type": "InputField",
+        "name": "Поле1",
+        "titleLocation": "Middle"
+      },
+      {
+        "type": "InputField",
+        "title": "Без имени"
+      },
+      {
+        "type": "Grid",
+        "name": "НеизвестныйВид"
+      },
+      {
+        "type": "UsualGroup",
+        "name": "Группа",
+        "items": [
+          {
+            "type": "Page",
+            "name": "ЗакладкаНеНаМесте",
+            "title": "ЗакладкаНеНаМесте",
+            "items": [
+              {
+                "type": "InputField",
+                "name": "Поле2"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "InputField",
+        "name": "Поле3",
+        "unknownProperty": true
+      },
+      {
+        "type": "InputField",
+        "name": "1Поле"
+      }
+    ]
+  }
+}

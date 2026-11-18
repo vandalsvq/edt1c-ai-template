@@ -241,6 +241,13 @@ claude mcp list 2>/dev/null | grep -iE 'edtmcp|codepilot1c'
 - `LICENSE` - перенеси в `licenses/edt1c-ai-template-LICENSE` (`git mv LICENSE licenses/edt1c-ai-template-LICENSE`). MIT требует сохранять уведомление об авторских правах в копиях: файлы, пришедшие из шаблона, остаются под ним, а код проекта под ним не оказывается.
 - Своя лицензия проекта в корне - спроси пользователя: положить его `LICENSE` (тогда добавить его в первый коммит, шаг 9) или обойтись без него (обычно для закрытого репозитория).
 
+### Шаг 5.Ж. Макеты форм `form-mockup`
+
+Спроси, нужны ли макеты управляемых форм для ТЗ (`tools/form-mockup/README.md`):
+
+- **Нужны** - проверь `python3 --version` (3.9 или новее) и наличие Google Chrome: без него макеты рисуются страницей HTML, но без PNG. Ярлыки `Открыть макеты.cmd` / `Открыть макеты.command` в `tools/form-mockup/` - для аналитика без терминала.
+- **Не нужны** - удали `tools/form-mockup/`, `.claude/skills/form-mockup/`, раздел «Skill `form-mockup`» из `CLAUDE.md` и строки дерева в `README.md`.
+
 ### Шаг 6. Локальные permissions Claude Code
 
 Если `.claude/settings.local.json` отсутствует - скопируй из `.claude/settings.local.json.example`. Если шаг 5.A уже создал/изменил файл - пропусти.

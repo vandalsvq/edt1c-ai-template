@@ -1,0 +1,1456 @@
+{
+  "version": 1,
+  "form": {
+    "title": "Витрина элементов",
+    "formKind": "DataProcessorForm",
+    "width": 110,
+    "commandBar": {
+      "type": "AutoCommandBar",
+      "name": "ФормаКоманднаяПанель",
+      "items": [
+        { "type": "Button", "name": "ФормаВыполнить", "title": "Выполнить", "commandName": "Form.Command.Выполнить", "defaultButton": true },
+        { "type": "Button", "name": "ФормаПечать", "title": "Печать", "commandName": "Form.Command.Печать", "picture": "StdPicture.Print", "representation": "PictureAndText" },
+        {
+          "type": "Popup",
+          "name": "ФормаПодменю",
+          "title": "Подменю",
+          "items": [
+            { "type": "Button", "name": "ФормаПодменюКоманда1", "title": "Команда 1", "commandName": "Form.Command.Команда1" },
+            { "type": "Button", "name": "ФормаПодменюКоманда2", "title": "Команда 2", "commandName": "Form.Command.Команда2" }
+          ]
+        },
+        {
+          "type": "ButtonGroup",
+          "name": "ФормаГруппаКнопок",
+          "items": [
+            { "type": "Button", "name": "ФормаКнопкаА", "title": "А", "commandName": "Form.Command.КомандаА" },
+            { "type": "Button", "name": "ФормаКнопкаБ", "title": "Б", "commandName": "Form.Command.КомандаБ" }
+          ],
+          "title": "Группа кнопок"
+        },
+        { "type": "Button", "name": "ФормаДлинныйЗаголовок", "title": "Кнопка с заведомо длинным заголовком", "commandName": "Form.Command.ДлиннаяКоманда", "width": 12, "note": "калибровка: ширина кнопки в 1С - нижняя граница, кнопка растет по тексту, замечания нет" }
+      ]
+    },
+    "items": [
+      {
+        "type": "Pages",
+        "name": "Страницы",
+        "items": [
+          {
+            "type": "Page",
+            "name": "СтраницаПоля",
+            "title": "Поля",
+            "items": [
+              {
+                "type": "UsualGroup",
+                "name": "ГруппаКолонки",
+                "group": "AlwaysHorizontal",
+                "representation": "None",
+                "showTitle": false,
+                "items": [
+                  {
+                    "type": "UsualGroup",
+                    "name": "ГруппаПоляВвода",
+                    "representation": "None",
+                    "showTitle": false,
+                    "items": [
+                      { "type": "InputField", "name": "Строка", "dataType": "string", "sample": "Текст строки" },
+                      { "type": "InputField", "name": "Ссылка", "dataType": "ref", "openButton": true, "sample": "ООО Ромашка" },
+                      { "type": "InputField", "name": "Дата", "dataType": "date", "sample": "30.10.2026" },
+                      { "type": "InputField", "name": "Число", "dataType": "number", "sample": "1 250,50" },
+                      { "type": "InputField", "name": "Список", "title": "Список выбора", "dropListButton": true, "clearButton": true, "choiceList": ["Первый", "Второй", "Третий"], "sample": "Второй" },
+                      { "type": "InputField", "name": "Обязательное", "dataType": "ref", "markIncomplete": true },
+                      { "type": "InputField", "name": "СПодсказкой", "title": "С подсказкой ввода", "inputHint": "Введите текст" },
+                      { "type": "InputField", "name": "ПолеТолькоПросмотр", "title": "Только просмотр", "dataType": "ref", "readOnly": true, "sample": "Только просмотр" },
+                      { "type": "InputField", "name": "СкрытоеПоле", "title": "Скрытое поле", "visible": false, "sample": "видно только по «Показать скрытые»" }
+                    ]
+                  },
+                  {
+                    "type": "UsualGroup",
+                    "name": "ГруппаДругиеПоля",
+                    "representation": "None",
+                    "showTitle": false,
+                    "items": [
+                      { "type": "LabelField", "name": "ПолеНадписи", "title": "Поле надписи", "sample": "Значение надписи" },
+                      { "type": "LabelField", "name": "ПолеГиперссылка", "title": "Гиперссылка", "hyperlink": true, "sample": "Открыть документ" },
+                      { "type": "CheckBoxField", "name": "Флажок", "sample": true },
+                      { "type": "CheckBoxField", "name": "ФлажокВыкл", "title": "Флажок снят", "sample": false },
+                      { "type": "CheckBoxField", "name": "Выключатель", "checkBoxType": "Switch", "sample": true },
+                      { "type": "CheckBoxField", "name": "Тумблер", "checkBoxType": "Tumbler", "sample": true },
+                      { "type": "RadioButtonField", "name": "Переключатель", "choiceList": ["Вариант 1", "Вариант 2", "Вариант 3"], "sample": "Вариант 2" },
+                      { "type": "RadioButtonField", "name": "ПереключательКолонка", "title": "В колонку", "columnsCount": 1, "choiceList": ["Да", "Нет"], "sample": "Да" },
+                      { "type": "RadioButtonField", "name": "ПереключательТумблер", "title": "Тумблер выбора", "radioButtonType": "Tumbler", "choiceList": ["День", "Неделя", "Месяц"], "sample": "Неделя" }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "UsualGroup",
+                "name": "ГруппаЗаголовкиСверху",
+                "title": "Заголовки сверху",
+                "group": "Horizontal",
+                "items": [
+                  { "type": "InputField", "name": "Организация", "titleLocation": "Top", "dataType": "ref", "sample": "ООО Ромашка" },
+                  { "type": "InputField", "name": "Период", "titleLocation": "Top", "dataType": "date", "sample": "01.10.2026" },
+                  { "type": "InputField", "name": "Сумма", "titleLocation": "Top", "dataType": "number", "sample": "8 900,00" }
+                ]
+              },
+              { "type": "InputField", "name": "Комментарий", "multiLine": true, "height": 3, "horizontalStretch": true, "sample": "Многострочный текст:\nвторая строка" }
+            ]
+          },
+          {
+            "type": "Page",
+            "name": "СтраницаГруппы",
+            "title": "Группы",
+            "items": [
+              {
+                "type": "UsualGroup",
+                "name": "ГруппаОтображения",
+                "group": "Horizontal",
+                "representation": "None",
+                "showTitle": false,
+                "items": [
+                  {
+                    "type": "UsualGroup",
+                    "name": "ГруппаСлабое",
+                    "title": "Слабое выделение",
+                    "representation": "WeakSeparation",
+                    "items": [
+                      { "type": "InputField", "name": "Поле1", "title": "Поле", "width": 14 },
+                      { "type": "InputField", "name": "Поле2", "title": "Второе поле", "width": 14 }
+                    ]
+                  },
+                  {
+                    "type": "UsualGroup",
+                    "name": "ГруппаОбычное",
+                    "title": "Обычное выделение",
+                    "representation": "NormalSeparation",
+                    "items": [
+                      { "type": "InputField", "name": "Поле3", "title": "Поле", "width": 14 },
+                      { "type": "InputField", "name": "Поле4", "title": "Второе поле", "width": 14 }
+                    ]
+                  },
+                  {
+                    "type": "UsualGroup",
+                    "name": "ГруппаСильное",
+                    "title": "Сильное выделение",
+                    "representation": "StrongSeparation",
+                    "items": [
+                      { "type": "InputField", "name": "Поле5", "title": "Поле", "width": 14 },
+                      { "type": "InputField", "name": "Поле6", "title": "Второе поле", "width": 14 }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "UsualGroup",
+                "name": "ГруппаСвертываемая",
+                "title": "Свертываемая группа (развернута)",
+                "behavior": "Collapsible",
+                "items": [
+                  { "type": "InputField", "name": "Поле7", "title": "Поле внутри", "sample": "Значение" }
+                ]
+              },
+              {
+                "type": "UsualGroup",
+                "name": "ГруппаСвернутая",
+                "title": "Свертываемая группа (свернута)",
+                "behavior": "Collapsible",
+                "collapsed": true,
+                "items": [
+                  { "type": "InputField", "name": "Поле8", "title": "Поле внутри" }
+                ]
+              },
+              {
+                "type": "UsualGroup",
+                "name": "ГруппаВсплывающая",
+                "title": "Всплывающая группа",
+                "behavior": "PopUp",
+                "items": [
+                  { "type": "InputField", "name": "Поле9", "title": "Поле внутри" }
+                ]
+              },
+              {
+                "type": "UsualGroup",
+                "name": "ГруппаЕслиВозможно",
+                "title": "Горизонтальная, если возможно",
+                "group": "HorizontalIfPossible",
+                "representation": "WeakSeparation",
+                "items": [
+                  { "type": "CheckBoxField", "name": "Флажок1", "title": "Первый" },
+                  { "type": "CheckBoxField", "name": "Флажок2", "title": "Второй", "sample": true },
+                  { "type": "CheckBoxField", "name": "Флажок3", "title": "Третий" }
+                ]
+              },
+              {
+                "type": "UsualGroup",
+                "name": "ГруппаКнопкиСправа",
+                "group": "Horizontal",
+                "representation": "None",
+                "showTitle": false,
+                "childItemsHorizontalAlign": "Right",
+                "items": [
+                  { "type": "Button", "name": "КнопкаОК", "title": "ОК", "commandName": "Form.Command.ОК", "defaultButton": true },
+                  { "type": "Button", "name": "КнопкаОтмена", "title": "Отмена", "commandName": "Form.Command.Отмена" }
+                ],
+                "horizontalStretch": true
+              },
+              {
+                "type": "Pages",
+                "name": "СтраницыСлева",
+                "pagesRepresentation": "TabsOnLeftHorizontal",
+                "items": [
+                  {
+                    "type": "Page",
+                    "name": "СтраницаСлеваОсновное",
+                    "title": "Основное",
+                    "items": [
+                      { "type": "InputField", "name": "Поле10", "title": "Закладки слева", "sample": "Первая закладка" }
+                    ]
+                  },
+                  {
+                    "type": "Page",
+                    "name": "СтраницаСлеваПрочее",
+                    "title": "Прочее",
+                    "items": [
+                      { "type": "InputField", "name": "Поле11", "title": "Поле", "sample": "Вторая закладка" }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "Page",
+            "name": "СтраницаТаблицы",
+            "title": "Таблицы",
+            "items": [
+              {
+                "type": "Table",
+                "name": "Товары",
+                "title": "Таблица с группами колонок",
+                "titleLocation": "Top",
+                "dataPath": "Объект.Товары",
+                "footer": true,
+                "heightInTableRows": 4,
+                "items": [
+                  { "type": "InputField", "name": "ТоварыНомерСтроки", "title": "N", "dataPath": "Объект.Товары.НомерСтроки", "width": 3, "dataType": "number" },
+                  { "type": "InputField", "name": "ТоварыОтметка", "dataPath": "Объект.Товары.Отметка", "width": 2, "dataType": "boolean" },
+                  {
+                    "type": "ColumnGroup",
+                    "name": "ТоварыГруппаНоменклатура",
+                    "group": "Vertical",
+                    "items": [
+                      { "type": "InputField", "name": "ТоварыНоменклатура", "title": "Номенклатура", "dataPath": "Объект.Товары.Номенклатура", "dataType": "ref" },
+                      { "type": "InputField", "name": "ТоварыХарактеристика", "title": "Характеристика", "dataPath": "Объект.Товары.Характеристика", "dataType": "ref" }
+                    ]
+                  },
+                  {
+                    "type": "ColumnGroup",
+                    "name": "ТоварыГруппаКоличество",
+                    "group": "InCell",
+                    "items": [
+                      { "type": "InputField", "name": "ТоварыКоличество", "title": "Количество", "dataPath": "Объект.Товары.Количество", "dataType": "number", "width": 6 },
+                      { "type": "InputField", "name": "ТоварыЕдиница", "title": "Ед.", "dataPath": "Объект.Товары.Единица", "dataType": "ref", "width": 4 }
+                    ]
+                  },
+                  {
+                    "type": "ColumnGroup",
+                    "name": "ТоварыГруппаСуммы",
+                    "title": "Суммы",
+                    "group": "Horizontal",
+                    "showInHeader": true,
+                    "items": [
+                      { "type": "InputField", "name": "ТоварыЦена", "title": "Цена", "dataPath": "Объект.Товары.Цена", "dataType": "number" },
+                      { "type": "InputField", "name": "ТоварыСумма", "title": "Сумма", "dataPath": "Объект.Товары.Сумма", "dataType": "number", "footerText": "4 250,00" }
+                    ]
+                  },
+                  { "type": "InputField", "name": "ТоварыКомментарий", "title": "Заведомо длинный заголовок узкой колонки", "dataPath": "Объект.Товары.Комментарий", "width": 4, "note": "проверка замечания раскладки: колонка уже заголовка" }
+                ],
+                "sample": [
+                  ["1", true, "Стол письменный", "дуб, 120 см", "2", "шт", "1 500,00", "3 000,00", ""],
+                  ["2", false, "Кресло офисное", "черное", "1", "шт", "1 250,00", "1 250,00", ""]
+                ]
+              },
+              {
+                "type": "Table",
+                "name": "Дерево",
+                "title": "Дерево",
+                "titleLocation": "Top",
+                "dataPath": "Дерево",
+                "representation": "Tree",
+                "header": false,
+                "commandBarLocation": "None",
+                "heightInTableRows": 3,
+                "items": [
+                  { "type": "InputField", "name": "ДеревоНаименование", "title": "Наименование", "dataPath": "Дерево.Наименование" }
+                ],
+                "sample": [
+                  ["Раздел"],
+                  ["Подраздел"]
+                ]
+              }
+            ]
+          },
+          {
+            "type": "Page",
+            "name": "СтраницаДекорации",
+            "title": "Декорации",
+            "items": [
+              { "type": "LabelDecoration", "name": "Надпись", "title": "Простая надпись - текст на форме" },
+              { "type": "LabelDecoration", "name": "НадписьФорматированная", "title": "Форматированная строка: <b>жирный</> и <link ссылка>ссылка</>", "formatted": true },
+              { "type": "LabelDecoration", "name": "НадписьГиперссылка", "title": "Надпись-гиперссылка", "hyperlink": true },
+              {
+                "type": "UsualGroup",
+                "name": "ГруппаКартинкиИЗаглушки",
+                "group": "Horizontal",
+                "representation": "None",
+                "showTitle": false,
+                "items": [
+                  { "type": "PictureDecoration", "name": "Картинка", "picture": "StdPicture.Information", "width": 10, "height": 3 },
+                  { "type": "SpreadsheetDocumentField", "name": "ТабличныйДокумент", "width": 30, "height": 5, "horizontalStretch": false },
+                  { "type": "ChartField", "name": "Диаграмма", "width": 24, "height": 5, "horizontalStretch": false }
+                ]
+              },
+              { "type": "HTMLDocumentField", "name": "ПолеHTML", "title": "Поле HTML-документа", "height": 3 }
+            ]
+          },
+          {
+            "type": "Page",
+            "name": "СтраницаШирины",
+            "title": "Ширины",
+            "items": [
+              {
+                "type": "UsualGroup",
+                "name": "ШГруппаВертикальная",
+                "title": "1. Вертикальная группа, ширина полей Авто",
+                "representation": "WeakSeparation",
+                "items": [
+                  { "type": "InputField", "name": "ШВертИНН", "title": "ИНН (строка 12)", "dataPath": "ШСтрока12", "dataType": "string", "length": 12 },
+                  { "type": "InputField", "name": "ШВертТелефон", "title": "Телефон (строка 19)", "dataPath": "ШСтрока19", "dataType": "string", "length": 19 },
+                  { "type": "InputField", "name": "ШВертНаименование", "title": "Наименование (строка 64)", "dataPath": "ШСтрока64", "dataType": "string", "length": 64 },
+                  { "type": "InputField", "name": "ШВертСумма", "title": "Сумма (число 15,2)", "dataPath": "ШЧисло15", "dataType": "number", "digits": 15, "fractionDigits": 2 },
+                  { "type": "InputField", "name": "ШВертДата", "title": "Дата", "dataPath": "ШДата", "dataType": "date" }
+                ]
+              },
+              {
+                "type": "UsualGroup",
+                "name": "ШГруппаСтроки",
+                "title": "2. Строки разной длины",
+                "representation": "WeakSeparation",
+                "items": [
+                  { "type": "InputField", "name": "ШСтрСтрока12", "title": "Строка 12", "dataPath": "ШСтрока12", "dataType": "string", "length": 12 },
+                  { "type": "InputField", "name": "ШСтрСтрока40", "title": "Строка 40", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                  { "type": "InputField", "name": "ШСтрСтрока150", "title": "Строка 150", "dataPath": "ШСтрока150", "dataType": "string", "length": 150 },
+                  { "type": "InputField", "name": "ШСтрСтрокаНеогр", "title": "Строка неограниченная", "dataPath": "ШСтрокаНеогр", "dataType": "string", "length": 150 }
+                ]
+              },
+              {
+                "type": "UsualGroup",
+                "name": "ШГруппаБезРастягивания",
+                "title": "3. Как группа 1, у полей «Растягивать по горизонтали: Нет»",
+                "representation": "WeakSeparation",
+                "items": [
+                  { "type": "InputField", "name": "ШНетИНН", "title": "ИНН (строка 12)", "dataPath": "ШСтрока12", "dataType": "string", "length": 12, "horizontalStretch": false },
+                  { "type": "InputField", "name": "ШНетТелефон", "title": "Телефон (строка 19)", "dataPath": "ШСтрока19", "dataType": "string", "length": 19, "horizontalStretch": false },
+                  { "type": "InputField", "name": "ШНетНаименование", "title": "Наименование (строка 64)", "dataPath": "ШСтрока64", "dataType": "string", "length": 64, "horizontalStretch": false },
+                  { "type": "InputField", "name": "ШНетСумма", "title": "Сумма (число 15,2)", "dataPath": "ШЧисло15", "dataType": "number", "digits": 15, "fractionDigits": 2, "horizontalStretch": false },
+                  { "type": "InputField", "name": "ШНетДата", "title": "Дата", "dataPath": "ШДата", "dataType": "date", "horizontalStretch": false }
+                ]
+              },
+              {
+                "type": "UsualGroup",
+                "name": "ШГруппаДвеКолонки",
+                "title": "4. Две колонки",
+                "group": "Horizontal",
+                "representation": "WeakSeparation",
+                "items": [
+                  {
+                    "type": "UsualGroup",
+                    "name": "ШКолонкаЛевая",
+                    "title": "Левая",
+                    "representation": "WeakSeparation",
+                    "items": [
+                      { "type": "InputField", "name": "ШЛевИНН", "title": "ИНН (строка 12)", "dataPath": "ШСтрока12", "dataType": "string", "length": 12 },
+                      { "type": "InputField", "name": "ШЛевНаименование", "title": "Наименование (строка 64)", "dataPath": "ШСтрока64", "dataType": "string", "length": 64 }
+                    ]
+                  },
+                  {
+                    "type": "UsualGroup",
+                    "name": "ШКолонкаПравая",
+                    "title": "Правая",
+                    "representation": "WeakSeparation",
+                    "items": [
+                      { "type": "InputField", "name": "ШПравТелефон", "title": "Телефон (строка 19)", "dataPath": "ШСтрока19", "dataType": "string", "length": 19 },
+                      { "type": "InputField", "name": "ШПравДата", "title": "Дата", "dataPath": "ШДата", "dataType": "date" }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "UsualGroup",
+                "name": "ШГруппаПоОдному",
+                "title": "5. Поле и флажок в строке",
+                "representation": "WeakSeparation",
+                "items": [
+                  {
+                    "type": "UsualGroup",
+                    "name": "ШСтрокаСтрока12",
+                    "title": "Строка 12",
+                    "showTitle": false,
+                    "group": "Horizontal",
+                    "items": [
+                      { "type": "InputField", "name": "ШОднСтрока12", "title": "Строка 12", "dataPath": "ШСтрока12", "dataType": "string", "length": 12 },
+                      { "type": "CheckBoxField", "name": "ШОднСтрока12Конец", "title": "конец", "dataPath": "ШФлажок" }
+                    ]
+                  },
+                  {
+                    "type": "UsualGroup",
+                    "name": "ШСтрокаСтрока40",
+                    "title": "Строка 40",
+                    "showTitle": false,
+                    "group": "Horizontal",
+                    "items": [
+                      { "type": "InputField", "name": "ШОднСтрока40", "title": "Строка 40", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "CheckBoxField", "name": "ШОднСтрока40Конец", "title": "конец", "dataPath": "ШФлажок" }
+                    ]
+                  },
+                  {
+                    "type": "UsualGroup",
+                    "name": "ШСтрокаСтрока64",
+                    "title": "Строка 64",
+                    "showTitle": false,
+                    "group": "Horizontal",
+                    "items": [
+                      { "type": "InputField", "name": "ШОднСтрока64", "title": "Строка 64", "dataPath": "ШСтрока64", "dataType": "string", "length": 64 },
+                      { "type": "CheckBoxField", "name": "ШОднСтрока64Конец", "title": "конец", "dataPath": "ШФлажок" }
+                    ]
+                  },
+                  {
+                    "type": "UsualGroup",
+                    "name": "ШСтрокаСтрокаНеогр",
+                    "title": "Строка неограниченная",
+                    "showTitle": false,
+                    "group": "Horizontal",
+                    "items": [
+                      { "type": "InputField", "name": "ШОднСтрокаНеогр", "title": "Строка неограниченная", "dataPath": "ШСтрокаНеогр", "dataType": "string", "length": 150 },
+                      { "type": "CheckBoxField", "name": "ШОднСтрокаНеогрКонец", "title": "конец", "dataPath": "ШФлажок" }
+                    ]
+                  },
+                  {
+                    "type": "UsualGroup",
+                    "name": "ШСтрокаЧисло5",
+                    "title": "Число 5",
+                    "showTitle": false,
+                    "group": "Horizontal",
+                    "items": [
+                      { "type": "InputField", "name": "ШОднЧисло5", "title": "Число 5", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0 },
+                      { "type": "CheckBoxField", "name": "ШОднЧисло5Конец", "title": "конец", "dataPath": "ШФлажок" }
+                    ]
+                  },
+                  {
+                    "type": "UsualGroup",
+                    "name": "ШСтрокаЧисло15",
+                    "title": "Число 15,2",
+                    "showTitle": false,
+                    "group": "Horizontal",
+                    "items": [
+                      { "type": "InputField", "name": "ШОднЧисло15", "title": "Число 15,2", "dataPath": "ШЧисло15", "dataType": "number", "digits": 15, "fractionDigits": 2 },
+                      { "type": "CheckBoxField", "name": "ШОднЧисло15Конец", "title": "конец", "dataPath": "ШФлажок" }
+                    ]
+                  },
+                  {
+                    "type": "UsualGroup",
+                    "name": "ШСтрокаДата",
+                    "title": "Дата",
+                    "showTitle": false,
+                    "group": "Horizontal",
+                    "items": [
+                      { "type": "InputField", "name": "ШОднДата", "title": "Дата", "dataPath": "ШДата", "dataType": "date" },
+                      { "type": "CheckBoxField", "name": "ШОднДатаКонец", "title": "конец", "dataPath": "ШФлажок" }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "UsualGroup",
+                "name": "ШГруппаКакКод",
+                "title": "6. Как «Наименование» и «Код» справочника: строка 9",
+                "representation": "WeakSeparation",
+                "items": [
+                  {
+                    "type": "UsualGroup",
+                    "name": "ШКК1",
+                    "title": "Всегда горизонтальная",
+                    "group": "AlwaysHorizontal",
+                    "representation": "WeakSeparation",
+                    "items": [
+                      { "type": "InputField", "name": "ШКК1Наим", "title": "Наименование (ширина 30, макс. 50), всегда", "dataPath": "ШСтрока150", "dataType": "string", "length": 150, "autoMaxWidth": false, "maxWidth": 50, "width": 30 },
+                      { "type": "InputField", "name": "ШКК1Код", "title": "Код (строка 9)", "dataPath": "ШСтрока9", "dataType": "string", "length": 9 }
+                    ]
+                  },
+                  {
+                    "type": "UsualGroup",
+                    "name": "ШКК2",
+                    "title": "Горизонтальная, если возможно",
+                    "group": "HorizontalIfPossible",
+                    "representation": "WeakSeparation",
+                    "items": [
+                      { "type": "InputField", "name": "ШКК2Наим", "title": "Наименование (ширина 30, макс. 50), если возможно", "dataPath": "ШСтрока150", "dataType": "string", "length": 150, "autoMaxWidth": false, "maxWidth": 50, "width": 30 },
+                      { "type": "InputField", "name": "ШКК2Код", "title": "Код (строка 9)", "dataPath": "ШСтрока9", "dataType": "string", "length": 9 }
+                    ]
+                  },
+                  {
+                    "type": "UsualGroup",
+                    "name": "ШКК3",
+                    "title": "Всегда горизонтальная, флажок",
+                    "group": "AlwaysHorizontal",
+                    "representation": "WeakSeparation",
+                    "items": [
+                      { "type": "InputField", "name": "ШКК3Код", "title": "Код (строка 9)", "dataPath": "ШСтрока9", "dataType": "string", "length": 9 },
+                      { "type": "CheckBoxField", "name": "ШКК3Конец", "title": "конец", "dataPath": "ШФлажок" }
+                    ]
+                  },
+                  {
+                    "type": "UsualGroup",
+                    "name": "ШКК4",
+                    "title": "Горизонтальная, если возможно, флажок",
+                    "group": "HorizontalIfPossible",
+                    "representation": "WeakSeparation",
+                    "items": [
+                      { "type": "InputField", "name": "ШКК4Код", "title": "Код (строка 9)", "dataPath": "ШСтрока9", "dataType": "string", "length": 9 },
+                      { "type": "CheckBoxField", "name": "ШКК4Конец", "title": "конец", "dataPath": "ШФлажок" }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "Page",
+            "name": "СтраницаЗаголовки",
+            "title": "Заголовки",
+            "items": [
+              {
+                "type": "Pages",
+                "name": "ЗСтраницы",
+                "title": "Случаи",
+                "items": [
+                  {
+                    "type": "Page",
+                    "name": "ЗА",
+                    "title": "А: 17, 23, 41",
+                    "items": [
+                      { "type": "InputField", "name": "ЗАПоле1", "title": "Заголовок длинный", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗАПоле2", "title": "Заголовок очень длинный", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗАПоле3", "title": "Заголовок возможно самый длинный на свете", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 }
+                    ]
+                  },
+                  {
+                    "type": "Page",
+                    "name": "ЗБ",
+                    "title": "Б: налоговый учет ОС",
+                    "items": [
+                      { "type": "InputField", "name": "ЗБПоле1", "title": "Специальный коэффициент", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗБПоле2", "title": "Первоначальная стоимость", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗБПоле3", "title": "Реквизиты документа оплаты", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗБПоле4", "title": "Процент годовой амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗБПоле5", "title": "Метод начисления амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗБПоле6", "title": "Срок полезного использования (в месяцах)", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 }
+                    ]
+                  },
+                  {
+                    "type": "Page",
+                    "name": "ЗВ",
+                    "title": "В: бухгалтерский учет ОС",
+                    "items": [
+                      { "type": "InputField", "name": "ЗВПоле1", "title": "Счет учета", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗВПоле2", "title": "Порядок учета", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗВПоле3", "title": "Ликвидационная стоимость", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗВПоле4", "title": "Годовая норма амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗВПоле5", "title": "График амортизации по году", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗВПоле6", "title": "Способ начисления амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗВПоле7", "title": "Счет начисления амортизации (износа)", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗВПоле8", "title": "Способ отражения расходов по амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗВПоле9", "title": "Срок полезного использования (в месяцах)", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 }
+                    ]
+                  },
+                  {
+                    "type": "Page",
+                    "name": "ЗГ",
+                    "title": "Г: 4, 4, 41",
+                    "items": [
+                      { "type": "InputField", "name": "ЗГПоле1", "title": "Код", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗГПоле2", "title": "Имя", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗГПоле3", "title": "Срок полезного использования (в месяцах)", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 }
+                    ]
+                  },
+                  {
+                    "type": "Page",
+                    "name": "ЗД",
+                    "title": "Д: один длинный",
+                    "items": [
+                      { "type": "InputField", "name": "ЗДПоле1", "title": "Срок полезного использования (в месяцах)", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 }
+                    ]
+                  },
+                  {
+                    "type": "Page",
+                    "name": "ЗЕ",
+                    "title": "Е: плавный рост",
+                    "items": [
+                      { "type": "InputField", "name": "ЗЕПоле1", "title": "Заголовок 10", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗЕПоле2", "title": "Заголовок из 14", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗЕПоле3", "title": "Заголовок из 18 букв", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗЕПоле4", "title": "Заголовок длиной 23 буквы", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗЕПоле5", "title": "Заголовок длиной двадцать девять", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗЕПоле6", "title": "Заголовок длиной тридцать шесть символов", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗЕПоле7", "title": "Заголовок длиной в сорок пять символов примерно", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 }
+                    ]
+                  },
+                  {
+                    "type": "Page",
+                    "name": "ЗЖ",
+                    "title": "Ж: как Б + флажок в строке",
+                    "items": [
+                      { "type": "InputField", "name": "ЗЖПоле1", "title": "Специальный коэффициент", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗЖПоле2", "title": "Первоначальная стоимость", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗЖПоле3", "title": "Реквизиты документа оплаты", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗЖПоле4", "title": "Процент годовой амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗЖПоле5", "title": "Метод начисления амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗЖПоле6", "title": "Срок полезного использования (в месяцах)", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      {
+                        "type": "UsualGroup",
+                        "name": "ЗЖСтрока",
+                        "title": "Строка с флажком",
+                        "showTitle": false,
+                        "group": "AlwaysHorizontal",
+                        "items": [
+                          { "type": "InputField", "name": "ЗЖСтрокаПоле", "title": "Счет начисления амортизации (износа)", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          { "type": "CheckBoxField", "name": "ЗЖСтрокаФлажок", "title": "Начислять амортизацию", "dataPath": "ШФлажок" }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "Page",
+            "name": "СтраницаЗаголовки2",
+            "title": "Заголовки 2",
+            "items": [
+              {
+                "type": "Pages",
+                "name": "З2Страницы",
+                "title": "Случаи с группами",
+                "items": [
+                  {
+                    "type": "Page",
+                    "name": "ЗЗ",
+                    "title": "З: бух. учет, строки",
+                    "items": [
+                      { "type": "InputField", "name": "ЗЗСчетУчета", "title": "Счет учета", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗЗПорядок", "title": "Порядок учета", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      {
+                        "type": "UsualGroup",
+                        "name": "ЗЗГруппа",
+                        "title": "Параметры начисления амортизации",
+                        "representation": "WeakSeparation",
+                        "items": [
+                          { "type": "InputField", "name": "ЗЗСпособ", "title": "Способ начисления амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗЗСтрокаСчет",
+                            "title": "Счет начисления амортизации",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "representation": "WeakSeparation",
+                            "items": [
+                              { "type": "InputField", "name": "ЗЗСчетНачисления", "title": "Счет начисления амортизации (износа)", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                              { "type": "CheckBoxField", "name": "ЗЗНачислять", "title": "Начислять амортизацию", "dataPath": "ШФлажок", "titleLocation": "Right" }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗЗОтражение", "title": "Способ отражения расходов по амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗЗСтрокаСрок",
+                            "title": "Срок использования",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "items": [
+                              { "type": "InputField", "name": "ЗЗСрок", "title": "Срок полезного использования (в месяцах)", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                              { "type": "LabelField", "name": "ЗЗСрокРасшифровка", "title": "Расшифровка срока", "dataPath": "ШСтрока40", "titleLocation": "None", "autoMaxWidth": false }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗЗНорма", "title": "Годовая норма амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          { "type": "InputField", "name": "ЗЗГрафик", "title": "График амортизации по году", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          { "type": "InputField", "name": "ЗЗЛиквидационная", "title": "Ликвидационная стоимость", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Page",
+                    "name": "ЗИ",
+                    "title": "И: бух. учет, типы",
+                    "items": [
+                      { "type": "InputField", "name": "ЗИСчетУчета", "title": "Счет учета", "dataPath": "ШСтрока9", "dataType": "string", "length": 9, "horizontalStretch": false },
+                      { "type": "InputField", "name": "ЗИПорядок", "title": "Порядок учета", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      {
+                        "type": "UsualGroup",
+                        "name": "ЗИГруппа",
+                        "title": "Параметры начисления амортизации",
+                        "representation": "WeakSeparation",
+                        "items": [
+                          { "type": "InputField", "name": "ЗИСпособ", "title": "Способ начисления амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗИСтрокаСчет",
+                            "title": "Счет начисления амортизации",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "representation": "WeakSeparation",
+                            "items": [
+                              { "type": "InputField", "name": "ЗИСчетНачисления", "title": "Счет начисления амортизации (износа)", "dataPath": "ШСтрока9", "dataType": "string", "length": 9, "horizontalStretch": false },
+                              { "type": "CheckBoxField", "name": "ЗИНачислять", "title": "Начислять амортизацию", "dataPath": "ШФлажок", "titleLocation": "Right" }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗИОтражение", "title": "Способ отражения расходов по амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗИСтрокаСрок",
+                            "title": "Срок использования",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "items": [
+                              { "type": "InputField", "name": "ЗИСрок", "title": "Срок полезного использования (в месяцах)", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0 },
+                              { "type": "LabelField", "name": "ЗИСрокРасшифровка", "title": "Расшифровка срока", "dataPath": "ШСтрока40", "titleLocation": "None", "autoMaxWidth": false }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗИНорма", "title": "Годовая норма амортизации", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0 },
+                          { "type": "InputField", "name": "ЗИГрафик", "title": "График амортизации по году", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          { "type": "InputField", "name": "ЗИЛиквидационная", "title": "Ликвидационная стоимость", "dataPath": "ШЧисло15", "dataType": "number", "digits": 15, "fractionDigits": 2 }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Page",
+                    "name": "ЗК",
+                    "title": "К: без строки с флажком",
+                    "items": [
+                      { "type": "InputField", "name": "ЗКСчетУчета", "title": "Счет учета", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗКПорядок", "title": "Порядок учета", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      {
+                        "type": "UsualGroup",
+                        "name": "ЗКГруппа",
+                        "title": "Параметры начисления амортизации",
+                        "representation": "WeakSeparation",
+                        "items": [
+                          { "type": "InputField", "name": "ЗКСпособ", "title": "Способ начисления амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          { "type": "InputField", "name": "ЗКСчетНачисления", "title": "Счет начисления амортизации (износа)", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          { "type": "InputField", "name": "ЗКОтражение", "title": "Способ отражения расходов по амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗКСтрокаСрок",
+                            "title": "Срок использования",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "items": [
+                              { "type": "InputField", "name": "ЗКСрок", "title": "Срок полезного использования (в месяцах)", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                              { "type": "LabelField", "name": "ЗКСрокРасшифровка", "title": "Расшифровка срока", "dataPath": "ШСтрока40", "titleLocation": "None", "autoMaxWidth": false }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗКНорма", "title": "Годовая норма амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          { "type": "InputField", "name": "ЗКГрафик", "title": "График амортизации по году", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          { "type": "InputField", "name": "ЗКЛиквидационная", "title": "Ликвидационная стоимость", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Page",
+                    "name": "ЗЛ",
+                    "title": "Л: «Не использовать»",
+                    "items": [
+                      { "type": "InputField", "name": "ЗЛСчетУчета", "title": "Счет учета", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗЛПорядок", "title": "Порядок учета", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      {
+                        "type": "UsualGroup",
+                        "name": "ЗЛГруппа",
+                        "title": "Параметры начисления амортизации",
+                        "representation": "WeakSeparation",
+                        "throughAlign": "DontUse",
+                        "items": [
+                          { "type": "InputField", "name": "ЗЛСпособ", "title": "Способ начисления амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗЛСтрокаСчет",
+                            "title": "Счет начисления амортизации",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "representation": "WeakSeparation",
+                            "items": [
+                              { "type": "InputField", "name": "ЗЛСчетНачисления", "title": "Счет начисления амортизации (износа)", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                              { "type": "CheckBoxField", "name": "ЗЛНачислять", "title": "Начислять амортизацию", "dataPath": "ШФлажок", "titleLocation": "Right" }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗЛОтражение", "title": "Способ отражения расходов по амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗЛСтрокаСрок",
+                            "title": "Срок использования",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "items": [
+                              { "type": "InputField", "name": "ЗЛСрок", "title": "Срок полезного использования (в месяцах)", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                              { "type": "LabelField", "name": "ЗЛСрокРасшифровка", "title": "Расшифровка срока", "dataPath": "ШСтрока40", "titleLocation": "None", "autoMaxWidth": false }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗЛНорма", "title": "Годовая норма амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          { "type": "InputField", "name": "ЗЛГрафик", "title": "График амортизации по году", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          { "type": "InputField", "name": "ЗЛЛиквидационная", "title": "Ликвидационная стоимость", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Page",
+                    "name": "ЗМ",
+                    "title": "М: группа без заголовка",
+                    "items": [
+                      { "type": "InputField", "name": "ЗМСчетУчета", "title": "Счет учета", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗМПорядок", "title": "Порядок учета", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      {
+                        "type": "UsualGroup",
+                        "name": "ЗМГруппа",
+                        "title": "Параметры начисления амортизации",
+                        "showTitle": false,
+                        "items": [
+                          { "type": "InputField", "name": "ЗМСпособ", "title": "Способ начисления амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗМСтрокаСчет",
+                            "title": "Счет начисления амортизации",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "representation": "WeakSeparation",
+                            "items": [
+                              { "type": "InputField", "name": "ЗМСчетНачисления", "title": "Счет начисления амортизации (износа)", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                              { "type": "CheckBoxField", "name": "ЗМНачислять", "title": "Начислять амортизацию", "dataPath": "ШФлажок", "titleLocation": "Right" }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗМОтражение", "title": "Способ отражения расходов по амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗМСтрокаСрок",
+                            "title": "Срок использования",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "items": [
+                              { "type": "InputField", "name": "ЗМСрок", "title": "Срок полезного использования (в месяцах)", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                              { "type": "LabelField", "name": "ЗМСрокРасшифровка", "title": "Расшифровка срока", "dataPath": "ШСтрока40", "titleLocation": "None", "autoMaxWidth": false }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗМНорма", "title": "Годовая норма амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          { "type": "InputField", "name": "ЗМГрафик", "title": "График амортизации по году", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          { "type": "InputField", "name": "ЗМЛиквидационная", "title": "Ликвидационная стоимость", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Page",
+                    "name": "ЗН",
+                    "title": "Н: налог. учет, типы",
+                    "items": [
+                      { "type": "InputField", "name": "ЗНПорядок", "title": "Порядок включения стоимости\nв состав расходов", "dataPath": "ШСтрока40", "titleLocation": "Left", "titleHeight": 2, "dataType": "string", "length": 40 },
+                      { "type": "CheckBoxField", "name": "ЗНУказать", "title": "Указать первоначальную стоимость вручную", "dataPath": "ШФлажок", "titleLocation": "Right" },
+                      { "type": "InputField", "name": "ЗНПервоначальная", "title": "Первоначальная стоимость", "dataPath": "ШЧисло15", "dataType": "number", "digits": 15, "fractionDigits": 2 },
+                      { "type": "InputField", "name": "ЗНРеквизиты", "title": "Реквизиты документа оплаты", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "CheckBoxField", "name": "ЗНВычет", "title": "Применяется инвестиционный вычет", "dataPath": "ШФлажок", "titleLocation": "Right" },
+                      {
+                        "type": "UsualGroup",
+                        "name": "ЗНГруппа",
+                        "title": "Параметры начисления амортизации",
+                        "representation": "WeakSeparation",
+                        "items": [
+                          { "type": "CheckBoxField", "name": "ЗННачислять", "title": "Начислять амортизацию", "dataPath": "ШФлажок", "titleLocation": "Right" },
+                          { "type": "InputField", "name": "ЗНМетод", "title": "Метод начисления амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗНСтрокаСрок",
+                            "title": "Срок полезного использования НУ",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "items": [
+                              { "type": "InputField", "name": "ЗНСрок", "title": "Срок полезного использования (в месяцах)", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0 },
+                              { "type": "LabelField", "name": "ЗНСрокРасшифровка", "title": "Расшифровка срока", "dataPath": "ШСтрока40", "titleLocation": "None", "autoMaxWidth": false }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗНПроцент", "title": "Процент годовой амортизации", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0, "width": 4 },
+                          { "type": "InputField", "name": "ЗНКоэффициент", "title": "Специальный коэффициент", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0, "width": 4 }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Page",
+                    "name": "ЗО",
+                    "title": "О: А во вложенной",
+                    "items": [
+                      { "type": "InputField", "name": "ЗОПоле1", "title": "Заголовок длинный", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗОПоле2", "title": "Заголовок очень длинный", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      {
+                        "type": "UsualGroup",
+                        "name": "ЗОГруппа",
+                        "title": "Вложенная группа",
+                        "representation": "WeakSeparation",
+                        "items": [
+                          { "type": "InputField", "name": "ЗОПоле3", "title": "Заголовок возможно самый длинный на свете", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "Page",
+            "name": "СтраницаЗаголовки3",
+            "title": "Заголовки 3",
+            "items": [
+              {
+                "type": "Pages",
+                "name": "З3Страницы",
+                "title": "Случаи с типами",
+                "items": [
+                  {
+                    "type": "Page",
+                    "name": "ЗП",
+                    "title": "П: И без группы",
+                    "items": [
+                      { "type": "InputField", "name": "ЗПСчетУчета", "title": "Счет учета", "dataPath": "ШСтрока9", "dataType": "string", "length": 9, "horizontalStretch": false },
+                      { "type": "InputField", "name": "ЗППорядок", "title": "Порядок учета", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗПСпособ", "title": "Способ начисления амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      {
+                        "type": "UsualGroup",
+                        "name": "ЗПСтрокаСчет",
+                        "title": "Счет начисления амортизации",
+                        "showTitle": false,
+                        "group": "Horizontal",
+                        "representation": "WeakSeparation",
+                        "items": [
+                          { "type": "InputField", "name": "ЗПСчетНачисления", "title": "Счет начисления амортизации (износа)", "dataPath": "ШСтрока9", "dataType": "string", "length": 9, "horizontalStretch": false },
+                          { "type": "CheckBoxField", "name": "ЗПНачислять", "title": "Начислять амортизацию", "dataPath": "ШФлажок", "titleLocation": "Right" }
+                        ]
+                      },
+                      { "type": "InputField", "name": "ЗПОтражение", "title": "Способ отражения расходов по амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      {
+                        "type": "UsualGroup",
+                        "name": "ЗПСтрокаСрок",
+                        "title": "Срок использования",
+                        "showTitle": false,
+                        "group": "Horizontal",
+                        "items": [
+                          { "type": "InputField", "name": "ЗПСрок", "title": "Срок полезного использования (в месяцах)", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0 },
+                          { "type": "LabelField", "name": "ЗПСрокРасшифровка", "title": "Расшифровка срока", "dataPath": "ШСтрока40", "titleLocation": "None", "autoMaxWidth": false }
+                        ]
+                      },
+                      { "type": "InputField", "name": "ЗПНорма", "title": "Годовая норма амортизации", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0 },
+                      { "type": "InputField", "name": "ЗПГрафик", "title": "График амортизации по году", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗПЛиквидационная", "title": "Ликвидационная стоимость", "dataPath": "ШЧисло15", "dataType": "number", "digits": 15, "fractionDigits": 2 }
+                    ]
+                  },
+                  {
+                    "type": "Page",
+                    "name": "ЗР",
+                    "title": "Р: счет строкой",
+                    "items": [
+                      { "type": "InputField", "name": "ЗРСчетУчета", "title": "Счет учета", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗРПорядок", "title": "Порядок учета", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      {
+                        "type": "UsualGroup",
+                        "name": "ЗРГруппа",
+                        "title": "Параметры начисления амортизации",
+                        "representation": "WeakSeparation",
+                        "items": [
+                          { "type": "InputField", "name": "ЗРСпособ", "title": "Способ начисления амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗРСтрокаСчет",
+                            "title": "Счет начисления амортизации",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "representation": "WeakSeparation",
+                            "items": [
+                              { "type": "InputField", "name": "ЗРСчетНачисления", "title": "Счет начисления амортизации (износа)", "dataPath": "ШСтрока9", "dataType": "string", "length": 9, "horizontalStretch": false },
+                              { "type": "CheckBoxField", "name": "ЗРНачислять", "title": "Начислять амортизацию", "dataPath": "ШФлажок", "titleLocation": "Right" }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗРОтражение", "title": "Способ отражения расходов по амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗРСтрокаСрок",
+                            "title": "Срок использования",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "items": [
+                              { "type": "InputField", "name": "ЗРСрок", "title": "Срок полезного использования (в месяцах)", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0 },
+                              { "type": "LabelField", "name": "ЗРСрокРасшифровка", "title": "Расшифровка срока", "dataPath": "ШСтрока40", "titleLocation": "None", "autoMaxWidth": false }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗРНорма", "title": "Годовая норма амортизации", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0 },
+                          { "type": "InputField", "name": "ЗРГрафик", "title": "График амортизации по году", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          { "type": "InputField", "name": "ЗРЛиквидационная", "title": "Ликвидационная стоимость", "dataPath": "ШЧисло15", "dataType": "number", "digits": 15, "fractionDigits": 2 }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Page",
+                    "name": "ЗС",
+                    "title": "С: износ строкой",
+                    "items": [
+                      { "type": "InputField", "name": "ЗССчетУчета", "title": "Счет учета", "dataPath": "ШСтрока9", "dataType": "string", "length": 9, "horizontalStretch": false },
+                      { "type": "InputField", "name": "ЗСПорядок", "title": "Порядок учета", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      {
+                        "type": "UsualGroup",
+                        "name": "ЗСГруппа",
+                        "title": "Параметры начисления амортизации",
+                        "representation": "WeakSeparation",
+                        "items": [
+                          { "type": "InputField", "name": "ЗССпособ", "title": "Способ начисления амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗССтрокаСчет",
+                            "title": "Счет начисления амортизации",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "representation": "WeakSeparation",
+                            "items": [
+                              { "type": "InputField", "name": "ЗССчетНачисления", "title": "Счет начисления амортизации (износа)", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                              { "type": "CheckBoxField", "name": "ЗСНачислять", "title": "Начислять амортизацию", "dataPath": "ШФлажок", "titleLocation": "Right" }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗСОтражение", "title": "Способ отражения расходов по амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗССтрокаСрок",
+                            "title": "Срок использования",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "items": [
+                              { "type": "InputField", "name": "ЗССрок", "title": "Срок полезного использования (в месяцах)", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0 },
+                              { "type": "LabelField", "name": "ЗССрокРасшифровка", "title": "Расшифровка срока", "dataPath": "ШСтрока40", "titleLocation": "None", "autoMaxWidth": false }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗСНорма", "title": "Годовая норма амортизации", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0 },
+                          { "type": "InputField", "name": "ЗСГрафик", "title": "График амортизации по году", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          { "type": "InputField", "name": "ЗСЛиквидационная", "title": "Ликвидационная стоимость", "dataPath": "ШЧисло15", "dataType": "number", "digits": 15, "fractionDigits": 2 }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Page",
+                    "name": "ЗТ",
+                    "title": "Т: числа строками",
+                    "items": [
+                      { "type": "InputField", "name": "ЗТСчетУчета", "title": "Счет учета", "dataPath": "ШСтрока9", "dataType": "string", "length": 9, "horizontalStretch": false },
+                      { "type": "InputField", "name": "ЗТПорядок", "title": "Порядок учета", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      {
+                        "type": "UsualGroup",
+                        "name": "ЗТГруппа",
+                        "title": "Параметры начисления амортизации",
+                        "representation": "WeakSeparation",
+                        "items": [
+                          { "type": "InputField", "name": "ЗТСпособ", "title": "Способ начисления амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗТСтрокаСчет",
+                            "title": "Счет начисления амортизации",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "representation": "WeakSeparation",
+                            "items": [
+                              { "type": "InputField", "name": "ЗТСчетНачисления", "title": "Счет начисления амортизации (износа)", "dataPath": "ШСтрока9", "dataType": "string", "length": 9, "horizontalStretch": false },
+                              { "type": "CheckBoxField", "name": "ЗТНачислять", "title": "Начислять амортизацию", "dataPath": "ШФлажок", "titleLocation": "Right" }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗТОтражение", "title": "Способ отражения расходов по амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗТСтрокаСрок",
+                            "title": "Срок использования",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "items": [
+                              { "type": "InputField", "name": "ЗТСрок", "title": "Срок полезного использования (в месяцах)", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                              { "type": "LabelField", "name": "ЗТСрокРасшифровка", "title": "Расшифровка срока", "dataPath": "ШСтрока40", "titleLocation": "None", "autoMaxWidth": false }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗТНорма", "title": "Годовая норма амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          { "type": "InputField", "name": "ЗТГрафик", "title": "График амортизации по году", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          { "type": "InputField", "name": "ЗТЛиквидационная", "title": "Ликвидационная стоимость", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Page",
+                    "name": "ЗУ",
+                    "title": "У: без флажка",
+                    "items": [
+                      { "type": "InputField", "name": "ЗУСчетУчета", "title": "Счет учета", "dataPath": "ШСтрока9", "dataType": "string", "length": 9, "horizontalStretch": false },
+                      { "type": "InputField", "name": "ЗУПорядок", "title": "Порядок учета", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      {
+                        "type": "UsualGroup",
+                        "name": "ЗУГруппа",
+                        "title": "Параметры начисления амортизации",
+                        "representation": "WeakSeparation",
+                        "items": [
+                          { "type": "InputField", "name": "ЗУСпособ", "title": "Способ начисления амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          { "type": "InputField", "name": "ЗУСчетНачисления", "title": "Счет начисления амортизации (износа)", "dataPath": "ШСтрока9", "dataType": "string", "length": 9, "horizontalStretch": false },
+                          { "type": "InputField", "name": "ЗУОтражение", "title": "Способ отражения расходов по амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗУСтрокаСрок",
+                            "title": "Срок использования",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "items": [
+                              { "type": "InputField", "name": "ЗУСрок", "title": "Срок полезного использования (в месяцах)", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0 },
+                              { "type": "LabelField", "name": "ЗУСрокРасшифровка", "title": "Расшифровка срока", "dataPath": "ШСтрока40", "titleLocation": "None", "autoMaxWidth": false }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗУНорма", "title": "Годовая норма амортизации", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0 },
+                          { "type": "InputField", "name": "ЗУГрафик", "title": "График амортизации по году", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          { "type": "InputField", "name": "ЗУЛиквидационная", "title": "Ликвидационная стоимость", "dataPath": "ШЧисло15", "dataType": "number", "digits": 15, "fractionDigits": 2 }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Page",
+                    "name": "ЗФ",
+                    "title": "Ф: без верхних",
+                    "items": [
+                      {
+                        "type": "UsualGroup",
+                        "name": "ЗФГруппа",
+                        "title": "Параметры начисления амортизации",
+                        "representation": "WeakSeparation",
+                        "items": [
+                          { "type": "InputField", "name": "ЗФСпособ", "title": "Способ начисления амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗФСтрокаСчет",
+                            "title": "Счет начисления амортизации",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "representation": "WeakSeparation",
+                            "items": [
+                              { "type": "InputField", "name": "ЗФСчетНачисления", "title": "Счет начисления амортизации (износа)", "dataPath": "ШСтрока9", "dataType": "string", "length": 9, "horizontalStretch": false },
+                              { "type": "CheckBoxField", "name": "ЗФНачислять", "title": "Начислять амортизацию", "dataPath": "ШФлажок", "titleLocation": "Right" }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗФОтражение", "title": "Способ отражения расходов по амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗФСтрокаСрок",
+                            "title": "Срок использования",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "items": [
+                              { "type": "InputField", "name": "ЗФСрок", "title": "Срок полезного использования (в месяцах)", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0 },
+                              { "type": "LabelField", "name": "ЗФСрокРасшифровка", "title": "Расшифровка срока", "dataPath": "ШСтрока40", "titleLocation": "None", "autoMaxWidth": false }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗФНорма", "title": "Годовая норма амортизации", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0 },
+                          { "type": "InputField", "name": "ЗФГрафик", "title": "График амортизации по году", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          { "type": "InputField", "name": "ЗФЛиквидационная", "title": "Ликвидационная стоимость", "dataPath": "ШЧисло15", "dataType": "number", "digits": 15, "fractionDigits": 2 }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Page",
+                    "name": "ЗХ",
+                    "title": "Х: А, узкое у 41",
+                    "items": [
+                      { "type": "InputField", "name": "ЗХПоле1", "title": "Заголовок длинный", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗХПоле2", "title": "Заголовок очень длинный", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗХПоле3", "title": "Заголовок возможно самый длинный на свете", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0 }
+                    ]
+                  },
+                  {
+                    "type": "Page",
+                    "name": "ЗЦ",
+                    "title": "Ц: А, все узкие",
+                    "items": [
+                      { "type": "InputField", "name": "ЗЦПоле1", "title": "Заголовок длинный", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0 },
+                      { "type": "InputField", "name": "ЗЦПоле2", "title": "Заголовок очень длинный", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0 },
+                      { "type": "InputField", "name": "ЗЦПоле3", "title": "Заголовок возможно самый длинный на свете", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0 }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "Page",
+            "name": "СтраницаЗаголовки4",
+            "title": "Заголовки 4",
+            "items": [
+              {
+                "type": "Pages",
+                "name": "З4Страницы",
+                "title": "Пороги",
+                "items": [
+                  {
+                    "type": "Page",
+                    "name": "ЗЧ",
+                    "title": "Ч: число только срок",
+                    "items": [
+                      { "type": "InputField", "name": "ЗЧСчетУчета", "title": "Счет учета", "dataPath": "ШСтрока9", "dataType": "string", "length": 9, "horizontalStretch": false },
+                      { "type": "InputField", "name": "ЗЧПорядок", "title": "Порядок учета", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      {
+                        "type": "UsualGroup",
+                        "name": "ЗЧГруппа",
+                        "title": "Параметры начисления амортизации",
+                        "representation": "WeakSeparation",
+                        "items": [
+                          { "type": "InputField", "name": "ЗЧСпособ", "title": "Способ начисления амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗЧСтрокаСчет",
+                            "title": "Счет начисления амортизации",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "representation": "WeakSeparation",
+                            "items": [
+                              { "type": "InputField", "name": "ЗЧСчетНачисления", "title": "Счет начисления амортизации (износа)", "dataPath": "ШСтрока9", "dataType": "string", "length": 9, "horizontalStretch": false },
+                              { "type": "CheckBoxField", "name": "ЗЧНачислять", "title": "Начислять амортизацию", "dataPath": "ШФлажок", "titleLocation": "Right" }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗЧОтражение", "title": "Способ отражения расходов по амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗЧСтрокаСрок",
+                            "title": "Срок использования",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "items": [
+                              { "type": "InputField", "name": "ЗЧСрок", "title": "Срок полезного использования (в месяцах)", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0 },
+                              { "type": "LabelField", "name": "ЗЧСрокРасшифровка", "title": "Расшифровка срока", "dataPath": "ШСтрока40", "titleLocation": "None", "autoMaxWidth": false }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗЧНорма", "title": "Годовая норма амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          { "type": "InputField", "name": "ЗЧГрафик", "title": "График амортизации по году", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          { "type": "InputField", "name": "ЗЧЛиквидационная", "title": "Ликвидационная стоимость", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Page",
+                    "name": "ЗШ",
+                    "title": "Ш: срок строкой",
+                    "items": [
+                      { "type": "InputField", "name": "ЗШСчетУчета", "title": "Счет учета", "dataPath": "ШСтрока9", "dataType": "string", "length": 9, "horizontalStretch": false },
+                      { "type": "InputField", "name": "ЗШПорядок", "title": "Порядок учета", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      {
+                        "type": "UsualGroup",
+                        "name": "ЗШГруппа",
+                        "title": "Параметры начисления амортизации",
+                        "representation": "WeakSeparation",
+                        "items": [
+                          { "type": "InputField", "name": "ЗШСпособ", "title": "Способ начисления амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗШСтрокаСчет",
+                            "title": "Счет начисления амортизации",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "representation": "WeakSeparation",
+                            "items": [
+                              { "type": "InputField", "name": "ЗШСчетНачисления", "title": "Счет начисления амортизации (износа)", "dataPath": "ШСтрока9", "dataType": "string", "length": 9, "horizontalStretch": false },
+                              { "type": "CheckBoxField", "name": "ЗШНачислять", "title": "Начислять амортизацию", "dataPath": "ШФлажок", "titleLocation": "Right" }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗШОтражение", "title": "Способ отражения расходов по амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗШСтрокаСрок",
+                            "title": "Срок использования",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "items": [
+                              { "type": "InputField", "name": "ЗШСрок", "title": "Срок полезного использования (в месяцах)", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                              { "type": "LabelField", "name": "ЗШСрокРасшифровка", "title": "Расшифровка срока", "dataPath": "ШСтрока40", "titleLocation": "None", "autoMaxWidth": false }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗШНорма", "title": "Годовая норма амортизации", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0 },
+                          { "type": "InputField", "name": "ЗШГрафик", "title": "График амортизации по году", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          { "type": "InputField", "name": "ЗШЛиквидационная", "title": "Ликвидационная стоимость", "dataPath": "ШЧисло15", "dataType": "number", "digits": 15, "fractionDigits": 2 }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Page",
+                    "name": "ЗЩ",
+                    "title": "Щ: срок без строки",
+                    "items": [
+                      { "type": "InputField", "name": "ЗЩСчетУчета", "title": "Счет учета", "dataPath": "ШСтрока9", "dataType": "string", "length": 9, "horizontalStretch": false },
+                      { "type": "InputField", "name": "ЗЩПорядок", "title": "Порядок учета", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      {
+                        "type": "UsualGroup",
+                        "name": "ЗЩГруппа",
+                        "title": "Параметры начисления амортизации",
+                        "representation": "WeakSeparation",
+                        "items": [
+                          { "type": "InputField", "name": "ЗЩСпособ", "title": "Способ начисления амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗЩСтрокаСчет",
+                            "title": "Счет начисления амортизации",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "representation": "WeakSeparation",
+                            "items": [
+                              { "type": "InputField", "name": "ЗЩСчетНачисления", "title": "Счет начисления амортизации (износа)", "dataPath": "ШСтрока9", "dataType": "string", "length": 9, "horizontalStretch": false },
+                              { "type": "CheckBoxField", "name": "ЗЩНачислять", "title": "Начислять амортизацию", "dataPath": "ШФлажок", "titleLocation": "Right" }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗЩОтражение", "title": "Способ отражения расходов по амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          { "type": "InputField", "name": "ЗЩСрок", "title": "Срок полезного использования (в месяцах)", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0 },
+                          { "type": "InputField", "name": "ЗЩНорма", "title": "Годовая норма амортизации", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0 },
+                          { "type": "InputField", "name": "ЗЩГрафик", "title": "График амортизации по году", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          { "type": "InputField", "name": "ЗЩЛиквидационная", "title": "Ликвидационная стоимость", "dataPath": "ШЧисло15", "dataType": "number", "digits": 15, "fractionDigits": 2 }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Page",
+                    "name": "ЗЭ",
+                    "title": "Э: верхние 28, 26",
+                    "items": [
+                      { "type": "InputField", "name": "ЗЭСчетУчета", "title": "Счет бухгалтерского учета ОС", "dataPath": "ШСтрока9", "dataType": "string", "length": 9, "horizontalStretch": false },
+                      { "type": "InputField", "name": "ЗЭПорядок", "title": "Порядок учета стоимости ОС", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      {
+                        "type": "UsualGroup",
+                        "name": "ЗЭГруппа",
+                        "title": "Параметры начисления амортизации",
+                        "representation": "WeakSeparation",
+                        "items": [
+                          { "type": "InputField", "name": "ЗЭСпособ", "title": "Способ начисления амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗЭСтрокаСчет",
+                            "title": "Счет начисления амортизации",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "representation": "WeakSeparation",
+                            "items": [
+                              { "type": "InputField", "name": "ЗЭСчетНачисления", "title": "Счет начисления амортизации (износа)", "dataPath": "ШСтрока9", "dataType": "string", "length": 9, "horizontalStretch": false },
+                              { "type": "CheckBoxField", "name": "ЗЭНачислять", "title": "Начислять амортизацию", "dataPath": "ШФлажок", "titleLocation": "Right" }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗЭОтражение", "title": "Способ отражения расходов по амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗЭСтрокаСрок",
+                            "title": "Срок использования",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "items": [
+                              { "type": "InputField", "name": "ЗЭСрок", "title": "Срок полезного использования (в месяцах)", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0 },
+                              { "type": "LabelField", "name": "ЗЭСрокРасшифровка", "title": "Расшифровка срока", "dataPath": "ШСтрока40", "titleLocation": "None", "autoMaxWidth": false }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗЭНорма", "title": "Годовая норма амортизации", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0 },
+                          { "type": "InputField", "name": "ЗЭГрафик", "title": "График амортизации по году", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          { "type": "InputField", "name": "ЗЭЛиквидационная", "title": "Ликвидационная стоимость", "dataPath": "ШЧисло15", "dataType": "number", "digits": 15, "fractionDigits": 2 }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Page",
+                    "name": "ЗЮ",
+                    "title": "Ю: верхние 18, 21",
+                    "items": [
+                      { "type": "InputField", "name": "ЗЮСчетУчета", "title": "Счет учета объекта", "dataPath": "ШСтрока9", "dataType": "string", "length": 9, "horizontalStretch": false },
+                      { "type": "InputField", "name": "ЗЮПорядок", "title": "Порядок учета объекта", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      {
+                        "type": "UsualGroup",
+                        "name": "ЗЮГруппа",
+                        "title": "Параметры начисления амортизации",
+                        "representation": "WeakSeparation",
+                        "items": [
+                          { "type": "InputField", "name": "ЗЮСпособ", "title": "Способ начисления амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗЮСтрокаСчет",
+                            "title": "Счет начисления амортизации",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "representation": "WeakSeparation",
+                            "items": [
+                              { "type": "InputField", "name": "ЗЮСчетНачисления", "title": "Счет начисления амортизации (износа)", "dataPath": "ШСтрока9", "dataType": "string", "length": 9, "horizontalStretch": false },
+                              { "type": "CheckBoxField", "name": "ЗЮНачислять", "title": "Начислять амортизацию", "dataPath": "ШФлажок", "titleLocation": "Right" }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗЮОтражение", "title": "Способ отражения расходов по амортизации", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          {
+                            "type": "UsualGroup",
+                            "name": "ЗЮСтрокаСрок",
+                            "title": "Срок использования",
+                            "showTitle": false,
+                            "group": "Horizontal",
+                            "items": [
+                              { "type": "InputField", "name": "ЗЮСрок", "title": "Срок полезного использования (в месяцах)", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0 },
+                              { "type": "LabelField", "name": "ЗЮСрокРасшифровка", "title": "Расшифровка срока", "dataPath": "ШСтрока40", "titleLocation": "None", "autoMaxWidth": false }
+                            ]
+                          },
+                          { "type": "InputField", "name": "ЗЮНорма", "title": "Годовая норма амортизации", "dataPath": "ШЧисло5", "dataType": "number", "digits": 5, "fractionDigits": 0 },
+                          { "type": "InputField", "name": "ЗЮГрафик", "title": "График амортизации по году", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                          { "type": "InputField", "name": "ЗЮЛиквидационная", "title": "Ликвидационная стоимость", "dataPath": "ШЧисло15", "dataType": "number", "digits": 15, "fractionDigits": 2 }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Page",
+                    "name": "ЗЯ",
+                    "title": "Я: 10, 10, 40",
+                    "items": [
+                      { "type": "InputField", "name": "ЗЯПоле1", "title": "Код записи", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗЯПоле2", "title": "Имя записи", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗЯПоле3", "title": "Срок полезного использования (в месяцах)", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 }
+                    ]
+                  },
+                  {
+                    "type": "Page",
+                    "name": "ЗЁ",
+                    "title": "Ё: 18, 18, 40",
+                    "items": [
+                      { "type": "InputField", "name": "ЗЁПоле1", "title": "Код учетной записи", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗЁПоле2", "title": "Имя учетной записи", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 },
+                      { "type": "InputField", "name": "ЗЁПоле3", "title": "Срок полезного использования (в месяцах)", "dataPath": "ШСтрока40", "dataType": "string", "length": 40 }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

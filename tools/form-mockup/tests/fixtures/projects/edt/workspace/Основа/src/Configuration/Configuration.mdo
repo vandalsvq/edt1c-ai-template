@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdclass:Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mdclass="http://g5.1c.ru/v8/dt/metadata/mdclass" xmlns:mdclassExtension="http://g5.1c.ru/v8/dt/metadata/mdclass/extension" uuid="11111111-1111-1111-1111-111111111111">
+  <name>Основа</name>
+  <synonym>
+    <key>ru</key>
+    <value>Основа для проверки</value>
+  </synonym>
+  <catalogs>Catalog.Партнеры</catalogs>
+  <commonModules>CommonModule.ОбщийМодуль</commonModules>
+</mdclass:Configuration>

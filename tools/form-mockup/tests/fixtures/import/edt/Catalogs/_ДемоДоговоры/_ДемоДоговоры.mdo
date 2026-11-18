@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdclass:Catalog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mdclass="http://g5.1c.ru/v8/dt/metadata/mdclass" uuid="77777777-7777-7777-7777-777777777777">
+  <name>_ДемоДоговоры</name>
+  <synonym>
+    <key>ru</key>
+    <value>Договоры</value>
+  </synonym>
+  <objectPresentation>
+    <key>ru</key>
+    <value>Договор</value>
+  </objectPresentation>
+  <codeLength>9</codeLength>
+  <descriptionLength>100</descriptionLength>
+  <defaultObjectForm>Catalog._ДемоДоговоры.Form.ФормаЭлемента</defaultObjectForm>
+  <attributes uuid="77777777-0000-0000-0000-000000000001">
+    <name>ДатаПодписания</name>
+    <synonym>
+      <key>ru</key>
+      <value>Дата подписания</value>
+    </synonym>
+    <type>
+      <types>Date</types>
+      <dateQualifiers>
+        <dateFractions>Date</dateFractions>
+      </dateQualifiers>
+    </type>
+    <fillChecking>ShowError</fillChecking>
+  </attributes>
+  <attributes uuid="77777777-0000-0000-0000-000000000002">
+    <name>Вид</name>
+    <synonym>
+      <key>ru</key>
+      <value>Вид договора</value>
+    </synonym>
+    <type>
+      <types>String</types>
+      <stringQualifiers>
+        <length>20</length>
+      </stringQualifiers>
+    </type>
+  </attributes>
+  <tabularSections uuid="77777777-0000-0000-0000-000000000010">
+    <name>Этапы</name>
+    <synonym>
+      <key>ru</key>
+      <value>Этапы исполнения</value>
+    </synonym>
+    <attributes uuid="77777777-0000-0000-0000-000000000011">
+      <name>Наименование</name>
+      <type>
+        <types>String</types>
+        <stringQualifiers>
+          <length>50</length>
+        </stringQualifiers>
+      </type>
+    </attributes>
+    <attributes uuid="77777777-0000-0000-0000-000000000012">
+      <name>ТребуетсяСогласование</name>
+      <synonym>
+        <key>ru</key>
+        <value>Согласование руководителем перед оплатой</value>
+      </synonym>
+      <type>
+        <types>Boolean</types>
+      </type>
+    </attributes>
+  </tabularSections>
+  <tabularSections uuid="77777777-0000-0000-0000-000000000020">
+    <name>Условия</name>
+    <synonym>
+      <key>ru</key>
+      <value>Условия</value>
+    </synonym>
+    <attributes uuid="77777777-0000-0000-0000-000000000021">
+      <name>Имя</name>
+      <type>
+        <types>String</types>
+        <stringQualifiers>
+          <length>50</length>
+        </stringQualifiers>
+      </type>
+    </attributes>
+  </tabularSections>
+</mdclass:Catalog>

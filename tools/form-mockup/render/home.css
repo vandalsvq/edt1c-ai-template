@@ -1,0 +1,305 @@
+/* Стартовая страница сервиса макетов: список макетов папки, новая форма, импорт, выбор папки и
+   исходников. Префикс fh-; цвета и кнопки - как у конструктора (editor.css, fe-) */
+
+:root {
+  --fh-font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Roboto, Arial, sans-serif;
+  --fh-mono: "SF Mono", Menlo, Consolas, monospace;
+  --fh-text: #1f2328;
+  --fh-muted: #6b7280;
+  --fh-line: #e5e7eb;
+  --fh-line-strong: #d1d5db;
+  --fh-surface: #ffffff;
+  --fh-subtle: #f6f7f9;
+  --fh-hover: #f1f3f6;
+  --fh-accent: #2f6fde;
+  --fh-accent-soft: #e8f0fe;
+  --fh-accent-ring: rgba(47, 111, 222, 0.18);
+  --fh-alert: #d14343;
+  --fh-alert-soft: #fdecec;
+  --fh-ok: #1f8a4c;
+  --fh-radius: 6px;
+  --fh-field-h: 30px;
+}
+
+* { box-sizing: border-box; }
+/* `hidden` важнее `display` классов: панели окон прячутся атрибутом */
+[hidden] { display: none !important; }
+html, body { margin: 0; }
+body.fh-home {
+  font: 13px/1.45 var(--fh-font);
+  color: var(--fh-text);
+  background: var(--fh-subtle);
+  accent-color: var(--fh-accent);
+  min-height: 100vh;
+}
+body.fh-dragging::after {
+  content: "Отпустите Form.xml или Form.form - импорт в эту папку";
+  position: fixed;
+  inset: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 600 16px var(--fh-font);
+  color: var(--fh-accent);
+  background: rgba(232, 240, 254, 0.92);
+  border: 2px dashed var(--fh-accent);
+  border-radius: 12px;
+  pointer-events: none;
+  z-index: 50;
+}
+
+/* Кнопки */
+
+.fh-button {
+  font: 500 12.5px var(--fh-font);
+  height: var(--fh-field-h);
+  padding: 0 12px;
+  color: var(--fh-text);
+  border: 1px solid var(--fh-line-strong);
+  border-radius: var(--fh-radius);
+  background: var(--fh-surface);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.fh-button:hover:not(:disabled) { background: var(--fh-hover); border-color: #c3c8cf; }
+.fh-button:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--fh-accent-ring); border-color: var(--fh-accent); }
+.fh-button:disabled { color: #b0b5bc; background: var(--fh-subtle); cursor: default; }
+.fh-button.fh-main { color: #fff; background: var(--fh-accent); border-color: var(--fh-accent); }
+.fh-button.fh-main:hover:not(:disabled) { background: #2861c7; border-color: #2861c7; }
+.fh-link { color: var(--fh-accent); background: none; border: 0; padding: 0; font: inherit; cursor: pointer; }
+.fh-link:hover { text-decoration: underline; }
+
+input.fh-input, select.fh-input {
+  font: 13px var(--fh-font);
+  height: var(--fh-field-h);
+  padding: 0 8px;
+  color: var(--fh-text);
+  border: 1px solid var(--fh-line-strong);
+  border-radius: var(--fh-radius);
+  background: var(--fh-surface);
+  min-width: 0;
+}
+input.fh-input:focus, select.fh-input:focus { outline: none; box-shadow: 0 0 0 3px var(--fh-accent-ring); border-color: var(--fh-accent); }
+
+/* Шапка: папка и исходники */
+
+.fh-head {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--fh-surface);
+  border-bottom: 1px solid var(--fh-line);
+  padding: 12px 20px;
+  display: grid;
+  gap: 8px;
+}
+.fh-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0; }
+.fh-title { font: 600 16px var(--fh-font); margin: 0 8px 0 0; }
+.fh-label { color: var(--fh-muted); }
+.fh-path { font: 12px var(--fh-mono); overflow-wrap: anywhere; min-width: 0; flex: 0 1 auto; }
+.fh-search { flex: 1 1 160px; max-width: 320px; }
+.fh-spacer { flex: 1; }
+.fh-note { color: var(--fh-muted); font-size: 12px; }
+.fh-suggest {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 6px 10px;
+  border-radius: var(--fh-radius);
+  background: var(--fh-accent-soft);
+}
+/* Папка проектов: конфигурации - переключателем, их расширения - флажками с отступом */
+.fh-projects { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.fh-project { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; min-width: 0; cursor: pointer; }
+.fh-project-ext { padding-left: 24px; }
+.fh-project input { margin: 0; flex: none; }
+.fh-project-name { overflow-wrap: anywhere; min-width: 0; }
+.fh-projects-head { margin-top: 6px; font-weight: 600; font-size: 12.5px; }
+.fh-projects-head:first-child { margin-top: 0; }
+.fh-error {
+  padding: 6px 10px;
+  border-radius: var(--fh-radius);
+  color: var(--fh-alert);
+  background: var(--fh-alert-soft);
+  white-space: pre-wrap;
+}
+
+/* Список макетов */
+
+.fh-body { padding: 16px 20px 32px; }
+.fh-head, .fh-body { max-width: 100vw; }
+.fh-empty { color: var(--fh-muted); padding: 32px 0; text-align: center; }
+.fh-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+.fh-card {
+  display: flex;
+  flex-direction: column;
+  color: inherit;
+  text-decoration: none;
+  background: var(--fh-surface);
+  border: 1px solid var(--fh-line);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.12s, box-shadow 0.12s;
+}
+.fh-card:hover, .fh-card:focus-visible { outline: none; border-color: var(--fh-accent); box-shadow: 0 0 0 3px var(--fh-accent-ring); }
+.fh-thumb {
+  position: relative;
+  height: 170px;
+  overflow: hidden;
+  background: #fbfbfc;
+  border-bottom: 1px solid var(--fh-line);
+}
+/* Миниатюра - страница рендерера; размер и масштаб по форме ставит home.js (fitThumb), до того - окно 1200x800
+   в 4,5 раза меньше; щелчки идут карточке */
+.fh-thumb iframe {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1200px;
+  height: 800px;
+  border: 0;
+  transform: scale(0.22);
+  transform-origin: 0 0;
+  pointer-events: none;
+}
+.fh-card-text { padding: 8px 10px 10px; display: grid; gap: 2px; min-width: 0; }
+.fh-card-title { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fh-card-file { font: 11.5px var(--fh-mono); color: var(--fh-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fh-card-meta { font-size: 11.5px; color: var(--fh-muted); }
+
+/* Группы и метки: раздел на подкаталог, кнопка действий поверх карточки, метки - плашками */
+.fh-group + .fh-group { margin-top: 18px; }
+.fh-group-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+.fh-group-toggle {
+  display: flex; align-items: center; gap: 8px; padding: 2px 4px; margin-left: -4px;
+  border: 0; border-radius: var(--fh-radius); background: none; color: var(--fh-text); font: 600 14px var(--fh-font);
+  cursor: pointer;
+}
+.fh-group-toggle:hover { background: var(--fh-hover); }
+.fh-group-toggle:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--fh-accent-ring); }
+.fh-group-mark { width: 12px; color: var(--fh-muted); font: 14px var(--fh-mono); text-align: center; }
+.fh-group-name { overflow-wrap: anywhere; }
+.fh-group-count { color: var(--fh-muted); font-weight: 400; font-size: 12px; }
+.fh-group-empty { color: var(--fh-muted); font-size: 12px; padding: 4px 0 8px 20px; }
+.fh-card-box { position: relative; min-width: 0; display: flex; }
+.fh-card-box > .fh-card { flex: 1; min-width: 0; }
+/* «⋯» - не поверх миниатюры (на пестрой форме терялась, владелец 08.11.2026), а в строке названия под ней:
+   своя подложка и рамка, при наведении на карточку - цвет акцента */
+.fh-card-box > .fh-card .fh-card-text { padding-right: 46px; }
+.fh-card-more {
+  position: absolute; top: 178px; right: 8px; width: 32px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--fh-line-strong); border-radius: var(--fh-radius); background: var(--fh-subtle);
+  color: var(--fh-muted); font: 700 16px/1 var(--fh-font); letter-spacing: 1px; cursor: pointer;
+}
+.fh-card-box:hover > .fh-card-more { color: var(--fh-accent); border-color: var(--fh-accent); background: var(--fh-accent-soft); }
+.fh-card-more:hover, .fh-card-more:focus-visible {
+  outline: none; color: #fff !important; background: var(--fh-accent) !important; border-color: var(--fh-accent) !important;
+}
+.fh-menu {
+  position: absolute; z-index: 20; min-width: 170px; padding: 4px; display: grid;
+  background: var(--fh-surface); border: 1px solid var(--fh-line-strong); border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14);
+}
+.fh-menu-item {
+  text-align: left; padding: 6px 10px; border: 0; border-radius: 4px; background: none;
+  color: var(--fh-text); font: 13px var(--fh-font); cursor: pointer;
+}
+.fh-menu-item:hover, .fh-menu-item:focus-visible { outline: none; background: var(--fh-hover); }
+.fh-menu-item.fh-menu-danger { color: var(--fh-alert); }
+.fh-menu-sep { height: 1px; margin: 4px 6px; background: var(--fh-line); }
+.fh-notice .fh-link { margin-left: 6px; }
+.fh-button.fh-main.fh-danger { background: var(--fh-alert); border-color: var(--fh-alert); }
+.fh-button.fh-main.fh-danger:hover:not(:disabled) { background: #b83636; border-color: #b83636; }
+.fh-card-tags, .fh-tag-edit { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 2px; }
+.fh-tag {
+  display: inline-flex; align-items: center; gap: 2px; max-width: 100%; padding: 0 7px; height: 20px;
+  border-radius: 10px; background: var(--fh-accent-soft); color: var(--fh-accent); font-size: 11.5px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+button.fh-tag-filter { border: 1px solid transparent; cursor: pointer; font-family: var(--fh-font); }
+button.fh-tag-filter[aria-pressed="true"] { background: var(--fh-accent); color: #fff; }
+button.fh-tag-filter:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--fh-accent-ring); }
+.fh-tag-remove { border: 0; background: none; color: inherit; padding: 0 0 0 2px; font-size: 13px; cursor: pointer; }
+
+/* Окна */
+
+dialog.fh-dialog {
+  width: min(640px, calc(100vw - 32px));
+  max-height: calc(100vh - 64px);
+  padding: 0;
+  border: 1px solid var(--fh-line);
+  border-radius: 10px;
+  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.18);
+  color: var(--fh-text);
+}
+dialog.fh-dialog::backdrop { background: rgba(15, 23, 42, 0.25); }
+.fh-dialog-form { display: flex; flex-direction: column; max-height: calc(100vh - 66px); }
+.fh-dialog-head { padding: 14px 16px 6px; font: 600 15px var(--fh-font); }
+.fh-dialog-body { padding: 8px 16px; display: grid; gap: 10px; overflow: auto; min-height: 0; }
+.fh-dialog-body:focus, .fh-dialog-body:focus-visible { outline: none; }
+.fh-dialog-foot { padding: 10px 16px 14px; display: flex; gap: 8px; justify-content: flex-end; border-top: 1px solid var(--fh-line); }
+.fh-field { display: grid; gap: 4px; }
+.fh-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--fh-line); }
+.fh-tab { font: 500 12.5px var(--fh-font); padding: 6px 10px; border: 0; border-bottom: 2px solid transparent; background: none; color: var(--fh-muted); cursor: pointer; }
+.fh-tab[aria-selected="true"] { color: var(--fh-accent); border-bottom-color: var(--fh-accent); }
+.fh-tab:focus-visible, .fh-item:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--fh-accent-ring); }
+.fh-drop {
+  display: grid;
+  place-items: center;
+  gap: 6px;
+  min-height: 110px;
+  padding: 12px;
+  text-align: center;
+  color: var(--fh-muted);
+  border: 1.5px dashed var(--fh-line-strong);
+  border-radius: 8px;
+}
+.fh-drop.fh-over { border-color: var(--fh-accent); background: var(--fh-accent-soft); color: var(--fh-accent); }
+.fh-list {
+  border: 1px solid var(--fh-line);
+  border-radius: var(--fh-radius);
+  height: 300px;
+  overflow: auto;
+  background: var(--fh-surface);
+}
+.fh-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 5px 10px;
+  border: 0;
+  background: none;
+  text-align: left;
+  font: 13px var(--fh-font);
+  color: var(--fh-text);
+  cursor: pointer;
+}
+.fh-item:hover { background: var(--fh-hover); }
+.fh-item[aria-selected="true"] { background: var(--fh-accent-soft); }
+.fh-item-note { margin-left: auto; font-size: 11.5px; color: var(--fh-ok); white-space: nowrap; }
+.fh-item-sub { color: var(--fh-muted); font-size: 12px; }
+/* Дерево «Из конфигурации»: строка - знак раскрытия, значок вида, имя, число форм */
+.fh-tree-row { gap: 6px; padding-top: 3px; padding-bottom: 3px; }
+.fh-tree-toggle { flex: none; width: 12px; color: var(--fh-muted); font: 13px var(--fh-mono); text-align: center; }
+.fh-tree-icon { flex: none; width: 16px; height: 16px; }
+.fh-tree-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fh-tree-row > .fh-item-sub { margin-left: auto; }
+.fh-tree-project > .fh-tree-text { font-weight: 600; }
+.fh-roots { display: flex; gap: 6px; flex-wrap: wrap; }
+.fh-report { font: 12px var(--fh-mono); white-space: pre-wrap; color: var(--fh-muted); }
+
+@media (max-width: 560px) {
+  .fh-head, .fh-body { padding-left: 16px; padding-right: 16px; }
+  .fh-grid { grid-template-columns: 1fr; }
+}
+/* «Завершить» и страница после остановки сервиса */
+.fh-dirty { margin: 0; padding-left: 20px; font: 12px var(--fh-mono); overflow-wrap: anywhere; }
+.fh-stopped { max-width: 520px; margin: 64px auto; padding: 0 16px; }
+.fh-stopped p { color: var(--fh-muted); }

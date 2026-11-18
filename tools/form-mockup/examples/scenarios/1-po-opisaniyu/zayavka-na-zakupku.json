@@ -1,0 +1,367 @@
+{
+  "version": 1,
+  "form": {
+    "title": "Заявка на закупку",
+    "formKind": "DocumentObjectForm",
+    "width": 110,
+    "commandBar": {
+      "type": "AutoCommandBar",
+      "name": "ФормаКоманднаяПанель",
+      "autoFill": true,
+      "items": [
+        {
+          "type": "Button",
+          "name": "ФормаОтправитьНаСогласование",
+          "title": "Отправить на согласование",
+          "commandName": "Form.Command.ОтправитьНаСогласование"
+        },
+        {
+          "type": "Popup",
+          "name": "ПодменюПечать",
+          "title": "Печать",
+          "picture": "StdPicture.Print",
+          "items": [
+            {
+              "type": "Button",
+              "name": "ПечатьЗаявка",
+              "title": "Заявка на закупку",
+              "commandName": "Form.Command.ПечатьЗаявка"
+            }
+          ]
+        }
+      ]
+    },
+    "items": [
+      {
+        "type": "UsualGroup",
+        "name": "ГруппаНомерДата",
+        "title": "Номер и дата",
+        "group": "AlwaysHorizontal",
+        "items": [
+          {
+            "type": "InputField",
+            "name": "Номер",
+            "dataPath": "Объект.Номер",
+            "dataType": "string",
+            "length": 11,
+            "sample": "00-000057",
+            "width": 11,
+            "horizontalStretch": false
+          },
+          {
+            "type": "InputField",
+            "name": "Дата",
+            "title": "от",
+            "dataPath": "Объект.Дата",
+            "dataType": "date",
+            "sample": "02.11.2026 10:42:15"
+          }
+        ],
+        "showTitle": false
+      },
+      {
+        "type": "UsualGroup",
+        "name": "ГруппаШапка",
+        "title": "Шапка",
+        "group": "AlwaysHorizontal",
+        "items": [
+          {
+            "type": "UsualGroup",
+            "name": "ГруппаШапкаЛево",
+            "title": "Шапка слева",
+            "group": "Vertical",
+            "items": [
+              {
+                "type": "InputField",
+                "name": "Организация",
+                "dataPath": "Объект.Организация",
+                "dataType": "ref",
+                "markIncomplete": true,
+                "sample": "ООО \"Торговый дом\""
+              },
+              {
+                "type": "InputField",
+                "name": "Подразделение",
+                "dataPath": "Объект.Подразделение",
+                "dataType": "ref",
+                "markIncomplete": true,
+                "sample": "Отдел снабжения"
+              },
+              {
+                "type": "InputField",
+                "name": "Склад",
+                "dataPath": "Объект.Склад",
+                "dataType": "ref",
+                "note": "предложение",
+                "sample": "Основной склад"
+              },
+              {
+                "type": "InputField",
+                "name": "Поставщик",
+                "title": "Предполагаемый поставщик",
+                "dataPath": "Объект.Поставщик",
+                "dataType": "ref",
+                "clearButton": true,
+                "inputHint": "Не выбран"
+              }
+            ],
+            "showTitle": false
+          },
+          {
+            "type": "UsualGroup",
+            "name": "ГруппаШапкаПраво",
+            "title": "Шапка справа",
+            "group": "Vertical",
+            "items": [
+              {
+                "type": "InputField",
+                "name": "ЖелаемаяДатаПоставки",
+                "title": "Поставить к",
+                "dataPath": "Объект.ЖелаемаяДатаПоставки",
+                "dataType": "date",
+                "markIncomplete": true,
+                "sample": "16.11.2026"
+              },
+              {
+                "type": "InputField",
+                "name": "Ответственный",
+                "dataPath": "Объект.Ответственный",
+                "dataType": "ref",
+                "sample": "Смирнова Е. А."
+              },
+              {
+                "type": "InputField",
+                "name": "Статус",
+                "dataPath": "Объект.Статус",
+                "dataType": "ref",
+                "readOnly": true,
+                "enumValues": [
+                  "Черновик",
+                  "На согласовании",
+                  "Согласована",
+                  "Отклонена"
+                ],
+                "sample": "Черновик"
+              }
+            ],
+            "showTitle": false
+          }
+        ],
+        "showTitle": false
+      },
+      {
+        "type": "Pages",
+        "name": "ГруппаСтраницы",
+        "title": "Страницы",
+        "items": [
+          {
+            "type": "Page",
+            "name": "ГруппаСтраницаТовары",
+            "title": "Товары",
+            "items": [
+              {
+                "type": "Table",
+                "name": "Товары",
+                "dataPath": "Объект.Товары",
+                "titleLocation": "None",
+                "heightInTableRows": 5,
+                "items": [
+                  {
+                    "type": "LabelField",
+                    "name": "ТоварыНомерСтроки",
+                    "title": "N",
+                    "dataPath": "Объект.Товары.НомерСтроки",
+                    "width": 3
+                  },
+                  {
+                    "type": "InputField",
+                    "name": "ТоварыНоменклатура",
+                    "title": "Номенклатура",
+                    "dataPath": "Объект.Товары.Номенклатура",
+                    "dataType": "ref",
+                    "width": 24
+                  },
+                  {
+                    "type": "InputField",
+                    "name": "ТоварыХарактеристика",
+                    "title": "Характеристика",
+                    "dataPath": "Объект.Товары.Характеристика",
+                    "dataType": "ref",
+                    "width": 12
+                  },
+                  {
+                    "type": "InputField",
+                    "name": "ТоварыКоличество",
+                    "title": "Количество",
+                    "dataPath": "Объект.Товары.Количество",
+                    "dataType": "number",
+                    "width": 8
+                  },
+                  {
+                    "type": "InputField",
+                    "name": "ТоварыЕдиницаИзмерения",
+                    "title": "Ед.",
+                    "dataPath": "Объект.Товары.ЕдиницаИзмерения",
+                    "dataType": "ref",
+                    "width": 5
+                  },
+                  {
+                    "type": "InputField",
+                    "name": "ТоварыЦена",
+                    "title": "Цена (ориент.)",
+                    "dataPath": "Объект.Товары.Цена",
+                    "dataType": "number",
+                    "width": 12
+                  },
+                  {
+                    "type": "InputField",
+                    "name": "ТоварыСумма",
+                    "title": "Сумма",
+                    "dataPath": "Объект.Товары.Сумма",
+                    "dataType": "number",
+                    "width": 10,
+                    "readOnly": true
+                  },
+                  {
+                    "type": "InputField",
+                    "name": "ТоварыНазначение",
+                    "title": "Назначение",
+                    "dataPath": "Объект.Товары.Назначение",
+                    "dataType": "string",
+                    "width": 20
+                  }
+                ],
+                "sample": [
+                  [
+                    "1",
+                    "Бумага офисная А4",
+                    "",
+                    "40",
+                    "пач",
+                    "320,00",
+                    "12 800,00",
+                    "Канцелярия на I квартал"
+                  ],
+                  [
+                    "2",
+                    "Картридж HP 59A",
+                    "черный",
+                    "6",
+                    "шт",
+                    "4 150,00",
+                    "24 900,00",
+                    "Принтеры бухгалтерии"
+                  ],
+                  [
+                    "3",
+                    "Папка-регистратор 75 мм",
+                    "синяя",
+                    "25",
+                    "шт",
+                    "185,00",
+                    "4 625,00",
+                    ""
+                  ]
+                ]
+              },
+              {
+                "type": "UsualGroup",
+                "name": "ГруппаИтоги",
+                "title": "Итоги",
+                "group": "AlwaysHorizontal",
+                "childItemsHorizontalAlign": "Right",
+                "horizontalStretch": true,
+                "items": [
+                  {
+                    "type": "InputField",
+                    "name": "СуммаДокумента",
+                    "title": "Сумма заявки",
+                    "dataPath": "Объект.СуммаДокумента",
+                    "dataType": "number",
+                    "readOnly": true,
+                    "width": 14,
+                    "sample": "42 325,00"
+                  }
+                ],
+                "showTitle": false
+              }
+            ]
+          },
+          {
+            "type": "Page",
+            "name": "ГруппаСтраницаСогласование",
+            "title": "Согласование",
+            "items": [
+              {
+                "type": "Table",
+                "name": "ИсторияСогласования",
+                "dataPath": "ИсторияСогласования",
+                "titleLocation": "None",
+                "readOnly": true,
+                "heightInTableRows": 5,
+                "commandBar": {
+                  "type": "AutoCommandBar",
+                  "name": "ИсторияСогласованияКоманднаяПанель",
+                  "autoFill": false
+                },
+                "items": [
+                  {
+                    "type": "LabelField",
+                    "name": "ИсторияСогласованияДата",
+                    "title": "Дата",
+                    "dataPath": "ИсторияСогласования.Дата",
+                    "width": 16
+                  },
+                  {
+                    "type": "LabelField",
+                    "name": "ИсторияСогласованияСогласующий",
+                    "title": "Согласующий",
+                    "dataPath": "ИсторияСогласования.Согласующий",
+                    "width": 22
+                  },
+                  {
+                    "type": "LabelField",
+                    "name": "ИсторияСогласованияРешение",
+                    "title": "Решение",
+                    "dataPath": "ИсторияСогласования.Решение",
+                    "width": 14
+                  },
+                  {
+                    "type": "LabelField",
+                    "name": "ИсторияСогласованияКомментарий",
+                    "title": "Комментарий",
+                    "dataPath": "ИсторияСогласования.Комментарий",
+                    "width": 40
+                  }
+                ],
+                "sample": [
+                  [
+                    "30.10.2026 15:02",
+                    "Ковалев А. П.",
+                    "Отклонена",
+                    "Уточнить количество картриджей"
+                  ],
+                  [
+                    "31.10.2026 09:47",
+                    "Ковалев А. П.",
+                    "Согласована",
+                    ""
+                  ]
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "InputField",
+        "name": "Комментарий",
+        "dataPath": "Объект.Комментарий",
+        "dataType": "string",
+        "multiLine": true,
+        "height": 2,
+        "horizontalStretch": true
+      }
+    ]
+  }
+}

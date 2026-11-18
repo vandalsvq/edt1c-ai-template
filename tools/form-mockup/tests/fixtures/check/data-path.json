@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "form": {
+    "title": "Пути к данным",
+    "formKind": "DocumentObjectForm",
+    "items": [
+      { "type": "InputField", "name": "Глубоко", "dataPath": "Объект.Контрагент.ГоловнойКонтрагент.ГоловнойКонтрагент.ИНН" },
+      { "type": "InputField", "name": "НеописанныйТип", "dataPath": "Объект.Договор.Владелец.ИНН" },
+      { "type": "InputField", "name": "Стандартный", "dataPath": "Объект.Ref" },
+      { "type": "InputField", "name": "ТекущаяСтрока", "dataPath": "Объект.Товары.Номенклатура" },
+      { "type": "InputField", "name": "ДопКолонка", "dataPath": "Объект.Товары.ЦенаЗаУпаковку" },
+      { "type": "InputField", "name": "НетРеквизита", "dataPath": "Объект.НетТакого" },
+      { "type": "InputField", "name": "НетКорня", "dataPath": "Реквизит" },
+      { "type": "InputField", "name": "ЧерезСтроку", "dataPath": "Объект.Комментарий.Длина" },
+      { "type": "Table", "name": "Товары", "dataPath": "Объект.Товары", "items": [
+        { "type": "LabelField", "name": "ТоварыНомерСтроки", "dataPath": "Объект.Товары.НомерСтроки" },
+        { "type": "InputField", "name": "ТоварыИНН", "dataPath": "Объект.Товары.Номенклатура.Поставщик.ИНН" },
+        { "type": "InputField", "name": "ТоварыЧужая", "dataPath": "Объект.Контрагент" }
+      ] }
+    ]
+  },
+  "attributes": [
+    { "name": "Объект", "valueType": "DocumentObject.Заказ", "main": true, "additionalColumns": {
+      "Товары": [{ "name": "ЦенаЗаУпаковку", "valueType": "Number" }]
+    } }
+  ],
+  "types": {
+    "Catalog.Контрагенты": { "attributes": [
+      { "name": "ИНН", "valueType": "String", "length": 12 },
+      { "name": "ГоловнойКонтрагент", "valueType": "CatalogRef.Контрагенты" }
+    ] },
+    "Catalog.Номенклатура": { "attributes": [{ "name": "Поставщик", "valueType": "CatalogRef.Контрагенты" }] },
+    "Document.Заказ": {
+      "attributes": [
+        { "name": "Контрагент", "valueType": "CatalogRef.Контрагенты" },
+        { "name": "Договор", "valueType": "CatalogRef.Договоры" },
+        { "name": "Комментарий", "valueType": "String" }
+      ],
+      "tabularSections": [{ "name": "Товары", "columns": [{ "name": "Номенклатура", "valueType": "CatalogRef.Номенклатура" }] }]
+    }
+  }
+}

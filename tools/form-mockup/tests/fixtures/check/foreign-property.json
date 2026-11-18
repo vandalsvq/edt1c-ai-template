@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "form": {
+    "title": "Фикстура",
+    "items": [
+      {
+        "type": "InputField",
+        "name": "Поле",
+        "checkBoxType": "Switch"
+      }
+    ]
+  }
+}

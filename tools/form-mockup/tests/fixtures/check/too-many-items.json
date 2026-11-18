@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "form": {
+    "title": "Фикстура",
+    "items": [
+      {
+        "type": "InputField",
+        "name": "Поле1"
+      },
+      {
+        "type": "InputField",
+        "name": "Поле2"
+      },
+      {
+        "type": "InputField",
+        "name": "Поле3"
+      },
+      {
+        "type": "InputField",
+        "name": "Поле4"
+      },
+      {
+        "type": "InputField",
+        "name": "Поле5"
+      },
+      {
+        "type": "InputField",
+        "name": "Поле6"
+      },
+      {
+        "type": "InputField",
+        "name": "Поле7"
+      },
+      {
+        "type": "InputField",
+        "name": "Поле8"
+      },
+      {
+        "type": "InputField",
+        "name": "Поле9"
+      },
+      {
+        "type": "InputField",
+        "name": "Поле10"
+      },
+      {
+        "type": "InputField",
+        "name": "Поле11"
+      },
+      {
+        "type": "InputField",
+        "name": "Поле12"
+      },
+      {
+        "type": "InputField",
+        "name": "Поле13"
+      },
+      {
+        "type": "InputField",
+        "name": "Поле14"
+      },
+      {
+        "type": "InputField",
+        "name": "Поле15"
+      },
+      {
+        "type": "InputField",
+        "name": "Поле16"
+      },
+      {
+        "type": "InputField",
+        "name": "Поле17"
+      },
+      {
+        "type": "InputField",
+        "name": "Поле18"
+      },
+      {
+        "type": "InputField",
+        "name": "Поле19"
+      },
+      {
+        "type": "InputField",
+        "name": "Поле20"
+      },
+      {
+        "type": "InputField",
+        "name": "Поле21"
+      },
+      {
+        "type": "InputField",
+        "name": "Поле22"
+      },
+      {
+        "type": "InputField",
+        "name": "Поле23"
+      },
+      {
+        "type": "InputField",
+        "name": "Поле24"
+      },
+      {
+        "type": "InputField",
+        "name": "Поле25"
+      },
+      {
+        "type": "InputField",
+        "name": "Поле26"
+      },
+      {
+        "type": "InputField",
+        "name": "Скрытое",
+        "visible": false
+      }
+    ]
+  }
+}

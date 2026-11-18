@@ -18,7 +18,9 @@ description: Подтянуть переносимые файлы (docs со с�
      проектный, не затирать), `usage/` (замер расхода этапа), `form-audit/` (аудит форм) и
      `yaxunit/` (прогон модулей YAxUnit в рабочей базе) - у обоих блок «Настройка под проект» в
      шапке проектный, не затирать; `yaxunit/stand.json` машинный, не переносить; `build-diff/`
-     (сравнение собранных epf/erf/cfe по содержимому)
+     (сравнение собранных epf/erf/cfe по содержимому), `form-mockup/` (макеты форм 1С для ТЗ, вместе
+     со скиллом `form-mockup`); каталог `tools/form-mockup/calibration/` в проекте - проектный: при
+     заборе не трогать
    - `licenses/cc-1c-skills-LICENSE`
    - `specs/_template/`, `specs/README.md`, `planning/README.md`
    - `.gitattributes`, `.mcp.json.example` (при параметре «MCP-сервер» = codepilot1c - имя сервера `codepilot1c` оставить своим)

@@ -1,0 +1,299 @@
+{
+ "source": "Формат() 1С 8.3.27.2214, локаль ru_RU, снято 06.11.2026",
+ "cases": [
+  {
+   "type": "number",
+   "value": -987654.321,
+   "format": "",
+   "expected": "-987 654,321"
+  },
+  {
+   "type": "number",
+   "value": 1234567.891,
+   "format": "ЧДЦ=2",
+   "expected": "1 234 567,89"
+  },
+  {
+   "type": "number",
+   "value": 1234567,
+   "format": "ЧГ=0",
+   "expected": "1234567"
+  },
+  {
+   "type": "number",
+   "value": 1234567,
+   "format": "ЧГ=",
+   "expected": "1234567"
+  },
+  {
+   "type": "number",
+   "value": 1234567,
+   "format": "ЧГ=3,2,0",
+   "expected": "12 34 567"
+  },
+  {
+   "type": "number",
+   "value": 1234567,
+   "format": "ЧГ=3",
+   "expected": "1234 567"
+  },
+  {
+   "type": "number",
+   "value": 0,
+   "format": "",
+   "expected": ""
+  },
+  {
+   "type": "number",
+   "value": 0,
+   "format": "ЧН=",
+   "expected": "0"
+  },
+  {
+   "type": "number",
+   "value": 0,
+   "format": "ЧН=Ноль",
+   "expected": "Ноль"
+  },
+  {
+   "type": "number",
+   "value": 0,
+   "format": "ЧДЦ=2; ЧН=",
+   "expected": "0,00"
+  },
+  {
+   "type": "number",
+   "value": 12,
+   "format": "ЧЦ=5; ЧВН=",
+   "expected": "00 012"
+  },
+  {
+   "type": "number",
+   "value": 12,
+   "format": "ЧЦ=5; ЧВН=; ЧГ=0",
+   "expected": "00012"
+  },
+  {
+   "type": "number",
+   "value": -5.5,
+   "format": "ЧДЦ=2; ЧО=0",
+   "expected": "(5,50)"
+  },
+  {
+   "type": "number",
+   "value": -5.5,
+   "format": "ЧО=2",
+   "expected": "- 5,5"
+  },
+  {
+   "type": "number",
+   "value": -5.5,
+   "format": "ЧО=3",
+   "expected": "5,5-"
+  },
+  {
+   "type": "number",
+   "value": -5.5,
+   "format": "ЧО=4",
+   "expected": "5,5 -"
+  },
+  {
+   "type": "number",
+   "value": 1.005,
+   "format": "ЧДЦ=2",
+   "expected": "1,01"
+  },
+  {
+   "type": "number",
+   "value": 2.5,
+   "format": "ЧДЦ=0",
+   "expected": "3"
+  },
+  {
+   "type": "number",
+   "value": -2.5,
+   "format": "ЧДЦ=0",
+   "expected": "-3"
+  },
+  {
+   "type": "number",
+   "value": 123456,
+   "format": "ЧС=3",
+   "expected": "123,456"
+  },
+  {
+   "type": "number",
+   "value": 5,
+   "format": "ЧФ='Ч руб.'",
+   "expected": "5 руб."
+  },
+  {
+   "type": "number",
+   "value": 1234.5,
+   "format": "ЧРД=.; ЧРГ=','",
+   "expected": "1,234.5"
+  },
+  {
+   "type": "number",
+   "value": 1234.5,
+   "format": "ЧРГ=' '",
+   "expected": "1 234,5"
+  },
+  {
+   "type": "number",
+   "value": 1234.5,
+   "format": "ND=10; NFD=2",
+   "expected": "1 234,50"
+  },
+  {
+   "type": "number",
+   "value": 1234.5,
+   "format": "ЧЦ = 10; ЧДЦ = 2; ЧРД = '.'; ЧГ = ",
+   "expected": "1234.50"
+  },
+  {
+   "type": "number",
+   "value": 12,
+   "format": "ЧЦ = 5; ЧВН = Истина; ЧГ = '0'",
+   "expected": "00012"
+  },
+  {
+   "type": "number",
+   "value": -1234.5,
+   "format": "ЧДЦ = 2; ЧО = '0'",
+   "expected": "(1 234,50)"
+  },
+  {
+   "type": "date",
+   "value": "2026-11-03T09:05:07",
+   "format": "",
+   "expected": "03.11.2026 9:05:07"
+  },
+  {
+   "type": "date",
+   "value": "2026-11-03T22:45:34",
+   "format": "",
+   "expected": "03.11.2026 22:45:34"
+  },
+  {
+   "type": "date",
+   "value": "2026-11-03T09:05:07",
+   "format": "ДЛФ=D",
+   "expected": "03.11.2026"
+  },
+  {
+   "type": "date",
+   "value": "2026-11-03T09:05:07",
+   "format": "ДЛФ=DD",
+   "expected": "3 ноября 2026 г."
+  },
+  {
+   "type": "date",
+   "value": "2026-11-03T09:05:07",
+   "format": "ДЛФ=T",
+   "expected": "9:05:07"
+  },
+  {
+   "type": "date",
+   "value": "2026-11-03T09:05:07",
+   "format": "ДЛФ=DT",
+   "expected": "03.11.2026 9:05:07"
+  },
+  {
+   "type": "date",
+   "value": "2026-11-03T09:05:07",
+   "format": "ДЛФ=DDT",
+   "expected": "3 ноября 2026 г. 9:05:07"
+  },
+  {
+   "type": "date",
+   "value": "2026-11-03T09:05:07",
+   "format": "ДФ=dd.MM.yy",
+   "expected": "03.11.26"
+  },
+  {
+   "type": "date",
+   "value": "2026-11-03T09:05:07",
+   "format": "ДФ=d.M.yy",
+   "expected": "3.11.26"
+  },
+  {
+   "type": "date",
+   "value": "2026-11-03T09:05:07",
+   "format": "ДФ=yyyy-MM-dd",
+   "expected": "2026-11-03"
+  },
+  {
+   "type": "date",
+   "value": "2026-11-03T09:05:07",
+   "format": "ДФ='dd MMMM yyyy'",
+   "expected": "03 ноября 2026"
+  },
+  {
+   "type": "date",
+   "value": "2026-11-03T09:05:07",
+   "format": "ДФ=MMMM",
+   "expected": "Ноябрь"
+  },
+  {
+   "type": "date",
+   "value": "2026-11-03T09:05:07",
+   "format": "ДФ='HH:mm'",
+   "expected": "09:05"
+  },
+  {
+   "type": "date",
+   "value": "2026-11-03T21:05:07",
+   "format": "ДФ='hh:mm'",
+   "expected": "09:05"
+  },
+  {
+   "type": "date",
+   "value": "2026-11-03T09:05:07",
+   "format": "ДФ=q",
+   "expected": "4"
+  },
+  {
+   "type": "date",
+   "value": "0001-01-01T00:00:00",
+   "format": "",
+   "expected": ""
+  },
+  {
+   "type": "date",
+   "value": "0001-01-01T00:00:00",
+   "format": "ДП='Нет даты'",
+   "expected": "Нет даты"
+  },
+  {
+   "type": "date",
+   "value": "2026-11-03T09:05:07",
+   "format": "ДФ = 'dd.MM.yyyy'; ДП = '-'",
+   "expected": "03.11.2026"
+  },
+  {
+   "type": "boolean",
+   "value": true,
+   "format": "",
+   "expected": "Да"
+  },
+  {
+   "type": "boolean",
+   "value": false,
+   "format": "",
+   "expected": "Нет"
+  },
+  {
+   "type": "boolean",
+   "value": true,
+   "format": "БИ=Включено",
+   "expected": "Включено"
+  },
+  {
+   "type": "boolean",
+   "value": false,
+   "format": "БЛ = 'Выключено'; БИ = 'Включено'",
+   "expected": "Выключено"
+  }
+ ]
+}
