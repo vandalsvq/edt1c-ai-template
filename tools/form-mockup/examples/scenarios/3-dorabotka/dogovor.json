@@ -22,8 +22,7 @@
         "name": "Контрагент",
         "title": "Контрагент",
         "dataPath": "Объект.Контрагент",
-        "dataType": "string",
-        "length": 100,
+        "dataType": "ref",
         "choiceButton": true,
         "autoMarkIncomplete": true
       },
