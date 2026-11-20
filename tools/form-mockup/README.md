@@ -116,16 +116,18 @@ python3 tools/form-mockup/formmockup.py check  <модель.json>              
 python3 tools/form-mockup/formmockup.py render <модель.json> -o <каталог> [--png] [--before <было.json>]
                                                                                         HTML, PNG, замечания раскладки
 python3 tools/form-mockup/formmockup.py table  <модель.json> [--before <было.json>]    таблица элементов или изменений, Markdown
+python3 tools/form-mockup/formmockup.py compare <макет.json> <Form.form|Form.xml|модель.json>
+                                                                                        сверка собранной формы с макетом, Markdown
 python3 tools/form-mockup/formmockup.py ru     <слово> [...]                           перевод имен видов и свойств
 python3 tools/form-mockup/formmockup.py serve  <папка|модель.json> [--src <исходники>] [--port N]
                                                                                         сервис макетов и конструктор в браузере
 ```
 
-Коды возврата: 0 - чисто; 1 - замечания модели или раскладки; 2 - файл не читается, порт занят
+Коды возврата: 0 - чисто; 1 - замечания модели или раскладки, у `compare` - отличия формы от макета; 2 - файл не читается, порт занят
 или каталог не исходники конфигурации; 3 - нужен PNG, а Chrome нет. Все ключи - в шапке
 `formmockup.py` и `formmockup.py <команда> -h`.
 
-Для агента сценарии работы (форма по описанию, по XML, доработка «было / стало»), правила вёрстки
+Для агента сценарии работы (форма по описанию, по XML, доработка «было / стало», сверка собранной формы с макетом), правила вёрстки
 и разбор ответов инструмента описаны в скилле `.claude/skills/form-mockup/SKILL.md`.
 
 ### Переменные окружения

@@ -7,7 +7,7 @@
         ["commandBarLocation", "excludedCommands", "showTitle", "showCloseButton", "help"]
       ] },
       { "group": "Расположение", "blocks": [["width", "height"]] },
-      { "group": "Макет", "blocks": [["formKind", "note"]] }
+      { "group": "Макет", "blocks": [["formKind", "note", "generated"]] }
     ],
     "InputField": [
       { "group": "Основные", "blocks": [
@@ -30,7 +30,7 @@
         ["horizontalStretch", "verticalStretch"],
         ["titleHeight"]
       ] },
-      { "group": "Макет", "blocks": [["note", "sample", "renamedFrom"]] }
+      { "group": "Макет", "blocks": [["note", "generated", "sample", "renamedFrom"]] }
     ],
     "CheckBoxField": [
       { "group": "Основные", "blocks": [
@@ -49,7 +49,7 @@
         ["horizontalStretch", "verticalStretch"],
         ["titleHeight"]
       ] },
-      { "group": "Макет", "blocks": [["note", "sample", "renamedFrom"]] }
+      { "group": "Макет", "blocks": [["note", "generated", "sample", "renamedFrom"]] }
     ],
     "RadioButtonField": [
       { "group": "Основные", "blocks": [["name", "title", "type", "dataPath", "titleLocation", "visible", "userVisible", "enabled", "readOnly", "radioButtonType"]] },
@@ -65,7 +65,7 @@
         ["horizontalStretch", "verticalStretch"],
         ["titleHeight"]
       ] },
-      { "group": "Макет", "blocks": [["note", "sample", "renamedFrom"]] }
+      { "group": "Макет", "blocks": [["note", "generated", "sample", "renamedFrom"]] }
     ],
     "LabelField": [
       { "group": "Основные", "blocks": [["name", "title", "type", "dataPath", "titleLocation", "visible", "userVisible", "enabled", "readOnly", "hyperlink"]] },
@@ -86,7 +86,7 @@
         ["horizontalStretch", "verticalStretch"],
         ["titleHeight"]
       ] },
-      { "group": "Макет", "blocks": [["note", "sample", "renamedFrom"]] }
+      { "group": "Макет", "blocks": [["note", "generated", "sample", "renamedFrom"]] }
     ],
     "PictureField": [
       { "group": "Основные", "blocks": [["name", "title", "type", "dataPath", "titleLocation", "visible", "userVisible", "enabled", "readOnly", "valuesPicture", "hyperlink"]] },
@@ -106,7 +106,7 @@
         ["horizontalStretch", "verticalStretch"],
         ["titleHeight"]
       ] },
-      { "group": "Макет", "blocks": [["note", "sample", "renamedFrom"]] }
+      { "group": "Макет", "blocks": [["note", "generated", "sample", "renamedFrom"]] }
     ],
     "UsualGroup": [
       { "group": "Основные", "blocks": [["name", "title", "visible", "userVisible", "enabled", "behavior", "collapsed", "controlRepresentation", "representation", "group", "united", "throughAlign"]] },
@@ -117,7 +117,7 @@
         ["groupHorizontalAlign", "groupVerticalAlign", "childItemsHorizontalAlign", "childItemsVerticalAlign"],
         ["horizontalStretch", "verticalStretch"]
       ] },
-      { "group": "Макет", "blocks": [["note", "renamedFrom"]] }
+      { "group": "Макет", "blocks": [["note", "generated", "renamedFrom"]] }
     ],
     "Pages": [
       { "group": "Основные", "blocks": [["name", "title", "visible", "userVisible", "enabled", "currentPage"]] },
@@ -127,7 +127,7 @@
         ["groupHorizontalAlign", "groupVerticalAlign"],
         ["horizontalStretch", "verticalStretch"]
       ] },
-      { "group": "Макет", "blocks": [["note", "renamedFrom"]] }
+      { "group": "Макет", "blocks": [["note", "generated", "renamedFrom"]] }
     ],
     "Page": [
       { "group": "Основные", "blocks": [["name", "title", "visible", "userVisible", "enabled", "group"]] },
@@ -137,7 +137,7 @@
         ["horizontalStretch", "verticalStretch"],
         ["groupHorizontalAlign", "groupVerticalAlign"]
       ] },
-      { "group": "Макет", "blocks": [["note", "renamedFrom"]] }
+      { "group": "Макет", "blocks": [["note", "generated", "renamedFrom"]] }
     ],
     "ColumnGroup": [
       { "group": "Основные", "blocks": [["name", "title", "visible", "userVisible", "enabled", "group"]] },
@@ -149,7 +149,7 @@
         ["headerHorizontalAlign"],
         ["groupHorizontalAlign", "groupVerticalAlign"]
       ] },
-      { "group": "Макет", "blocks": [["note", "renamedFrom"]] }
+      { "group": "Макет", "blocks": [["note", "generated", "renamedFrom"]] }
     ],
     "Table": [
       { "group": "Основные", "blocks": [
@@ -172,7 +172,7 @@
         ["horizontalStretch", "verticalStretch"],
         ["titleHeight"]
       ] },
-      { "group": "Макет", "blocks": [["note", "sample", "renamedFrom"]] }
+      { "group": "Макет", "blocks": [["note", "generated", "sample", "renamedFrom"]] }
     ],
     "LabelDecoration": [
       { "group": "Основные", "blocks": [["name", "title", "visible", "userVisible", "enabled", "hyperlink", "formatted"]] },
@@ -183,7 +183,7 @@
         ["groupHorizontalAlign", "groupVerticalAlign"],
         ["horizontalStretch", "verticalStretch"]
       ] },
-      { "group": "Макет", "blocks": [["note", "renamedFrom"]] }
+      { "group": "Макет", "blocks": [["note", "generated", "renamedFrom"]] }
     ],
     "PictureDecoration": [
       { "group": "Основные", "blocks": [["name", "title", "visible", "userVisible", "enabled", "picture", "hyperlink"]] },
@@ -193,7 +193,7 @@
         ["groupHorizontalAlign", "groupVerticalAlign"],
         ["horizontalStretch", "verticalStretch"]
       ] },
-      { "group": "Макет", "blocks": [["note", "renamedFrom"]] }
+      { "group": "Макет", "blocks": [["note", "generated", "renamedFrom"]] }
     ],
     "Button": [
       { "group": "Основные", "blocks": [["name", "title", "buttonType", "commandName", "visible", "userVisible", "enabled", "representation", "picture", "defaultButton", "check", "locationInCommandBar"]] },
@@ -204,7 +204,7 @@
         ["groupHorizontalAlign", "groupVerticalAlign"],
         ["horizontalStretch", "verticalStretch"]
       ] },
-      { "group": "Макет", "blocks": [["note", "renamedFrom"]] }
+      { "group": "Макет", "blocks": [["note", "generated", "renamedFrom"]] }
     ],
     "ButtonGroup": [
       { "group": "Основные", "blocks": [["name", "title", "commandSource", "representation", "visible", "userVisible", "enabled"]] },
@@ -214,7 +214,7 @@
         ["groupHorizontalAlign", "groupVerticalAlign"],
         ["horizontalStretch", "verticalStretch"]
       ] },
-      { "group": "Макет", "blocks": [["note", "renamedFrom"]] }
+      { "group": "Макет", "blocks": [["note", "generated", "renamedFrom"]] }
     ],
     "Popup": [
       { "group": "Основные", "blocks": [["name", "title", "commandSource", "visible", "userVisible", "enabled", "representation"]] },
@@ -224,7 +224,7 @@
         ["horizontalStretch", "verticalStretch"],
         ["groupHorizontalAlign", "groupVerticalAlign"]
       ] },
-      { "group": "Макет", "blocks": [["note", "renamedFrom"]] }
+      { "group": "Макет", "blocks": [["note", "generated", "renamedFrom"]] }
     ],
     "CommandBar": [
       { "group": "Основные", "blocks": [["name", "title", "commandSource", "visible", "userVisible", "enabled", "autoFill"]] },
@@ -234,7 +234,7 @@
         ["groupHorizontalAlign", "groupVerticalAlign"],
         ["horizontalStretch", "verticalStretch"]
       ] },
-      { "group": "Макет", "blocks": [["note", "renamedFrom"]] }
+      { "group": "Макет", "blocks": [["note", "generated", "renamedFrom"]] }
     ],
     "AutoCommandBar": [
       { "group": "Основные", "blocks": [
@@ -247,7 +247,7 @@
         ["groupHorizontalAlign", "groupVerticalAlign"],
         ["horizontalStretch", "verticalStretch"]
       ] },
-      { "group": "Макет", "blocks": [["note", "renamedFrom"]] }
+      { "group": "Макет", "blocks": [["note", "generated", "renamedFrom"]] }
     ],
     "Addition": [
       { "group": "Основные", "blocks": [
@@ -260,7 +260,7 @@
         ["groupHorizontalAlign", "groupVerticalAlign"],
         ["horizontalStretch", "verticalStretch"]
       ] },
-      { "group": "Макет", "blocks": [["note", "renamedFrom"]] }
+      { "group": "Макет", "blocks": [["note", "generated", "renamedFrom"]] }
     ],
     "Attribute": [
       { "group": "Основные", "blocks": [["name", "title", "valueType", "main"], ["length", "digits", "fractionDigits", "dateFractions", "mainTable"]] }
@@ -292,7 +292,7 @@
       ["horizontalStretch", "verticalStretch"],
       ["titleHeight"]
     ] },
-    { "group": "Макет", "blocks": [["note", "sample", "renamedFrom", "sourceType"]] }
+    { "group": "Макет", "blocks": [["note", "generated", "sample", "renamedFrom", "sourceType"]] }
   ],
   "places": {
     "*": {
@@ -314,7 +314,7 @@
     "userVisible", "enabled", "readOnly", "toolTip", "toolTipRepresentation", "extendedTooltip", "extendedTooltipTextColor",
     "groupHorizontalAlign", "groupVerticalAlign", "horizontalAlign", "verticalAlign", "showInHeader", "headerHorizontalAlign",
     "headerPicture", "headerBackColor", "showInFooter", "footerText", "footerFont", "footerHorizontalAlign", "footerPicture",
-    "footerBackColor", "footerTextColor", "fixingInTable", "cellHyperlink", "autoCellHeight", "sample", "note", "renamedFrom"],
+    "footerBackColor", "footerTextColor", "fixingInTable", "cellHyperlink", "autoCellHeight", "sample", "note", "generated", "renamedFrom"],
   "defaults": {
     "*": {
       "visible": true, "userVisible": true, "enabled": true, "readOnly": false,

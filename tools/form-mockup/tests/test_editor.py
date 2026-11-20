@@ -161,7 +161,7 @@ class PropertiesTest(unittest.TestCase):
         props = [item["prop"] for item in result["props"]]
         self.assertEqual(props[:4], ["name", "title", "type", "dataPath"])
         self.assertLess(props.index("width"), props.index("height"))
-        self.assertEqual(props[-3:], ["note", "sample", "renamedFrom"])
+        self.assertEqual(props[-4:], ["note", "generated", "sample", "renamedFrom"])
         unset = {item["prop"]: item for item in result["props"] if not item["set"]}
         self.assertEqual(unset["titleLocation"]["value"], "Auto", "незаданное - значением по умолчанию")
         self.assertTrue(unset["visible"]["value"])

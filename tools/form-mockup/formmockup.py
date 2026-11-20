@@ -26,6 +26,14 @@
         таблица для ТЗ в Markdown русскими названиями: элементов формы (с примечаниями - колонка
         «№», номер как на снимке примечаний) или, с --before, изменений (номер - как на рисунке
         правок); код 1 - модель с нарушением схемы
+    python3 tools/form-mockup/formmockup.py compare <макет.json> <Form.form | Form.xml | модель.json>
+        сверка собранной формы с макетом: XML формы импортируется, как у import, без записи файла; Markdown
+        тремя разделами - «Отличия» (таблица изменений «макет → форма», как у table --before), «Заполняется
+        кодом» (что сверка пропустила по отметке generated макета и что в форме на этом месте), «Уточнения»
+        (свойства формы, которых нет у элемента в макете). Не сравниваются свойства только для ТЗ (note,
+        sample); список выбора - по представлениям, состав команд - без порядка, умолчание платформы равно
+        незаданному свойству. Код 0 - отличий нет (места кода и уточнения не в счет), 1 - есть,
+        2 - файл не открыть, не модель или не XML формы, модель с нарушением схемы
     python3 tools/form-mockup/formmockup.py ru titleLocation "Поле ввода" titleLocation=None
         перевод по словарю в обе стороны; у свойства вне платформы - пометка «нет в 1С» или
         «в 1С не напрямую» с пояснением; код 1, если слово не найдено
@@ -68,6 +76,7 @@ from fmlib.server import (FORM_KINDS, Editor, Lifetime, ServeError, Sources, Wor
                           make_server)
 from fmlib.workspace import WorkspaceError, last_folder, remember_folder, settings_sources, user_dir  # noqa: E402
 from fmlib.tables import changes_table, elements_table  # noqa: E402
+from fmlib.reconcile import reconcile, report  # noqa: E402
 
 
 def command_import(args) -> int:
@@ -297,6 +306,32 @@ def command_table(args) -> int:
     return 0
 
 
+def command_compare(args) -> int:
+    validator = SchemaValidator.from_file(SCHEMA_PATH)
+    try:
+        mockup = load_model(Path(args.mockup))
+        source = Path(args.form)
+        if source.suffix.lower() == ".json":
+            form = load_model(source)
+        else:
+            form, _ = import_form(source)
+    except (ModelLoadError, ImportFailure) as error:
+        print(f"Ошибка: {error}", file=sys.stderr)
+        return 2
+    for label, model in (("макет", mockup), ("форма", form)):
+        issues = [issue for issue in check(model, validator) if issue.code in BLOCKING_CODES]
+        print_issues(model, issues, f"{label}: ")
+        if issues:
+            print(f"Ошибка: {label} с нарушением схемы ({len(issues)}) - сверка после исправления "
+                  f"(formmockup.py check)", file=sys.stderr)
+            return 2
+    dictionary = load_dictionary(DICTIONARY_PATH)
+    result = reconcile(mockup, form, dictionary)
+    print_warnings(result.diff)
+    print(report(result, dictionary), end="")
+    return 1 if result.changes else 0
+
+
 def command_ru(args) -> int:
     dictionary = load_dictionary(DICTIONARY_PATH)
     validator = SchemaValidator.from_file(SCHEMA_PATH)
@@ -473,6 +508,12 @@ def main() -> int:
     table_parser.add_argument("model", help="model.json")
     table_parser.add_argument("--before", help="прежняя версия модели: таблица изменений")
     table_parser.set_defaults(handler=command_table)
+
+    compare_parser = commands.add_parser("compare", help="сверка собранной формы с макетом")
+    compare_parser.add_argument("mockup", help="макет - модель JSON")
+    compare_parser.add_argument("form", help="собранная форма: Form.form (EDT), Form.xml (выгрузка конфигуратора) "
+                                "или модель JSON")
+    compare_parser.set_defaults(handler=command_compare)
 
     ru_parser = commands.add_parser("ru", help="перевод по словарю в обе стороны")
     ru_parser.add_argument("words", nargs="+", help="вид, свойство, значение или свойство=значение")

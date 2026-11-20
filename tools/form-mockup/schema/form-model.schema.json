@@ -60,6 +60,7 @@
     "model": {
       "version": "версия формата файла модели",
       "note": "примечание для ТЗ; в форму не переносится",
+      "generated": "отметка для сверки формы с макетом (compare): element - элемент целиком создает код или выводит платформа, title - заголовок в макете - пример текста, который подменит код; в форму не переносится",
       "sample": "пример значения для картинки; в 1С значение приходит из данных",
       "renamedFrom": "прежнее имя для сравнения версий формы; в 1С - переименование элемента",
       "sourceType": "вид элемента в исходном XML, который импорт не распознал (вид модели Unknown - заглушка)",
@@ -214,7 +215,8 @@
         "verticalStretch": { "type": "boolean" },
         "groupHorizontalAlign": { "enum": ["Auto", "Left", "Center", "Right"] },
         "groupVerticalAlign": { "$ref": "#/$defs/verticalAlign" },
-        "note": { "type": "string" }
+        "note": { "type": "string" },
+        "generated": { "enum": ["element", "title"] }
       }
     },
     "dataBase": {
@@ -262,6 +264,7 @@
         "showCloseButton": { "type": "boolean" },
         "excludedCommands": { "type": "array", "items": { "type": "string" } },
         "note": { "type": "string" },
+        "generated": { "enum": ["title"] },
         "items": { "type": "array", "items": { "$ref": "#/$defs/bodyItem" } }
       },
       "additionalProperties": false
