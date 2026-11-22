@@ -2,7 +2,7 @@
 
 Чеклист первичной настройки skill для проверки синтаксиса 1С по локальному справочнику.
 
-Skill - это обёртка над Python-скриптом `1c-syntax-check.py`, который ищет методы и свойства в индексе `shcntx_ru_v*/search-index-ru.json`. Скрипт и справочники живут в отдельном публичном репозитории - этот шаблон только регистрирует skill в Claude Code и подставляет путь к ним.
+Skill - это обёртка над Python-скриптом `1c-syntax-check.py`, который ищет методы и свойства в индексе `shcntx_ru_v*/search-index-ru.json`. Скрипт и справочники живут в отдельном публичном репозитории - этот шаблон регистрирует skill в Codex и Claude Code и подставляет путь к ним.
 
 ## Зависимости
 
@@ -58,7 +58,11 @@ ls ~/Repository/hbk_md/shcntx_ru_v*/search-index-ru.json 2>/dev/null
 
 Разбор нужен один раз на каждую новую версию платформы. Скрипт `1c-syntax-check.py` автоматически выбирает самую свежую папку `shcntx_ru_v*` рядом с собой - отдельно версию указывать не нужно.
 
-## Шаг 3. Прописать путь в `.claude/settings.local.json`
+## Шаг 3. Задать путь для выбранного клиента
+
+**Codex.** При запуске скрипта передайте абсолютный путь к клону через `HBK_MD_HOME` в окружении команды. На Windows добавьте `PYTHONIOENCODING=utf-8`. В новом чате проекта вызовите `$bsl-check Структура.Вставить`.
+
+**Claude Code.** Настройте `.claude/settings.local.json`.
 
 `SKILL.md` в репозитории не содержит абсолютных путей - он берёт каталог `hbk_md` из переменной окружения `HBK_MD_HOME`. Эту переменную (вместе с permission на запуск skill) задаёт каждый разработчик у себя в `.claude/settings.local.json` - этот файл в `.gitignore` и в репозиторий не попадает.
 
@@ -128,7 +132,7 @@ git -C ~/Repository/hbk_md pull
 
 ## Если skill не нужен
 
-Удалите каталог [`.claude/skills/bsl-check/`](../.claude/skills/bsl-check/) - Claude Code перестанет регистрировать команду `/bsl-check`. Также можно убрать упоминания skill из `CLAUDE.md` и `README.md`, если они мешают.
+Удалите вход Codex `.agents/skills/bsl-check/` и каталог [`.claude/skills/bsl-check/`](../.claude/skills/bsl-check/) - Claude Code перестанет регистрировать команду `/bsl-check`. Также можно убрать упоминания skill из `PROJECT.md` и `README.md`, если они мешают.
 
 ## Troubleshooting
 

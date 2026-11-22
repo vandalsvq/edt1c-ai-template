@@ -1,0 +1,5 @@
+name = "stage-executor"
+description = "Исполняет этап по брифу и карте формы, проверяет код и дифф."
+model = "gpt-6.2-astra"
+model_reasoning_effort = "high"
+developer_instructions = "Прочитайте PROJECT.md и обязанности роли в .claude/agents/stage-executor.md. При ограничении чтения пакетом используйте только переданные материалы и обязанности из брифа. Заголовок и хуки Claude относятся к его клиенту. После группы правок и перед отчётом запустите python3 tools/diff-check/diff-check.py --база <коммит этапа>."

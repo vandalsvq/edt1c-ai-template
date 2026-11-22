@@ -6,10 +6,10 @@ description: Проверка синтаксиса 1С:Предприятие 8 
 Run the following Bash command, substituting `$ARGUMENTS` with the arguments passed to the skill:
 
 ```bash
-: "${HBK_MD_HOME:?HBK_MD_HOME не задана. Пропишите путь к каталогу hbk_md в .claude/settings.local.json (см. docs/bsl-check-setup.md).}" && python3 "$HBK_MD_HOME/.claude/1c-syntax-check.py" $ARGUMENTS
+: "${HBK_MD_HOME:?HBK_MD_HOME не задана. Укажите путь к каталогу hbk_md по docs/bsl-check-setup.md.}" && python3 "$HBK_MD_HOME/.claude/1c-syntax-check.py" $ARGUMENTS
 ```
 
-> Путь к каталогу `hbk_md` (со скриптом `1c-syntax-check.py` и справочниками `shcntx_ru_v*`) берётся из переменной окружения `HBK_MD_HOME`. Её задаёт каждый разработчик у себя в `.claude/settings.local.json` (секция `env`) - этот файл в `.gitignore` и не попадает в репозиторий. Скрипт авто-обнаруживает свежую версию справочника `shcntx_ru_v*` рядом с собой - отдельный `--ref-dir` не нужен. На Windows в той же секции `env` нужна `PYTHONIOENCODING=utf-8`, иначе кириллица в выводе ломается (`docs/bsl-check-setup.md`, шаг 3).
+> Путь к каталогу `hbk_md` (со скриптом `1c-syntax-check.py` и справочниками `shcntx_ru_v*`) берётся из переменной окружения `HBK_MD_HOME`. В Codex передайте её в окружение команды. В Claude Code её задаёт каждый разработчик у себя в `.claude/settings.local.json` (секция `env`) - этот файл в `.gitignore` и не попадает в репозиторий. Скрипт авто-обнаруживает свежую версию справочника `shcntx_ru_v*` рядом с собой - отдельный `--ref-dir` не нужен. На Windows в той же секции `env` нужна `PYTHONIOENCODING=utf-8`, иначе кириллица в выводе ломается (`docs/bsl-check-setup.md`, шаг 3).
 >
 > Если переменная не задана, команда упадёт с понятным сообщением до запуска Python (конструкция `${VAR:?msg}` - стандартный bash-идиом).
 >

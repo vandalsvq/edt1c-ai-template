@@ -142,8 +142,8 @@ EDT держит `Template.dcs` и `Template.mxlx` без BOM и с LF, поэт
 Если MCP-сервер EDT дорастёт до этих сценариев:
 
 ```bash
-rm -rf .claude/skills/{skd,mxl}-* docs/skd-mxl-toolkit.md licenses/cc-1c-skills-LICENSE
+rm -rf .agents/skills/{skd,mxl}-* .claude/skills/{skd,mxl}-* docs/skd-mxl-toolkit.md licenses/cc-1c-skills-LICENSE
 ```
 
-плюс снять строки из `CLAUDE.md` → «Инструменты» и `README.md`. Отказ может быть частичным: слой
+плюс снять строки из `PROJECT.md` → «Инструменты» и `README.md`. Отказ может быть частичным: слой
 вариантов СКД и слой макетов закрываются независимо.

@@ -1,0 +1,5 @@
+name = "stage-form-designer"
+description = "Собирает форму этапа через MCP и передаёт исполнителю карту формы."
+model = "gpt-6.2-astra"
+model_reasoning_effort = "xhigh"
+developer_instructions = "Прочитайте PROJECT.md и обязанности роли в .claude/agents/stage-form-designer.md. При ограничении чтения пакетом используйте только переданные материалы и обязанности из брифа. Заголовок и хуки Claude относятся к его клиенту. Сверьте путь проекта в EDT, проверьте собранную форму и сверьте её с макетом при его наличии."
